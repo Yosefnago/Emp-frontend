@@ -1,0 +1,32 @@
+
+<div class="sign-in-container">
+
+  <span class="title">Sign in</span>
+
+  <input [(ngModel)]="username" class="username" placeholder="Username">
+
+  <div class="password-container">
+    <input
+      [(ngModel)]="password"
+      [type]="showPassword ? 'text' : 'password'"
+      class="password"
+      placeholder="Password" />
+    <input
+      [(ngModel)]="confirmPassword"
+      [type]="showPassword ? 'text' : 'password'"
+      class="confirmpassword"
+      placeholder="Confirm password" />
+
+
+    <button
+      type="button"
+      class="toggle-btn"
+      (click)="showPassword = !showPassword">
+      {{ showPassword ? '🔓‍️' : '🔒‍' }}
+    </button>
+
+
+  </div>
+  <button class="SaveButton"  (click)="onRegister()">Save</button>
+
+</div>

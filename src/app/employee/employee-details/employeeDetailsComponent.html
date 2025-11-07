@@ -1,0 +1,27 @@
+
+<div class="image-employee">
+  <img ngSrc="images/worker.png" alt="Employee photo" width="200" height="200">
+</div>
+
+<div class="employee-details-container" *ngIf="employee">
+  <label class="employee-name"> שם עובד :  {{ employee.firstName }}</label>
+  <label class="employee-id"> ת.ז : {{ employee.personalId }} </label>
+  <label class="employee-phone"> מס' פלאפון : {{ employee.phone }}</label>
+  <label class="employee-email">{{ employee.email }} : אימייל  </label>
+  <label class="employee-department"> מחלקה : {{ employee.department }}</label>
+  <label class="employee-date-start"> תאריך התחלה : {{ employee.hireDate | date:'dd/MM/yyyy' }}</label>
+</div>
+
+<div class="salary-employee-details" *ngIf="employee">
+  <label class="salary-per-hour">₪ {{ employee.salaryPerHour }} : שכר לשעה  </label>
+  <label class="salary-month"> שכר לחודש : ₪{{ employee.monthlySalary }}</label>
+  <label class="bonus">₪ בונוס : {{ employee.bonus }} </label>
+  <label class="pension">פנסיה : {{ employee.pensionFund }} </label>
+</div>
+
+
+
+<div class="settings">
+  <button class="edit-btn">עריכה</button>
+  <button class="attendance-btn">נוכחות</button>
+</div>

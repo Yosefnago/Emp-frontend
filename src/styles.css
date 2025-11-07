@@ -1,1 +1,25 @@
 /* You can add global styles to this file, and also import other style files */
+html, body, app-root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.custom-snackbar {
+  background: linear-gradient(135deg, #d1c1a8, #cfcaca);
+  color: white !important;
+  font-weight: bold;
+  font-family: "Segoe UI", sans-serif;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+* {
+  box-sizing: border-box;
+}
+
+
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

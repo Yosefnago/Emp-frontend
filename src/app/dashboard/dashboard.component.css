@@ -1,0 +1,104 @@
+.dashboard {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #ffffff, #ffffff, #ffffff);
+  color: white;
+  font-family: "Segoe UI", sans-serif;
+  text-align: center;
+  padding-top: 50px;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+  height: 50px;
+  background-color: white;
+  margin-top: 0;
+}
+
+.header-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #5aaae4;
+  height: 50px;
+  padding: 0 20px;
+}
+
+.nav-buttons {
+  display: flex;
+  gap: 15px;
+}
+
+.header-nav button {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.header-nav button:hover {
+  color: rgba(0, 0, 0, 0.5);
+  transform: translateY(-2px);
+}
+
+.header-nav button:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 35px;
+  right: 0;
+  background-color: #5aaae4;
+  border-radius: 8px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+  padding: 5px 0;
+  display: flex;
+  flex-direction: column;
+  min-width: 160px;
+  z-index: 2000;
+  opacity: 0;
+  transform: translateY(-10px);
+  animation: fadeIn 0.55s forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-menu button {
+  background: transparent;
+  border: none;
+  color: white;
+  text-align: right;
+  padding: 8px 15px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.dropdown-menu button:hover {
+  background-color: rgba(255,255,255,0.2);
+}
+
+
+.logout-button {
+  font-weight: bold;
+  color: #ffdddd;
+}
+
+.logout-button:hover {
+  color: #ff5555;
+  transform: scale(1.05);
+}

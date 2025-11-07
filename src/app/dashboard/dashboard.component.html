@@ -1,0 +1,27 @@
+<div class="dashboard">
+  <div class="header">
+    <nav class="header-nav">
+      <button class="logout-button" routerLink="/login" (click)="logout()">התנתק</button>
+      <div class="nav-buttons">
+        <button class="events" routerLink="/dashboard/events">אירועים</button>
+
+
+
+        <div class="dropdown" (click)="toggleEmployeesMenu($event)">
+          <button class="employees">
+            עובדים
+          </button>
+          <div class="dropdown-menu" *ngIf="showEmployeesMenu" (mouseleave)="closeMenuDelayed()">
+            <button routerLink="/dashboard/employees" (click)="closeMenu()">רשימת עובדים</button>
+            <button routerLink="/dashboard/employees/settings" (click)="closeMenu()">הגדרות</button>
+          </div>
+        </div>
+
+
+        <button class="salary" routerLink="/dashboard/salary">מערכת שכר</button>
+        <button class="home" routerLink="/dashboard">בית</button>
+      </div>
+    </nav>
+  </div>
+  <router-outlet></router-outlet>
+</div>

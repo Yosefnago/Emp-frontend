@@ -1,0 +1,36 @@
+<div class="buttons-container">
+  <input
+    type="search"
+    class="search"
+    placeholder="חיפוש"
+    [(ngModel)]="searchTerm"
+    (input)="applyFilter()"
+  />
+  <button class="add-employee-btn" routerLink="/dashboard/add">הוספת עובד</button>
+</div>
+
+
+
+<div class="employee-grid">
+  <div class="employee-grid-header">
+    <div class="grid-cell">אימייל</div>
+    <div class="grid-cell">פלאפון</div>
+    <div class="grid-cell">מחלקה</div>
+        <div class="grid-cell">תעודת זהות</div>
+    <div class="grid-cell">שם עובד</div>
+  </div>
+
+  <div class="employee-grid-body">
+    <div class="grid-row"
+         *ngFor="let emp of filteredEmployees"
+         (click)="selectEmployee(emp)"
+         (dblclick)="goToEmployeeDetails(emp.personalId)"
+         [class.selected]="emp === selectedEmployee">
+      <div class="grid-cell">{{ emp.email }}</div>
+      <div class="grid-cell">{{ emp.phone }}</div>
+      <div class="grid-cell">{{ emp.department }}</div>
+      <div class="grid-cell">{{ emp.personalId }}</div>
+      <div class="grid-cell">{{ emp.firstName }}</div>
+    </div>
+  </div>
+</div>

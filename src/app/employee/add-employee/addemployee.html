@@ -1,0 +1,39 @@
+<div class="details-container">
+
+
+  <form class="employee-form">
+    <h2>כרטיס עובד</h2>
+    <div class="form-row">
+      <div class="form-field">
+        <input type="text" placeholder="שם עובד" class="employee-input" [(ngModel)]="employeeName" name="employeeName">
+      </div>
+      <div class="form-field">
+        <input type="text" placeholder="תעודת זהות" class="employee-input" [(ngModel)]="employeeId" name="employeeId">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-field">
+        <input type="text" placeholder="מס נייד" class="employee-input" [(ngModel)]="employeePhone" name="employeePhone">
+      </div>
+      <div class="form-field">
+        <input type="text" placeholder="מחלקה" class="employee-input" [(ngModel)]="employeeDepartment" name="employeeDepartment">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-field">
+        <input type="text" placeholder="כתובת" class="employee-input" [(ngModel)]="employeeAddress" name="employeeAddress">
+      </div>
+      <div class="form-field">
+        <input type="email" placeholder="אימייל" class="employee-input" [(ngModel)]="employeeEmail" name="employeeEmail">
+      </div>
+    </div>
+  </form>
+</div>
+
+
+
+<div class="image-employee"></div>
+
+<button class="save-btn" (click)="saveEmployee()" >שמור</button>

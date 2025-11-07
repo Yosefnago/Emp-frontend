@@ -1,0 +1,121 @@
+
+
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  background: linear-gradient(135deg, #ffffff, #ffffff, #ffffff);
+  background-size: cover;
+}
+
+.title{
+  font-family: "Arial";
+  position: absolute;
+  align-content: center;
+  top: 60px;
+  font-size: xx-large;
+  font-style: normal;
+  font-weight: bolder;
+  text-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.2),
+    0 4px 10px rgba(68, 244, 225, 0.4);
+
+
+}
+
+.login {
+  background: linear-gradient(135deg, #ffffff, #ffffff, #ffffff);
+  width: 400px;
+  height: 500px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  border-radius: 10px;
+  box-shadow: 0 20px 20px rgba(65, 94, 76, 0.5);
+}
+.username{
+
+  width: 300px;
+  border: none;
+  border-bottom: 1px solid #999;
+  top: 200px;
+  outline: none;
+  position: absolute;
+
+}
+.password-container {
+  width: 250px;
+}
+.password{
+  left: 50px;
+  width: 300px;
+  border: none;
+  border-bottom: 1px solid #999;
+  top: 260px;
+  outline: none;
+  position: absolute;
+}
+.toggle-btn {
+
+  position: absolute;
+  top: 257px;
+  right: 38px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+
+.loginBTN {
+  font-size: 16px;
+  font-family: "Segoe UI", "Arial", sans-serif;
+  font-weight: bold;
+  background: linear-gradient(45deg, #5aaae4, #10b4d1, #6264d1);
+  background-size: 200% 200%;
+  width: 300px;
+  height: 45px;
+  border: none;
+  border-radius: 25px;
+  position: absolute;
+  top: 330px;
+  color: #fff;
+  cursor: pointer;
+
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  transition: all 0.4s ease;
+}
+
+
+.loginBTN:hover {
+  background-position: right center;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+  transform: translateY(-2px);
+}
+
+
+.loginBTN:active {
+  transform: translateY(1px) scale(0.98);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+}
+
+.register{
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  font-family: "Times New Roman", serif;
+  font-size: larger;
+  color: black;
+  align-self: end;
+  cursor: pointer;
+}
+.register:hover{
+  transform: translateY(-2px);
+}
+.register:active{
+  transform: translateY(1px) scale(0.98);
+}

@@ -1,0 +1,91 @@
+html, body {
+  position: relative;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+.number-of-employees-container{
+  display: flex;
+  right: 50px;
+  top: 100px;
+  border-radius: 15px;
+  position: absolute;
+  width: 400px;
+  height: 150px;
+  background: linear-gradient(145deg, #96f49a, #96f49a);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.number-of-employees-text{
+  color: #2b2b2b;
+  font-weight: 500;
+  font-size: 28px;
+  font-family: "Segoe UI", sans-serif;
+  letter-spacing: 0.5px;
+  margin-bottom: 80px;
+}
+
+.p {
+  color: #0078d7;
+  font-size: 40px;
+  font-weight: 600;
+  font-family: "Segoe UI", sans-serif;
+  text-shadow: 0 4px 12px rgba(0, 120, 215, 0.3);
+}
+
+.total-salaries-container{
+  display: flex;
+  right: 565px;
+  top: 100px;
+  border-radius: 15px;
+  position: absolute;
+  width: 400px;
+  height: 150px;
+  background: linear-gradient(145deg, #cac6c6, rgba(68, 244, 225, 0.4));
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+.total-salaries{
+  color: #2b2b2b;
+  font-weight: 500;
+  font-size: 28px;
+  font-family: "Segoe UI", sans-serif;
+  letter-spacing: 0.5px;
+  margin-bottom: 80px;
+}
+.number-of-departments-container{
+  display: flex;
+  left: 50px;
+  top: 100px;
+  border-radius: 15px;
+  position: absolute;
+  width: 400px;
+  height: 150px;
+  background: linear-gradient(145deg, #66cbef, #5aaae4);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+.number-of-departments-text{
+  color: #2b2b2b;
+  font-weight: 500;
+  font-size: 28px;
+  font-family: "Segoe UI", sans-serif;
+  letter-spacing: 0.5px;
+  margin-bottom: 80px;
+}

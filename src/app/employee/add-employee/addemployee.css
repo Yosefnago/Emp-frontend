@@ -1,0 +1,109 @@
+html, body {
+  position: relative;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1e1e1e;
+  margin-bottom: 25px;
+  text-align: right;
+  border-bottom: 1px solid #1e1e1e;
+}
+.details-container {
+  direction: rtl;
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  width: 800px;
+  height: 500px;
+  right: 90px;
+  top: 150px;
+  color: black;
+  background: linear-gradient(135deg, #91cfab, #8ebaea);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+.employee-form {
+
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+
+}
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  gap:20px;
+}
+.form-field {
+  flex: 1;
+}
+.employee-input {
+  width: 100%;
+  height: 38px;
+  border: none;
+  border-bottom: 1.5px solid #d0e0e3;
+  padding: 0 5px;
+  font-size: 15px;
+  background: transparent;
+  color: rgb(0, 0, 0);
+  transition: all 0.3s ease;
+}
+.employee-input:focus {
+  outline: none;
+  border-bottom: 2px solid #ffffff;
+  background: transparent;
+}
+.image-employee{
+  position: relative;
+  width: 300px;
+  height: 300px;
+  display: flex;
+  background-color: rgba(68, 244, 225, 0.4);
+  left: 150px;
+  top: 120px;
+  border-radius: 12px;
+
+}
+.save-btn {
+  position: absolute;
+  left: 225px;
+  top: 550px;
+
+  width: 160px;
+  height: 50px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #2196f3, #21cbf3);
+  box-shadow: 0 4px 15px rgba(33, 150, 243, 0.4);
+
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.save-btn:hover {
+  box-shadow: 0 6px 20px rgba(33, 150, 243, 0.6);
+  transform: translateY(-3px);
+  filter: brightness(1.1);
+}
+
+.save-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
+  filter: brightness(0.95);
+}
