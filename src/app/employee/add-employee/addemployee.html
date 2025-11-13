@@ -5,28 +5,43 @@
     <h2>כרטיס עובד</h2>
     <div class="form-row">
       <div class="form-field">
-        <input type="text" placeholder="שם עובד" class="employee-input" [(ngModel)]="employeeName" name="employeeName">
+        <input type="text" placeholder="שם" class="employee-input" [(ngModel)]="firstName" name="employeeFirstName">
       </div>
       <div class="form-field">
-        <input type="text" placeholder="תעודת זהות" class="employee-input" [(ngModel)]="employeeId" name="employeeId">
-      </div>
-    </div>
-
-    <div class="form-row">
-      <div class="form-field">
-        <input type="text" placeholder="מס נייד" class="employee-input" [(ngModel)]="employeePhone" name="employeePhone">
-      </div>
-      <div class="form-field">
-        <input type="text" placeholder="מחלקה" class="employee-input" [(ngModel)]="employeeDepartment" name="employeeDepartment">
+        <input type="text" placeholder="שם משפחה" class="employee-input" [(ngModel)]="lastName" name="employeeLastName">
       </div>
     </div>
 
     <div class="form-row">
       <div class="form-field">
-        <input type="text" placeholder="כתובת" class="employee-input" [(ngModel)]="employeeAddress" name="employeeAddress">
+        <input type="text" placeholder="תעודת זהות" class="employee-input" [(ngModel)]="personalId" name="employeeId">
       </div>
       <div class="form-field">
-        <input type="email" placeholder="אימייל" class="employee-input" [(ngModel)]="employeeEmail" name="employeeEmail">
+        <input type="text" placeholder="מס נייד" class="employee-input" [(ngModel)]="phone" name="employeePhone">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-field">
+        <input type="text" placeholder="כתובת" class="employee-input" [(ngModel)]="address" name="employeeAddress">
+      </div>
+      <div class="form-field">
+        <input type="email"  placeholder="אימייל" class="employee-input" [(ngModel)] ="email" name="employeeEmail" #employeeEmail="ngModel" required="true">
+        
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-field">
+        <input type="text" placeholder="תפקיד" class="employee-input" [(ngModel)]="position" name="employeePosition">
+      </div>
+      <div class="form-field">
+        <input type="text" placeholder="מחלקה" class="employee-input" [(ngModel)]="department" name="employeeDepartment">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-field">
+        <input type="text" placeholder="תאריך התחלה" class="employee-input" [(ngModel)]="hireDate" name="employeeHireDate">
       </div>
     </div>
   </form>
