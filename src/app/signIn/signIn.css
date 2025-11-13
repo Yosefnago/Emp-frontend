@@ -35,7 +35,15 @@
   width: 300px;
   border: none;
   border-bottom: 1px solid #999;
-  top: 200px;
+  top: 160px;
+  outline: none;
+  position: absolute;
+}
+.email{
+  width: 300px;
+  border: none;
+  border-bottom: 1px solid #999;
+  top: 210px;
   outline: none;
   position: absolute;
 }

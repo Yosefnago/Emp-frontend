@@ -1,8 +1,7 @@
 import {Component} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Observable} from 'rxjs';
 import {FormsModule} from '@angular/forms';
-import {MatSnackBar} from '@angular/material/snack-bar';
+import { NotificationService } from '../../services/notificationService.service';
+import { AddEmployeeRequest, EmployeeService } from '../../services/employee.service';
 
 
 
@@ -18,72 +17,53 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 })
 export class AddEmployeeComponent  {
 
-  private apiUrl = 'http://localhost:8090/employees/add';
-  private token: string = '';
+  firstName = '';
+  lastName = '';
+  personalId = '';
+  phone = '';
+  department = '';
+  address = '';
+  email = '';
+  position = '';
+  hireDate = '';
 
-  employeeName = '';
-  employeeId = '';
-  employeePhone = '';
-  employeeDepartment = '';
-  employeeAddress = '';
-  employeeEmail = '';
+  constructor(
+    private employeeService: EmployeeService,
+    private notificationService: NotificationService
+  ) { }
 
-  constructor(private http: HttpClient,private snackBar: MatSnackBar) { }
-
-  addEmployee(
-    employeeName:string,
-    employeeId:string,
-    employeePhone:string,
-    employeeDepartment:string,
-    employeeAddress:string,
-    employeeEmail:string
-    ):Observable<any> {
-
-    this.token = sessionStorage.getItem('token') ?? '';
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${this.token}`,
-      'Content-Type': 'application/json'
-    });
-
-    return this.http.post(this.apiUrl,
-      {
-        name: employeeName,
-        personalId: employeeId,     // ✅ personalId בדיוק כמו ב-Java, לא employeeId
-        phone: employeePhone,
-        department: employeeDepartment,
-        address: employeeAddress,
-        email: employeeEmail
-      },
-      { headers, responseType: 'text' }
-    );
-
-
-  }
   saveEmployee(): void {
-    this.addEmployee(
-      this.employeeName,
-      this.employeeId,
-      this.employeePhone,
-      this.employeeDepartment,
-      this.employeeAddress,
-      this.employeeEmail
-    ).subscribe({
-      next: res => {
-        this.snackBar.open(" עובד נוסף בהצלחה", '', {
-          duration: 5000,
-          horizontalPosition: 'right',
-          verticalPosition: 'bottom',
-          panelClass: ['custom-snackbar']
-        });
+    const request: AddEmployeeRequest = {
+      firstName: this.firstName,
+      lastName: this.lastName,
+      personalId: this.personalId,
+      phone: this.phone,
+      email: this.email,
+      department: this.department,
+      address: this.address,
+      position: this.position,
+      hireDate: this.hireDate
+    };
+
+    this.employeeService.addEmployee(request).subscribe({
+      next: () => {
+        this.notificationService.show('עובד נוסף בהצלחה', true);
+        this.resetFileds();
       },
-      error: err => {
-        this.snackBar.open(" שגיאה בשמירה: " + err.message, '', {
-          duration: 5000,
-          horizontalPosition: 'right',
-          verticalPosition: 'bottom',
-          panelClass: ['error-snackbar']
-        });
+      error: () => {
+        this.notificationService.show('שגיאה בהוספת עובד', false);
       }
     });
+  }
+  resetFileds(){
+    this.firstName = '';
+    this.lastName = '';
+    this.personalId = '';
+    this.phone = '';
+    this.department = '';
+    this.address = '';
+    this.email = '';
+    this.position = '';
+    this.hireDate = '';
   }
 }

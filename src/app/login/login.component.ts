@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { LoginService } from '../login.service';
+import { LoginService } from '../services/login.service';
 import {Router} from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import {firstValueFrom} from 'rxjs';
+import { NotificationService } from '../services/notificationService.service';
 
 
 @Component({
@@ -23,29 +23,30 @@ export class LoginComponent {
   constructor(
     private loginService: LoginService,
     private router: Router,
-  private snackBar: MatSnackBar
+    private notificationService: NotificationService
 
   ) {}
 
 
   async onLogin() {
+    
+    if(!this.username || !this.password){
+        this.notificationService.show('נא למלא את השדות בהתאם',false);
+        return;
+    } 
     try {
+
       const response = await firstValueFrom(this.loginService.login(this.username, this.password));
+
+      
+
       sessionStorage.setItem('token', response.token);
+      
       this.router.navigate(['/dashboard']);
-      this.snackBar.open("ברוך הבא", '', {
-        duration: 2000,
-        horizontalPosition: "left",
-        verticalPosition: "bottom",
-        panelClass: ['custom-snackbar']
-      });
+      this.notificationService.show('התחברת בהצלחה' ,true);
+    
     } catch (err) {
-      this.snackBar.open("שם משתמש או סיסמה שגויים", '', {
-        duration: 2000,
-        horizontalPosition: "center",
-        verticalPosition: "bottom",
-        panelClass: ['error-snackbar']
-      });
+      this.notificationService.show('שם משתמש או סיסמא שגויים',false);
     }
   }
   goToRegister() {

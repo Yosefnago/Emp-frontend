@@ -2,8 +2,9 @@ import {Component} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Router} from '@angular/router';
-import {RegisterService} from '../register.service';
+import {RegisterService} from '../services/register.service';
 import {CommonModule} from '@angular/common';
+import { NotificationService } from '../services/notificationService.service';
 
 
 @Component({
@@ -17,6 +18,7 @@ import {CommonModule} from '@angular/common';
 export class RegisterComponent {
 
   username: string = '';
+  email: string = '';
   password: string = '';
   confirmPassword: string = '';
   showPassword = false;
@@ -24,39 +26,25 @@ export class RegisterComponent {
   constructor(
     private registerService: RegisterService,
     private router:Router,
-    private snackBar:MatSnackBar
+    private notificationService: NotificationService
   ) {
   }
 
 
   onRegister() {
     if (this.password !== this.confirmPassword) {
-      this.snackBar.open('הסיסמאות אינן תואמות', '', {
-        duration: 2000,
-        horizontalPosition: 'left',
-        verticalPosition: 'bottom',
-        panelClass: ['custom-snackbar']
-      });
+      this.notificationService.show('הסיסמאות אינן זהות',false);
       return;
     }
 
-    this.registerService.register(this.username, this.password).subscribe({
-      next: (response) => {
-        this.snackBar.open('נרשמת בהצלחה', '', {
-          duration: 2000,
-          horizontalPosition: 'left',
-          verticalPosition: 'bottom',
-          panelClass: ['custom-snackbar']
-        });
+    this.registerService.register(this.username,this.email ,this.password).subscribe({
+
+      next: () => {
+        this.notificationService.show('נרשמת בהצלחה',true);
         this.router.navigate(['/login']);
       },
-      error: (err) => {
-        this.snackBar.open('שגיאה בהרשמה', '', {
-          duration: 2000,
-          horizontalPosition: 'left',
-          verticalPosition: 'bottom',
-          panelClass: ['custom-snackbar']
-        });
+      error: () => {
+        this.notificationService.show('שגיאה בהרשמה, נסה שוב במועד מאוחר יותר',false);
       }
     });
   }
