@@ -10,27 +10,69 @@
 </div>
 
 
+<div class="content-wrapper">
+    <div class="scrollable-content">
+      
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>שם עובד</th>
+              <th style="width: 15%; text-align: center;">אימייל</th>
+              <th style="width: 15%; text-align: center;">פלאפון</th>
+              <th style="width: 15%; text-align: center;">נוכחות</th>
+              <th style="width: 15%; text-align: center;">מחלקה</th>
+              <th style="width: 30%; text-align: center;">פעולות</th>
+            </tr>
+          </thead>
 
-<div class="employee-grid">
-  <div class="employee-grid-header">
-    <div class="grid-cell">אימייל</div>
-    <div class="grid-cell">פלאפון</div>
-    <div class="grid-cell">מחלקה</div>
-        <div class="grid-cell">תעודת זהות</div>
-    <div class="grid-cell">שם עובד</div>
-  </div>
+          <tbody>
+            @for (emp of filteredEmployees; track emp.email ) {
+              <tr 
+                (click)="selectEmployee(emp)"
+                (dblclick)="goToEmployeeDetails(emp.personalId)"
+                [class.selected-row]="selectedEmployee?.personalId === emp.personalId"
+              >
+                <td>{{ `${emp.firstName} ${emp.lastName}` }}</td>
 
-  <div class="employee-grid-body">
-    <div class="grid-row"
-         *ngFor="let emp of filteredEmployees"
-         (click)="selectEmployee(emp)"
-         (dblclick)="goToEmployeeDetails(emp.personalId)"
-         [class.selected]="emp === selectedEmployee">
-      <div class="grid-cell">{{ emp.email }}</div>
-      <div class="grid-cell">{{ emp.phone }}</div>
-      <div class="grid-cell">{{ emp.department }}</div>
-      <div class="grid-cell">{{ emp.personalId }}</div>
-      <div class="grid-cell">{{ emp.firstName }}</div>
+                <td style="text-align: center;">
+                  <span class="badge">
+                    {{ emp.email }}
+                  </span>
+                </td>
+
+                <td style="text-align: center;">
+                  <span class="badge">
+                  {{emp.phone}}
+                  </span>
+                </td>
+
+                <td style="text-align: center;">
+                  <span
+                    class="online-status"
+                    [ngClass]="emp.status ? 'online' : 'offline'"
+                  >
+                    
+                  </span>
+                  
+                </td>
+
+                <td class="badge">
+                  {{emp.department}}            
+                </td>
+                
+                <td class="actions-cell">
+                  
+                    <button class="action-btn"> עריכה</button>
+
+                    <button class="action-btn">נוכחות</button>
+                  
+                </td>
+              </tr>
+            }
+
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
 </div>

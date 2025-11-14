@@ -3,25 +3,69 @@
   <img ngSrc="images/worker.png" alt="Employee photo" width="200" height="200">
 </div>
 
-<div class="employee-details-container" *ngIf="employee">
-  <label class="employee-name"> שם עובד :  {{ employee.firstName }}</label>
-  <label class="employee-id"> ת.ז : {{ employee.personalId }} </label>
-  <label class="employee-phone"> מס' פלאפון : {{ employee.phone }}</label>
-  <label class="employee-email">{{ employee.email }} : אימייל  </label>
-  <label class="employee-department"> מחלקה : {{ employee.department }}</label>
-  <label class="employee-date-start"> תאריך התחלה : {{ employee.hireDate | date:'dd/MM/yyyy' }}</label>
+<div class="employee-details-container" >
+  <div class="nav-tabs">
+
+    <header>
+      <a [routerLink]="['/dashboard/employeeDetails',personalId]"  class="nav-tab active" >פרטי עובד</a>
+      <a [routerLink]="['/dashboard/salary', personalId]" class="nav-tab">פרטי שכר</a>
+      <a [routerLink]="['/dashboard/document',personalId]" class="nav-tab">מסמכים לעובד</a>
+    </header>
+    
+  </div>
+  <div class="content-wrapper">
+    <div class="row">
+    <div class="form-col">
+      <label>שם פרטי</label>
+      <input type="text" [value]="employee?.firstName" readonly>
+    </div>
+
+    <div class="form-col">
+      <label>שם משפחה</label>
+      <input type="text" [value]="employee?.lastName" readonly>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-col">
+      <label>ת.ז.</label>
+      <input type="text" [value]="employee?.personalId" readonly>
+    </div>
+
+    <div class="form-col">
+      <label>אימייל</label>
+      <input type="text" [value]="employee?.email" readonly>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-col">
+      <label>טלפון</label>
+      <input type="text" [value]="employee?.phone" readonly>
+    </div>
+
+    <div class="form-col">
+      <label>תפקיד</label>
+      <input type="text" [value]="employee?.position" readonly>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-col">
+      <label>מחלקה</label>
+      <input type="text" [value]="employee?.department" readonly>
+    </div>
+
+    <div class="form-col">
+      <label>כתובת</label>
+      <input type="text" [value]="employee?.address" readonly>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-col">
+    </div>
+  </div>
+  </div>
 </div>
 
-<div class="salary-employee-details" *ngIf="employee">
-  <label class="salary-per-hour">₪ {{ employee.salaryPerHour }} : שכר לשעה  </label>
-  <label class="salary-month"> שכר לחודש : ₪{{ employee.monthlySalary }}</label>
-  <label class="bonus">₪ בונוס : {{ employee.bonus }} </label>
-  <label class="pension">פנסיה : {{ employee.pensionFund }} </label>
-</div>
-
-
-
-<div class="settings">
-  <button class="edit-btn">עריכה</button>
-  <button class="attendance-btn">נוכחות</button>
-</div>

@@ -8,6 +8,8 @@ import {HomeComponent} from './home/home';
 import {SalaryComponent} from './salary/salary';
 import {AddEmployeeComponent} from './employee/add-employee/addemployee';
 import {EmployeeDetailsComponent} from './employee/employee-details/employeeDetailsComponent';
+import { EmployeeSalaryComponent } from './employee/employee-salary/employee-salary.component';
+import { EmployeeDocumentComponent } from './employee/employee-document/employee-document.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -19,11 +21,14 @@ export const routes: Routes = [
     children: [
       { path: 'employees', component: EmployeesComponent },
       { path: 'events', component: EventsComponent },
-      { path: 'salary', component: SalaryComponent },
+      { path: 'salaries', component: SalaryComponent },
       { path: 'home', component: HomeComponent },
       { path: 'add', component: AddEmployeeComponent },
       { path: '', redirectTo: 'home', pathMatch: 'full' },
-      { path: 'employees/:personalId', component: EmployeeDetailsComponent }
+      { path: 'employeeDetails/:personalId', component: EmployeeDetailsComponent },
+      { path: 'salary/:personalId', component: EmployeeSalaryComponent},
+      { path: 'document/:personalId', component: EmployeeDocumentComponent}
+
     ]
   }
 

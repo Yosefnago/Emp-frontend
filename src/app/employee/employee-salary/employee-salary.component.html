@@ -1,0 +1,74 @@
+
+<div class="image-employee">
+  <img ngSrc="images/worker.png" alt="Employee photo" width="200" height="200">
+</div>
+
+<div class="employee-details-container" >
+  <div class="nav-tabs">
+
+    <header>
+      <a [routerLink]="['/dashboard/employeeDetails',personalId]"  class="nav-tab" >פרטי עובד</a>
+      <a [routerLink]="['/dashboard/salary', personalId]" class="nav-tab active">פרטי שכר</a>
+      <a [routerLink]="['/dashboard/document',personalId]" class="nav-tab">מסמכים לעובד</a>
+    </header>
+    </div>
+    <div class="content-wrapper">
+
+  <div class="row">
+    <div class="form-col">
+      <label>שכר שעה</label>
+      <input type="text" [value]="employeeSalary?.salaryPerHour" readonly>
+    </div>
+
+    <div class="form-col">
+      <label>שכר חודשי</label>
+      <input type="text" [value]="employeeSalary?.monthlySalary" readonly>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-col">
+      <label>בונוס</label>
+      <input type="text" [value]="employeeSalary?.bonus" readonly>
+    </div>
+
+    <div class="form-col">
+      <label>שם בנק</label>
+      <input type="text" [value]="employeeSalary?.bankName" readonly>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-col">
+      <label>מס' חשבון</label>
+      <input type="text" [value]="employeeSalary?.bankAccount" readonly>
+    </div>
+
+    <div class="form-col">
+      <label>קרן פנסיה</label>
+      <input type="text" [value]="employeeSalary?.pensionFund" readonly>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-col">
+      <label>סה״כ שעות בחודש</label>
+      <input type="text" [value]="employeeSalary?.totalHoursMonth" readonly>
+    </div>
+
+    <div class="form-col">
+      <label>שעות נוספות</label>
+      <input type="text" [value]="employeeSalary?.overtimeHours" readonly>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-col">
+      <label>ימי חופשה</label>
+      <input type="text" [value]="employeeSalary?.vacationDays" readonly>
+    </div>
+    <div class="form-col"></div>
+  </div>
+  
+  </div>
+</div>

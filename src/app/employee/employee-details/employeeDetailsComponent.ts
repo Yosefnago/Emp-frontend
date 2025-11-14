@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {HttpClient} from '@angular/common/http';
 import {CommonModule, DatePipe, NgOptimizedImage} from '@angular/common';
 
@@ -11,7 +11,8 @@ import {CommonModule, DatePipe, NgOptimizedImage} from '@angular/common';
   imports: [
     CommonModule,
     NgOptimizedImage,
-    DatePipe
+    RouterLink
+    //DatePipe
   ],
   standalone: true
 })
@@ -19,7 +20,7 @@ import {CommonModule, DatePipe, NgOptimizedImage} from '@angular/common';
 export class EmployeeDetailsComponent implements OnInit {
 
   employee: any;
-
+  personalId!: string;
   constructor(
     private route: ActivatedRoute,
     private http: HttpClient
@@ -27,7 +28,8 @@ export class EmployeeDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadEmployee();
+    //this.loadEmployee();
+    this.personalId = this.route.snapshot.params['personalId']!;
   }
 
   private loadEmployee(): void {

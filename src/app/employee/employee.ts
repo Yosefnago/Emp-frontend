@@ -110,6 +110,6 @@ export class EmployeesComponent implements OnInit {
    * @param id - Unique employee identifier
    */
   goToEmployeeDetails(personalId: string) {
-    this.router.navigate(['/dashboard/employees',personalId]);
+    this.router.navigate(['/dashboard/employeeDetails',personalId]);
   }
 }
