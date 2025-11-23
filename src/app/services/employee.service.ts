@@ -28,15 +28,8 @@ export class EmployeeService {
 
         const token = sessionStorage.getItem('token') ?? '';
 
-        return this.http.post(
-            `${this.apiUrl}/addEmployee`,
-            request,
-            {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-            }
-        );
+        return this.http.post(`${this.apiUrl}/addEmployee`,request,{headers: {Authorization: `Bearer ${token}`}});
     }
+    
     
 }

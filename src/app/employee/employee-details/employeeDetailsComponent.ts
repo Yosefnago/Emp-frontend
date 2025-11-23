@@ -28,7 +28,7 @@ export class EmployeeDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    //this.loadEmployee();
+    this.loadEmployee();
     this.personalId = this.route.snapshot.params['personalId']!;
   }
 
