@@ -15,7 +15,7 @@
     
   </div>
     <div class="upload-container">
-      <Button class="upload-btn">העלאה </Button>
+      <Button (click)="openUploadDocumentModal()" class="upload-btn">העלאה </Button>
     </div>
    @defer (on idle) {
     <div class="table-wrapper">
@@ -28,7 +28,7 @@
         </thead>
         <tbody>
 
-          @for (doc of document; track doc.path) {
+          @for (doc of documents; track doc.path) {
           <tr>
             <td>
             <div class="item-name">
@@ -38,7 +38,7 @@
                       d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"
                     ></path>
                   </svg>
-                <span>{{ doc.name }}/</span>
+                  <span>{{ getFileName(doc.filePath) }}</span>
 
               } @else {
                   <svg viewBox="0 0 24 24">
@@ -66,5 +66,34 @@
       </table>
   </div>
 }
+<!-- Create Folder Modal -->
+  @if (showUploadDocumentModal) {
+    <div class="modal-overlay" (click)="closeUploadDocumentModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>העלאת קבצים</h2>
+          <button class="modal-close" (click)="closeUploadDocumentModal()">×</button>
+        </div>
+
+        <div class="modal-body">
+          
+          <label for="folderName">בחירת מסמך</label>
+          <input type="file" id="fileInput"  (change)="onFileChange($event)" multiple required [disabled]="isUploadingFile" />
+          <div class="modal-actions">
+            <button type="button" (click)="closeUploadDocumentModal()"  class="cancel-btn">
+              ביטול
+            </button>
+            <button type="button" (click)="uploadFile()" [disabled]="isUploadingFile" class="create-btn">
+              העלאה
+
+              @if (isUploadingFile) {
+                <span class="spinner"></span>
+              }
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
 </div>
 
