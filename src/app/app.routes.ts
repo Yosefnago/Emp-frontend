@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { RegisterComponent } from './signIn/signIn';
-import {EmployeesComponent} from './employee/employee';
+import {EmployeesComponent} from './employee/employees-dashboard/employee';
 import {EventsComponent} from './events/events';
 import {HomeComponent} from './home/home';
 import {SalaryComponent} from './salary/salary';

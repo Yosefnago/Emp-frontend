@@ -1,7 +1,8 @@
 import { CommonModule, NgOptimizedImage } from "@angular/common";
-import { HttpClient } from "@angular/common/http";
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, RouterLink } from "@angular/router";
+import { EmployeeService } from "../../services/employee.service";
+import { NotificationService } from "../../services/notificationService.service";
 
 
 @Component({
@@ -23,7 +24,7 @@ export class EmployeeSalaryComponent implements OnInit{
     employee: any;
     personalId!: string;
 
-    constructor(private route: ActivatedRoute,private http: HttpClient) {}
+    constructor(private route: ActivatedRoute,private employeeService: EmployeeService,private notificationService: NotificationService) {}
 
     ngOnInit(): void {
         
@@ -31,14 +32,9 @@ export class EmployeeSalaryComponent implements OnInit{
         this.loadEmployee();
     }
     private loadEmployee(): void {
-        
-        const id = this.route.snapshot.params['personalId'];
-        
-
-        this.http.get(`http://localhost:8090/salary/emp/${id}`, {
-            headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` }
-        }).subscribe({
-        next: (data) => this.employeeSalary = data,
+        this.employeeService.loadEmployeeSalary(this.personalId).subscribe({
+            next: (data) => this.employeeSalary = data,
+            error: () => this.notificationService.show('שגיאה בטעינת נתוני שכר', false)
         });
-  }
+    }
 }

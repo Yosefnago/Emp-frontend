@@ -76,7 +76,6 @@
         </div>
 
         <div class="modal-body">
-          
           <label for="folderName">בחירת מסמך</label>
           <input type="file" id="fileInput"  (change)="onFileChange($event)" multiple required [disabled]="isUploadingFile" />
           <div class="modal-actions">
@@ -86,10 +85,10 @@
             <button type="button" (click)="uploadFile()" [disabled]="isUploadingFile" class="create-btn">
               העלאה
 
-              @if (isUploadingFile) {
-                <span class="spinner"></span>
-              }
             </button>
+            @if (isUploadingFile) {
+                <span class="spinner"></span>
+            }
           </div>
         </div>
       </div>

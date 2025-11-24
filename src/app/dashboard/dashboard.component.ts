@@ -1,7 +1,6 @@
 import {Component, HostListener, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {Router, RouterLink, RouterOutlet} from '@angular/router';
-import {MatGridList, MatGridTile} from '@angular/material/grid-list';
 
 @Component({
   selector: 'app-dashboard',
@@ -10,7 +9,9 @@ import {MatGridList, MatGridTile} from '@angular/material/grid-list';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
+
 export class DashboardComponent implements OnInit {
+  
   username = sessionStorage.getItem('username') || 'משתמש';
   showEmployeesMenu = false;
   private closeTimeout: any;

@@ -1,7 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Router, RouterLink} from '@angular/router';
-import {HttpClient} from '@angular/common/http';
-import {CommonModule, DatePipe, NgOptimizedImage} from '@angular/common';
+import {ActivatedRoute, RouterLink} from '@angular/router';
+import {CommonModule, NgOptimizedImage} from '@angular/common';
+import { EmployeeService } from '../../services/employee.service';
+import { NotificationService } from '../../services/notificationService.service';
 
 
 @Component({
@@ -12,7 +13,6 @@ import {CommonModule, DatePipe, NgOptimizedImage} from '@angular/common';
     CommonModule,
     NgOptimizedImage,
     RouterLink
-    //DatePipe
   ],
   standalone: true
 })
@@ -21,24 +21,23 @@ export class EmployeeDetailsComponent implements OnInit {
 
   employee: any;
   personalId!: string;
+
   constructor(
     private route: ActivatedRoute,
-    private http: HttpClient
-  ) {
-  }
+    private employeeService:EmployeeService,
+    private notificationService: NotificationService
+  ) {}
 
   ngOnInit(): void {
+    this.personalId = this.route.snapshot.params['personalId'];
     this.loadEmployee();
-    this.personalId = this.route.snapshot.params['personalId']!;
   }
 
   private loadEmployee(): void {
-    const id = this.route.snapshot.paramMap.get('personalId');
-    this.http.get(`http://localhost:8090/employees/${id}`, {
-      headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` }
-    }).subscribe({
+    
+    this.employeeService.loadEmployee(this.personalId).subscribe({
       next: (data) => this.employee = data,
-      error: (err) => console.error('❌ שגיאה בטעינת עובד:', err)
+      error: () => this.notificationService.show('שגיאה בטעינת עובדים',false)
     });
   }
 }

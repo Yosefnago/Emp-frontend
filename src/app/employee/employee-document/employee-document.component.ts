@@ -1,8 +1,8 @@
 import { CommonModule, NgOptimizedImage } from "@angular/common";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Component } from "@angular/core";
 import { ActivatedRoute, RouterLink } from "@angular/router";
 import { NotificationService } from "../../services/notificationService.service";
+import { EmployeeService } from "../../services/employee.service";
 
 
 @Component({
@@ -26,8 +26,12 @@ export class EmployeeDocumentComponent{
     isUploadingFile = false;
     selectedFiles: File[] = [];
         
-    personalId!: string;
-    constructor(private route: ActivatedRoute,private http:HttpClient,private notificationService:NotificationService) {}
+    personalId: string = '';
+
+    constructor(
+        private route: ActivatedRoute,
+        private employeeService: EmployeeService,
+        private notificationService:NotificationService) {}
 
     ngOnInit(): void {
         this.personalId = this.route.snapshot.params['personalId'];
@@ -35,33 +39,25 @@ export class EmployeeDocumentComponent{
     }
 
     loadFiles(){
-        const id = this.route.snapshot.paramMap.get('personalId');
-        this.http.get<any[]>(`http://localhost:8090/files/${id}`, {
-            headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` }
-        }).subscribe({
+        this.employeeService.loadFiles(this.personalId).subscribe({
             next: (data) => this.documents = data,
-            
+            error:() => this.notificationService.show('שגיאה בטעינת מסמכים',false)
         });
     }
     uploadFile() {
         const input = document.getElementById('fileInput') as HTMLInputElement;
-        const id = this.route.snapshot.paramMap.get('personalId');
-        
+
         if (!input.files || input.files.length === 0) return;
 
-        const file = input.files[0];
         const formData = new FormData();
-        formData.append("file", file);
+        
+        Array.from(input.files).forEach(file => {
+            formData.append("file", file); 
+        });
 
         this.isUploadingFile = true;
 
-        this.http.post<any>(
-            `http://localhost:8090/files/upload/${id}`,
-            formData,
-            {
-                headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` }
-            }
-        ).subscribe({
+        this.employeeService.uploadFile(formData,this.personalId).subscribe({
             next: () => {
                 this.isUploadingFile = false;
                 this.notificationService.show("ההעלאה בוצעה בהצלחה", true);
@@ -71,7 +67,6 @@ export class EmployeeDocumentComponent{
             },
             error: () => {
                 this.isUploadingFile = false;
-                
                 this.notificationService.show('שגיאה בהעלאה', false);
             }
         });
@@ -83,21 +78,7 @@ export class EmployeeDocumentComponent{
     download(item: any, event: Event) {
         event.stopPropagation();
 
-        const token = sessionStorage.getItem('token');
-        
-        const headers = new HttpHeaders({
-        'Authorization': `Bearer ${token}` 
-        });
-
-        const config = {
-            headers: headers,
-            responseType: 'blob' as 'json' 
-        };
-
-        this.http.get<Blob>(
-            `http://localhost:8090/files/download/${item.name}`,
-            config 
-        ).subscribe({
+        this.employeeService.downloadFile(item.name).subscribe({
             next: (blob: Blob) => {
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement('a');
@@ -110,43 +91,30 @@ export class EmployeeDocumentComponent{
             error: () => this.notificationService.show('הורדה נכשלה', false)
         });
     }
-    deleteDoc(item: any, event: MouseEvent){
-        
+    deleteDoc(item: any, event: MouseEvent) {
         event.stopPropagation();
+
         if (!confirm(`Delete ${item.name}?`)) return;
 
-        this.http.delete(
-            `http://localhost:8090/files/delete/${item.name}`,
-            {
-                headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` }
-            }
-        ).subscribe({
+        this.employeeService.deleteFile(item.name).subscribe({
             next: () => {
                 this.notificationService.show('הקובץ נמחק בהצלחה', true);
                 this.loadFiles();
             },
             error: () => {
-                this.notificationService.show('שגיאה במחיקה הקובץ', false);
+                this.notificationService.show('שגיאה במחיקת הקובץ', false);
             }
         });
-
     }
     showDoc(item: any, event: MouseEvent) {
         event.stopPropagation();
 
-        this.http.get(
-            `http://localhost:8090/files/show/${item.id}`,
-            {
-                responseType: 'blob',
-                headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` }
-            }
-        ).subscribe({
+        this.employeeService.showFile(item.id).subscribe({
             next: (blob: Blob) => {
                 const url = window.URL.createObjectURL(blob);
                 window.open(url, "_blank");
             },
             error: () => {
-                
                 this.notificationService.show('אין הרשאה לפתיחת הקובץ', false);
             }
         });
