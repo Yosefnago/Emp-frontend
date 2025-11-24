@@ -10,11 +10,13 @@ import {AddEmployeeComponent} from './employee/add-employee/addemployee';
 import {EmployeeDetailsComponent} from './employee/employee-details/employeeDetailsComponent';
 import { EmployeeSalaryComponent } from './employee/employee-salary/employee-salary.component';
 import { EmployeeDocumentComponent } from './employee/employee-document/employee-document.component';
+import { ErrorComponent } from './error/error.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent } ,
+  { path: 'error', component: ErrorComponent },
   {
     path: 'dashboard',
     component: DashboardComponent,

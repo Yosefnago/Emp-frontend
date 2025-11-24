@@ -5,7 +5,7 @@ import { LoginService } from '../services/login.service';
 import {Router} from '@angular/router';
 import {firstValueFrom} from 'rxjs';
 import { NotificationService } from '../services/notificationService.service';
-
+import { WebSocketService } from '../services/web-socket.service';
 
 @Component({
   selector: 'app-root',
@@ -23,7 +23,8 @@ export class LoginComponent {
   constructor(
     private loginService: LoginService,
     private router: Router,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private wsService: WebSocketService
 
   ) {}
 
@@ -40,8 +41,11 @@ export class LoginComponent {
 
       
 
-      sessionStorage.setItem('token', response.token);
+      const token = response.token;
+      sessionStorage.setItem('token', token);
       
+      this.wsService.connect(token);
+
       this.router.navigate(['/dashboard']);
       this.notificationService.show('התחברת בהצלחה' ,true);
     

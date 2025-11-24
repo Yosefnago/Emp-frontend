@@ -1,0 +1,56 @@
+.template-2-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #212529; /* Dark background for contrast */
+    text-align: center;
+    color: white;
+}
+
+.content-box {
+    padding: 40px;
+}
+
+.status-code {
+    font-size: 8em;
+    font-weight: 700;
+    color: #ff4500; /* Bright orange/red */
+    line-height: 1em;
+    margin-bottom: 5px;
+}
+
+.status-title {
+    font-size: 2.5em;
+    font-weight: 500;
+    margin-bottom: 15px;
+    color: #ced4da;
+}
+
+.status-message {
+    font-size: 1.2em;
+    color: #adb5bd;
+    margin-bottom: 10px;
+}
+
+.status-detail {
+    font-size: 1em;
+    color: #6c757d;
+    margin-bottom: 40px;
+}
+
+.btn-home {
+    padding: 12px 25px;
+    border-radius: 5px;
+    font-weight: 600;
+    margin: 0 10px;
+    cursor: pointer;
+    border: none;
+    transition: opacity 0.3s;
+}
+.btn-home {
+    background-color: transparent;
+    border: 1px solid #adb5bd;
+    color: #adb5bd;
+}
+
