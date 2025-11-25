@@ -48,17 +48,17 @@ export class EmployeeService {
             formData
         );
     }
-    downloadFile(fileName: string) {
+    downloadFile(documentId: number) {
         return this.http.get(
-            `${this.apiUrlFiles}/download/${fileName}`,
+            `${this.apiUrlFiles}/download/${documentId}`,
             {
                 responseType: 'blob'
             }
         );
     }
-    deleteFile(fileName: string) {
+    deleteFile(documentId: number) {
         return this.http.delete(
-            `${this.apiUrlFiles}/delete/${fileName}`
+            `${this.apiUrlFiles}/delete/${documentId}`
         );
     }
     showFile(fileId: number) {

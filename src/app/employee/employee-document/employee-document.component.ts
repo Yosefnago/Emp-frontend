@@ -78,7 +78,7 @@ export class EmployeeDocumentComponent{
     download(item: any, event: Event) {
         event.stopPropagation();
 
-        this.employeeService.downloadFile(item.name).subscribe({
+        this.employeeService.downloadFile(item.id).subscribe({
             next: (blob: Blob) => {
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement('a');
@@ -94,9 +94,9 @@ export class EmployeeDocumentComponent{
     deleteDoc(item: any, event: MouseEvent) {
         event.stopPropagation();
 
-        if (!confirm(`Delete ${item.name}?`)) return;
+        if (!confirm(`Delete ${item.id}?`)) return;
 
-        this.employeeService.deleteFile(item.name).subscribe({
+        this.employeeService.deleteFile(item.id).subscribe({
             next: () => {
                 this.notificationService.show('הקובץ נמחק בהצלחה', true);
                 this.loadFiles();
