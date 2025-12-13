@@ -11,6 +11,7 @@ import {EmployeeDetailsComponent} from './employee/employee-details/employeeDeta
 import { EmployeeSalaryComponent } from './employee/employee-salary/employee-salary.component';
 import { EmployeeDocumentComponent } from './employee/employee-document/employee-document.component';
 import { ErrorComponent } from './error/error.component';
+import { EmployeeAttendence } from './employee/employee-attendence/employee-attendence';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -29,7 +30,8 @@ export const routes: Routes = [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'employeeDetails/:personalId', component: EmployeeDetailsComponent },
       { path: 'salary/:personalId', component: EmployeeSalaryComponent},
-      { path: 'document/:personalId', component: EmployeeDocumentComponent}
+      { path: 'document/:personalId', component: EmployeeDocumentComponent},
+      { path: 'attendence/:personalId', component: EmployeeAttendence}
 
     ]
   }

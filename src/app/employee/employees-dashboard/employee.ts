@@ -1,16 +1,16 @@
 import {Component, OnInit} from '@angular/core';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {Router, RouterLink} from '@angular/router';
 import { EmployeeService } from '../../services/employee.service';
 import { NotificationService } from '../../services/notificationService.service';
-
+import { MatIcon } from "@angular/material/icon";
 
 @Component({
   selector: 'app-employees',
   standalone: true,
-  imports: [CommonModule, MatTableModule, FormsModule, RouterLink],
+  imports: [CommonModule, MatTableModule, FormsModule, RouterLink, MatIcon],
   templateUrl: './employee.html',
   styleUrls: ['./employee.css']
 })
@@ -18,8 +18,9 @@ export class EmployeesComponent implements OnInit {
 
   
   searchTerm: string = '';
-  displayedColumns: string[] = ['name','personalId' ,'department', 'phone', 'email'];
-
+  displayedColumns: string[] = ['fullName', 'email', 'phone','address' ,'status', 'department', 'actions'];
+  dataSource = new MatTableDataSource<any>([]);
+  
   employees:any[]=[];
   selectedEmployee: any = null;
   filteredEmployees: any[] = [];
@@ -33,8 +34,7 @@ export class EmployeesComponent implements OnInit {
   loadEmployees() {
       this.employeeService.loadAllEmployees().subscribe({
           next: data => {
-              this.employees = data;
-              this.filteredEmployees = [...data];
+              this.dataSource.data = data;
           },
           error: err => { this.notificationService.show('שגיאה בטעינת עובדים',false) }
       });
@@ -44,7 +44,7 @@ export class EmployeesComponent implements OnInit {
   applyFilter() {
     const term = this.searchTerm.trim().toLowerCase();
     if (!term) {
-      this.filteredEmployees = [...this.employees];
+      this.dataSource.filter = term;
       return;
     }
 
@@ -55,6 +55,9 @@ export class EmployeesComponent implements OnInit {
     });
   }
 
+  viewAttendance(personalId: string) {
+    this.router.navigate(['dashboard/attendence/',personalId]);
+  }
  
   selectEmployee(emp: any) {
     this.selectedEmployee = emp;

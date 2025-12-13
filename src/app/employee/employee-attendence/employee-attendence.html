@@ -1,0 +1,57 @@
+<div class="header">
+
+    נוכחות לעובד : ככה
+
+</div>
+
+<div class="content-wrapper">
+
+        <div class="table-wrapper">
+            <div class="scrollable-content">
+            <table mat-table [dataSource]="dataSource">
+
+                <ng-container matColumnDef="day">
+                    <th mat-header-cell *matHeaderCellDef>יום</th>
+                    <td mat-cell *matCellDef="let attendence">{{`${attendence.day}`}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="startTime">
+                    <th mat-header-cell *matHeaderCellDef>שעת התחלה</th>
+                    <td mat-cell *matCellDef="let attendence">{{`${attendence.startTime}`}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="endTime">
+                    <th mat-header-cell *matHeaderCellDef>שעת סיום</th>
+                    <td mat-cell *matCellDef="let attendence">{{`${attendence.endTime}`}}</td>
+                </ng-container>
+                <ng-container matColumnDef="totalTime">
+                    <th mat-header-cell *matHeaderCellDef>סה"כ שעות</th>
+                    <td mat-cell *matCellDef="let attendence">{{`${attendence.totalTime}`}}</td>
+                </ng-container>
+                <ng-container matColumnDef="typeOfattend">
+                    <th mat-header-cell *matHeaderCellDef>סוג נוכחות</th>
+                    <td mat-cell *matCellDef="let attendence">{{`${attendence.typeOfattend}`}}</td>
+                </ng-container>
+                <ng-container matColumnDef="status">
+                    <th mat-header-cell *matHeaderCellDef>הערות</th>
+                    <td mat-cell *matCellDef="let attendence">{{`${attendence.status}`}}</td>
+                </ng-container>
+                <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef>פעולות</th>
+                    <td mat-cell *matCellDef="let attendence">
+                        <button mat-button color="primary" (click)="onEdit()" aria-label="ערוך">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <button mat-button color="warn" (click)="onDelete()" aria-label="מחק">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+        </div>
+    </div>
+</div>

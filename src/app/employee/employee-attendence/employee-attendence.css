@@ -1,0 +1,88 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    height: 100%; 
+    direction: rtl; 
+    box-sizing: border-box; 
+}
+:host ::ng-deep .mat-mdc-header-row {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 10 !important;
+    background: #366c9b !important;
+}
+
+:host ::ng-deep .table-wrapper .mat-mdc-header-row {
+    background-color: #366c9b !important;
+}
+
+:host ::ng-deep .table-wrapper .mat-mdc-header-cell {
+    color: #ffffff !important;
+}
+.header {
+    padding: 20px;
+    font-family: 'Inter', sans-serif;
+    background-color: #f7f9fc;
+    width: 100%; 
+    direction: rtl;
+    flex-shrink: 0; 
+}
+.content-wrapper {
+    flex-grow: 1;
+    padding: 20px;
+    direction: rtl;
+}
+.table-wrapper {
+    flex: 1;
+    overflow-y: hidden;   
+    border-radius: 16px;
+    border: 1px solid #acaaaa;
+    margin-bottom: 20px;
+    direction: rtl;
+    box-shadow: 0 2px 4px #a0a0a0;
+    width: 98% !important;
+    margin-left: 1%;
+    height: 75vh;
+    
+}
+.table-wrapper table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    border-spacing: 0 !important;
+}
+.table-wrapper th,
+.table-wrapper td {
+    padding: 12px 8px;
+    vertical-align: middle;
+    border-bottom: 1px solid #a0a0a0; 
+}
+.table-wrapper thead th {
+    color: #000;
+    font-weight: 500;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+.table-wrapper thead tr {
+    background-color: #2a333b !important;
+}
+.table-wrapper table .mat-column-day {
+    width: 20%;
+    padding-right: 45px;
+    text-align: right;
+    
+}
+.table-wrapper table .mat-column-startTime,
+.table-wrapper table .mat-column-endTime,
+.table-wrapper table .mat-column-typeOfattend,
+.table-wrapper table .mat-column-status,
+.table-wrapper table .mat-column-actions{
+    width: 15%;
+    text-align: center;
+}
+.scrollable-content {
+    height: 100%;
+    overflow-y: auto;     
+    overflow-x: hidden;
+    min-height: 0;
+}
