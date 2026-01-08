@@ -46,7 +46,7 @@ export class LoginComponent {
       
       this.wsService.connect(token);
 
-      this.router.navigate(['/dashboard']);
+      this.router.navigate(['/home']);
       this.notificationService.show('התחברת בהצלחה' ,true);
     
     } catch (err) {

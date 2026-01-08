@@ -1,39 +1,38 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
 import { RegisterComponent } from './signIn/signIn';
-import {EmployeesComponent} from './employee/employees-dashboard/employee';
-import {EventsComponent} from './events/events';
-import {HomeComponent} from './home/home';
-import {SalaryComponent} from './salary/salary';
-import {AddEmployeeComponent} from './employee/add-employee/addemployee';
-import {EmployeeDetailsComponent} from './employee/employee-details/employeeDetailsComponent';
-import { EmployeeSalaryComponent } from './employee/employee-salary/employee-salary.component';
-import { EmployeeDocumentComponent } from './employee/employee-document/employee-document.component';
+import { EventsComponent } from './events/events';
+import { HomeComponent } from './home/home';
+import { DashboardComponent } from './dashboard/dashboard.component'; // ✅ הוסף את זה!
+import { SalaryComponent } from './salary/salary';
 import { ErrorComponent } from './error/error.component';
-import { EmployeeAttendence } from './employee/employee-attendence/employee-attendence';
+import { EmployeesComponent } from './employees/employees';
+import { DepartmentsComponent } from './departments/departments';
+import { AttendanceComponent } from './attendence/attendence';
+import { ProjectsComponent } from './projects/projects';
+import { ReportsComponent } from './reports/reports';
+import { SettingsComponent } from './settings/settings';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent } ,
+  { path: 'register', component: RegisterComponent },
   { path: 'error', component: ErrorComponent },
   {
-    path: 'dashboard',
-    component: DashboardComponent,
+    path: 'home',
+    component: HomeComponent,
     children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: 'dashboard', component: DashboardComponent }, 
       { path: 'employees', component: EmployeesComponent },
+      { path: 'departments', component: DepartmentsComponent },
+      { path: 'attendance', component: AttendanceComponent },
+      { path: 'salary', component: SalaryComponent },
+      { path: 'projects', component: ProjectsComponent },
+      { path: 'reports', component: ReportsComponent },
+      { path: 'settings', component: SettingsComponent },
       { path: 'events', component: EventsComponent },
-      { path: 'salaries', component: SalaryComponent },
-      { path: 'home', component: HomeComponent },
-      { path: 'add', component: AddEmployeeComponent },
-      { path: '', redirectTo: 'home', pathMatch: 'full' },
-      { path: 'employeeDetails/:personalId', component: EmployeeDetailsComponent },
-      { path: 'salary/:personalId', component: EmployeeSalaryComponent},
-      { path: 'document/:personalId', component: EmployeeDocumentComponent},
-      { path: 'attendence/:personalId', component: EmployeeAttendence}
-
     ]
-  }
-
+  },
+  { path: '**', redirectTo: 'error' }
 ];

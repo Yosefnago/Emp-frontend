@@ -9,18 +9,14 @@ export class HomeService {
     
     private apiUrlEmployee = 'http://localhost:8090/employees';
     private apiUrlSalary ='http://localhost:8090/salary';
+    private apiUrlDashboard = 'http://localhost:8090/dashboard';
 
     constructor(private http : HttpClient){}
 
-    loadNumberOfEmployees() {
-        return this.http.get<number>(
-            `${this.apiUrlEmployee}/loadNumberOfEmployees`
-        );
-    }
-
-    loadTotalSalaries() {
-        return this.http.get<number>(
-            `${this.apiUrlSalary}/salaries`
+    
+    loadDashboardStats() {
+        return this.http.get(
+            `${this.apiUrlDashboard}/stats`
         );
     }
 }

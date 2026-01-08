@@ -74,5 +74,10 @@ export class EmployeeService {
             `${this.apiUrlSalary}/emp/${personalId}`
         );
     }
+    deleteEmployee(personalId: string) {
+        return this.http.delete(
+            `${this.apiUrlEmployee}/delete/${personalId}`
+        );
+    }
     
 }

@@ -2,105 +2,394 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  width: 100vw;
-  background: linear-gradient(135deg, #00f260, #0575e6, #6a11cb);
-  background-size: cover;
-}
-.title{
-  font-family: "Arial";
-  position: absolute;
-  align-content: center;
-  top: 60px;
-  font-size: xx-large;
-  font-style: normal;
-  font-weight: bolder;
-
-
-
+  min-height: 100vh;
+  width: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  direction: rtl;
+  
 }
 
-.sign-in-container{
-  background-color: white;
-  width: 400px;
-  height: 500px;
+.register-container {
   display: flex;
   justify-content: center;
   align-items: center;
+  min-height: 100vh;
+  width: 100%;
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 50%, #667eea 100%);
   position: relative;
-  border-radius: 10px;
-  box-shadow: 0 20px 20px rgba(65, 94, 76, 0.5);
+  overflow: hidden;
 }
-.username{
-  width: 300px;
-  border: none;
-  border-bottom: 1px solid #999;
-  top: 160px;
-  outline: none;
-  position: absolute;
-}
-.email{
-  width: 300px;
-  border: none;
-  border-bottom: 1px solid #999;
-  top: 210px;
-  outline: none;
-  position: absolute;
-}
-.password{
-  left: 50px;
-  width: 300px;
-  border: none;
-  border-bottom: 1px solid #999;
-  top: 260px;
-  outline: none;
-  position: absolute;
-}
-.confirmpassword{
-  left: 50px;
-  width: 300px;
-  border: none;
-  border-bottom: 1px solid #999;
-  top: 320px;
-  outline: none;
-  position: absolute;
 
-}
-.toggle-btn {
-
+/* Decorative Background Elements */
+.bg-decoration {
   position: absolute;
-  top: 257px;
-  right: 38px;
+  border-radius: 50%;
+  opacity: 0.1;
+  animation: float 20s infinite ease-in-out;
+}
+
+.bg-decoration-1 {
+  width: 450px;
+  height: 450px;
+  background: white;
+  top: -120px;
+  right: -120px;
+  animation-delay: 0s;
+}
+
+.bg-decoration-2 {
+  width: 350px;
+  height: 350px;
+  background: white;
+  bottom: -100px;
+  left: -100px;
+  animation-delay: 7s;
+}
+
+.bg-decoration-3 {
+  width: 280px;
+  height: 280px;
+  background: white;
+  top: 50%;
+  right: 15%;
+  animation-delay: 14s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-30px) scale(1.1);
+  }
+}
+
+/* Register Card */
+.register-card {
+  background: white;
+  border-radius: 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 520px;
+  padding: 30px 36px;
+  position: relative;
+  z-index: 10;
+  animation: slideUp 0.6s ease-out;
+}
+
+
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Header Section */
+.register-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.logo-icon {
+  width: 70px;
+  height: 70px;
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  box-shadow: 0 8px 24px rgba(17, 153, 142, 0.4);
+}
+
+.title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 6px;
+  letter-spacing: -0.5px;
+}
+
+.subtitle {
+  font-size: 13px;
+  color: #666;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+/* Form Styles */
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.input-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  text-align: right;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  right: 16px;
+  color: #999;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.input-field {
+  width: 100%;
+  padding: 12px 44px 12px 14px;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  font-size: 14px;
+  color: #333;
+  transition: all 0.3s ease;
+  background: #f9fafb;
+  outline: none;
+}
+
+.input-field:focus {
+  border-color: #11998e;
+  background: white;
+  box-shadow: 0 0 0 4px rgba(17, 153, 142, 0.1);
+}
+
+.input-field::placeholder {
+  color: #9ca3af;
+}
+
+.toggle-password {
+  position: absolute;
+  left: 16px;
   background: none;
   border: none;
+  color: #999;
   cursor: pointer;
-  font-size: 15px;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  transition: color 0.3s ease;
+  z-index: 2;
 }
-.SaveButton{
-  font-size: 16px;
-  font-family: "Segoe UI", "Arial", sans-serif;
-  font-weight: bold;
-  background: linear-gradient(45deg, #5aaae4, #10b4d1, #6264d1);
-  background-size: 200% 200%;
-  width: 300px;
-  height: 45px;
+
+.toggle-password:hover {
+  color: #11998e;
+}
+
+/* Terms Section */
+.terms-section {
+  margin-top: -4px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox-input {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #11998e;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.checkbox-text {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.5;
+}
+
+.terms-link {
+  color: #11998e;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.terms-link:hover {
+  color: #0d7a6f;
+  text-decoration: underline;
+}
+
+/* Register Button */
+.register-btn {
+  width: 100%;
+  padding: 14px 20px;
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  color: white;
   border: none;
-  border-radius: 25px;
-  position: absolute;
-  top: 380px;
-  color: #fff;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
-
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-  transition: all 0.4s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(17, 153, 142, 0.4);
+  margin-top: 4px;
 }
-.SaveButton:hover{
-  background-position: right center;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+
+.register-btn:hover {
   transform: translateY(-2px);
-}
-.SaveButton:active{
-  transform: translateY(1px) scale(0.98);
-  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 8px 20px rgba(17, 153, 142, 0.5);
 }
 
+.register-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(17, 153, 142, 0.4);
+}
+
+.register-btn svg {
+  transition: transform 0.3s ease;
+}
+
+.register-btn:hover svg {
+  transform: translateX(-4px);
+}
+
+/* Login Section */
+.login-section {
+  text-align: center;
+  padding-top: 16px;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.login-text {
+  font-size: 14px;
+  color: #666;
+}
+
+.login-link {
+  font-size: 14px;
+  color: #11998e;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.login-link:hover {
+  color: #0d7a6f;
+  transform: translateY(-1px);
+}
+
+/* Responsive Design */
+@media (max-width: 576px) {
+  .register-card {
+    padding: 32px 24px;
+    border-radius: 20px;
+  }
+
+  .title {
+    font-size: 26px;
+  }
+
+  .subtitle {
+    font-size: 13px;
+  }
+
+  .logo-icon {
+    width: 64px;
+    height: 64px;
+  }
+
+  .register-btn {
+    padding: 14px 20px;
+  }
+
+  .input-field {
+    padding: 12px 44px 12px 14px;
+    font-size: 14px;
+  }
+
+  .register-form {
+    gap: 18px;
+  }
+}
+
+/* Loading State (Optional) */
+.register-btn.loading {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.register-btn.loading::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 2px solid white;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Password Strength Indicator (Optional Enhancement) */
+.password-strength {
+  height: 4px;
+  background: #e5e7eb;
+  border-radius: 2px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+
+.password-strength-bar {
+  height: 100%;
+  transition: all 0.3s ease;
+  border-radius: 2px;
+}
+
+.strength-weak {
+  width: 33%;
+  background: #ef4444;
+}
+
+.strength-medium {
+  width: 66%;
+  background: #f59e0b;
+}
+
+.strength-strong {
+  width: 100%;
+  background: #10b981;
+}

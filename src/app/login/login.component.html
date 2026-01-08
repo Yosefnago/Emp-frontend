@@ -1,31 +1,107 @@
 
+<div class="login-container">
+  <div class="login-card">
+    <!-- Logo/Icon Section -->
+    <div class="login-header">
+      <div class="logo-icon">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="white">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+      </div>
+      <h1 class="title">התחברות למערכת</h1>
+      <p class="subtitle">HRM System - ניהול משאבי אנוש</p>
+    </div>
 
-<div class="login">
+    <!-- Login Form -->
+    <form class="login-form">
+      <!-- Username Field -->
+      <div class="input-group">
+        <label for="username" class="input-label">שם משתמש</label>
+        <div class="input-wrapper">
+          <span class="input-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </span>
+          <input
+            id="username"
+            [(ngModel)]="username"
+            name="username"
+            type="text"
+            class="input-field"
+            placeholder="הזן שם משתמש"
+            autocomplete="username" />
+        </div>
+      </div>
 
-  <span class="title">התחברות</span>
+      <!-- Password Field -->
+      <div class="input-group">
+        <label for="password" class="input-label">סיסמה</label>
+        <div class="input-wrapper">
+          <span class="input-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+          </span>
+          <input
+            id="password"
+            [(ngModel)]="password"
+            name="password"
+            [type]="showPassword ? 'text' : 'password'"
+            class="input-field"
+            placeholder="הזן סיסמה"
+            autocomplete="current-password" />
+          <button
+            type="button"
+            class="toggle-password"
+            (click)="showPassword = !showPassword"
+            [attr.aria-label]="showPassword ? 'הסתר סיסמה' : 'הצג סיסמה'">
+            <svg *ngIf="!showPassword" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            <svg *ngIf="showPassword" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+              <line x1="1" y1="1" x2="23" y2="23"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
 
-  <input [(ngModel)]="username" class= "username" placeholder="Username">
+      <!-- Remember Me & Forgot Password -->
+      <div class="form-options">
+        <label class="checkbox-label">
+          <input type="checkbox" class="checkbox-input" />
+          <span class="checkbox-text">זכור אותי</span>
+        </label>
+        <a href="#" class="forgot-password">שכחת סיסמה?</a>
+      </div>
 
+      <!-- Login Button -->
+      <button type="submit" class="login-btn" (click)="onLogin()">
+        <span>התחבר למערכת</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+          <polyline points="10 17 15 12 10 7"></polyline>
+          <line x1="15" y1="12" x2="3" y2="12"></line>
+        </svg>
+      </button>
 
-  <div class="password-container">
-    <input
-      [(ngModel)]="password"
-      [type]="showPassword ? 'text' : 'password'"
-      class="password"
-      placeholder="Password" />
-    <button
-      type="button"
-      class="toggle-btn"
-      (click)="showPassword = !showPassword">
-      {{ showPassword ? '🔓‍️' : '🔒‍' }}
-    </button>
+      <!-- Register Link -->
+      <div class="register-section">
+        <span class="register-text">אין לך חשבון?</span>
+        <a class="register-link" (click)="goToRegister()">
+          <strong>הרשם עכשיו</strong>
+        </a>
+      </div>
+    </form>
   </div>
 
-
-  <button type="submit" class="loginBTN"  (click)="onLogin()">התחבר</button>
-  <span (click)="goToRegister()" class="register"><strong>הרשמה</strong></span>
-
+  <!-- Decorative Background Elements -->
+  <div class="bg-decoration bg-decoration-1"></div>
+  <div class="bg-decoration bg-decoration-2"></div>
+  <div class="bg-decoration bg-decoration-3"></div>
 </div>
-
-
-

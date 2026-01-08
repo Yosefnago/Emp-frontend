@@ -1,65 +1,38 @@
-import {Component, HostListener, OnInit} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import {Router, RouterLink, RouterOutlet} from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { HomeService } from '../services/home.service';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterOutlet],
+  imports: [],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-
 export class DashboardComponent implements OnInit {
-  
-  username = sessionStorage.getItem('username') || 'משתמש';
-  showEmployeesMenu = false;
-  private closeTimeout: any;
-  constructor(private router: Router) {}
 
-  toggleEmployeesMenu(event: MouseEvent) {
-    event.stopPropagation();
-    this.showEmployeesMenu = !this.showEmployeesMenu;
+  numberOfEmployees = 0;
+  numberOfAttendants = 0;
+  monthlySalaryTotal = 0;
+  projectsOnboard = 0;
+
+  constructor(private router: Router,private homeService:HomeService) {}
+
+  ngOnInit(): void {
+    this.loadStats();
   }
-
-  closeMenuDelayed() {
-    this.closeTimeout = setTimeout(() => {
-      this.showEmployeesMenu = false;
-    }, 400);
+  navigateTo(route: string) {
+    this.router.navigate(['/home', route]);
   }
-
-  closeMenu() {
-    clearTimeout(this.closeTimeout);
-    this.showEmployeesMenu = false;
+  formatNumber(num: number): string {
+    return num.toLocaleString('he-IL');
   }
-
-  @HostListener('document:click')
-  closeOnOutsideClick() {
-    this.showEmployeesMenu = false;
-  }
-
-
-  ngOnInit() {
-    const token = sessionStorage.getItem('token');
-
-
-    if (!token) {
-      this.router.navigate(['/login']);
-    }
-
-    window.history.pushState(null, '', window.location.href);
-    window.addEventListener('popstate', () => {
-      this.router.navigate(['/login']);
+  loadStats() {
+    this.homeService.loadDashboardStats().subscribe((stats: any) => {
+      this.numberOfEmployees = stats.numberOfEmployees;
+      this.numberOfAttendants = stats.numberOfAttendants;
+      this.monthlySalaryTotal = stats.monthlySalaryTotal;
+      this.projectsOnboard = stats.projectsOnboard;
     });
   }
-
-  logout() {
-
-    sessionStorage.removeItem('token');
-    sessionStorage.removeItem('username');
-
-
-    this.router.navigate(['/login']);
-  }
-
 }

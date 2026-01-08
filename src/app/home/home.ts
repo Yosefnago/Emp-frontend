@@ -1,43 +1,46 @@
-import {Component, OnInit} from '@angular/core';
-import {FormsModule} from '@angular/forms';
-import {HttpClient} from '@angular/common/http';
-import {CommonModule} from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { HomeService } from '../services/home.service';
-
 
 @Component({
   selector: 'app-home',
   standalone: true,
+  imports: [RouterOutlet],
   templateUrl: './home.html',
-  styleUrls: ['./home.css'],
-  imports: [
-    FormsModule,
-    CommonModule
-  ]
+  styleUrls: ['./home.css']
 })
-
-
 export class HomeComponent implements OnInit {
+  isSidebarCollapsed = false;
+  username = 'משתמש מערכת';
+  currentRoute = 'dashboard';
+  numberOfEmployees = 0;
+  numberOfAttendants = 0;
+  monthlySalaryTotal = 0;
+  projectsOnboard = 0;
   
-  numberofemployees: number = 0;
-  totalsalaries: number = 0;
+  constructor(private router: Router) {}
 
-  constructor(private homeService: HomeService) {}
-
-  ngOnInit(): void {
-    this.loadNumberOfEmployees();
-    this.loadTotalSalaries();
+  ngOnInit() {
+    // Track current route for active state
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((event: any) => {
+        const urlParts = event.url.split('/');
+        this.currentRoute = urlParts[urlParts.length - 1] || 'dashboard';
+      });
   }
 
-  loadNumberOfEmployees() {
-    this.homeService.loadNumberOfEmployees().subscribe({
-      next: (res: number) => this.numberofemployees = res
-    });
+  toggleSidebar() {
+    this.isSidebarCollapsed = !this.isSidebarCollapsed;
   }
 
-  loadTotalSalaries() {
-    this.homeService.loadTotalSalaries().subscribe({
-      next: (res: number) => this.totalsalaries = res
-    });
+  navigateTo(route: string) {
+    this.currentRoute = route;
+    this.router.navigate(['/home', route]);
+  }
+
+  onLogout() {
+    this.router.navigate(['/login']);
   }
 }
