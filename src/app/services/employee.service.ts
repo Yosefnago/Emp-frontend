@@ -3,15 +3,16 @@ import { Injectable } from "@angular/core";
 
 
 export interface AddEmployeeRequest {
-  firstName: string;
-  lastName: string;
-  personalId: string;
-  email: string;
-  phone: string;
-  position: string;
-  department: string;
-  address: string;
-  hireDate: string; 
+    firstName: string,
+    lastName: string,
+    personalId: string,
+    email: string,
+    phone: string,
+    address: string,
+    position: string,
+    department: string,
+    hireDate: Date
+    status: string
 }
 @Injectable({
     providedIn: 'root'
@@ -31,49 +32,14 @@ export class EmployeeService {
         );
     }
     addEmployee(request: AddEmployeeRequest) {
-        
         return this.http.post(`${this.apiUrlEmployee}/addEmployee`,request);
     }
 
     loadEmployee(personalId:string){
-        
+    
         return this.http.get(`${this.apiUrlEmployee}/${personalId}`);
     }
-    loadFiles(personalId:string){
-        return this.http.get<any[]>(`${this.apiUrlFiles}/${personalId}`)
-    }
-    uploadFile(formData: FormData, personalId: string) {
-        return this.http.post(
-            `http://localhost:8090/files/upload/${personalId}`,
-            formData
-        );
-    }
-    downloadFile(documentId: number) {
-        return this.http.get(
-            `${this.apiUrlFiles}/download/${documentId}`,
-            {
-                responseType: 'blob'
-            }
-        );
-    }
-    deleteFile(documentId: number) {
-        return this.http.delete(
-            `${this.apiUrlFiles}/delete/${documentId}`
-        );
-    }
-    showFile(fileId: number) {
-        return this.http.get(
-            `${this.apiUrlFiles}/show/${fileId}`,
-            {
-                responseType: 'blob'
-            }
-        );
-    }
-    loadEmployeeSalary(personalId: string) {
-        return this.http.get(
-            `${this.apiUrlSalary}/emp/${personalId}`
-        );
-    }
+    
     deleteEmployee(personalId: string) {
         return this.http.delete(
             `${this.apiUrlEmployee}/delete/${personalId}`

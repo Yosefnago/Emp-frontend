@@ -39,11 +39,9 @@ export class LoginComponent {
 
       const response = await firstValueFrom(this.loginService.login(this.username, this.password));
 
-      
-
       const token = response.token;
       sessionStorage.setItem('token', token);
-      
+      sessionStorage.setItem('username', this.username);
       this.wsService.connect(token);
 
       this.router.navigate(['/home']);

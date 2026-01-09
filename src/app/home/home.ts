@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { HomeService } from '../services/home.service';
 
 @Component({
   selector: 'app-home',
@@ -11,8 +10,8 @@ import { HomeService } from '../services/home.service';
   styleUrls: ['./home.css']
 })
 export class HomeComponent implements OnInit {
-  isSidebarCollapsed = false;
-  username = 'משתמש מערכת';
+  isSidebarCollapsed = true;
+  username = '';
   currentRoute = 'dashboard';
   numberOfEmployees = 0;
   numberOfAttendants = 0;
@@ -29,6 +28,7 @@ export class HomeComponent implements OnInit {
         const urlParts = event.url.split('/');
         this.currentRoute = urlParts[urlParts.length - 1] || 'dashboard';
       });
+    this.getUsername();
   }
 
   toggleSidebar() {
@@ -42,5 +42,13 @@ export class HomeComponent implements OnInit {
 
   onLogout() {
     this.router.navigate(['/login']);
+  }
+  getUsername() {
+    
+    const storedName = sessionStorage.getItem('username');
+    if (storedName) {
+      this.username = storedName;
+    }
+    
   }
 }

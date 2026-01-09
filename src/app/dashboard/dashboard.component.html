@@ -6,25 +6,21 @@
     <p class="page-subtitle">סקירה כללית של המערכת</p>
   </div>
   <div class="header-right">
-    <button class="header-btn">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="11" cy="11" r="8"></circle>
-        <path d="m21 21-4.35-4.35"></path>
-      </svg>
-    </button>
-    <button class="header-btn notification-btn">
+    <button class="header-btn notification-btn" (click)="openNotifications()">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
         <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
       </svg>
-      <span class="notification-badge">3</span>
+      @if (notificationCount > 0) {
+        <span class="notification-badge">{{ notificationCount }}</span>
+      }
     </button>
   </div>
 </header>
 
 <!-- Stats Cards -->
 <section class="stats-grid">
-  <div class="stat-card stat-card-blue">
+  <div class="stat-card stat-card-blue"  (click)="navigateTo('employees')">
     <div class="stat-header">
       <div class="stat-icon-wrapper">
         <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
@@ -126,47 +122,93 @@
   </div>
 </section>
 
-<!-- Recent Activity -->
+<!-- Recent Activity Section -->
 <section class="recent-activity">
   <div class="section-header">
     <h2 class="section-title">פעילות אחרונה</h2>
     <a href="#" class="view-all-link">צפה בהכל →</a>
   </div>
-  <div class="activity-list">
-    <div class="activity-item">
-      <div class="activity-icon activity-icon-add">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
-          <line x1="12" y1="5" x2="12" y2="19"></line>
-          <line x1="5" y1="12" x2="19" y2="12"></line>
-        </svg>
-      </div>
-      <div class="activity-content">
-        <p class="activity-text"><strong>עובד חדש נוסף:</strong> כהן יוסי</p>
-        <span class="activity-time">לפני 2 שעות</span>
-      </div>
+
+  
+  <!-- Activities List -->
+  @if (lastActivities.length > 0) {
+    <div class="activity-list">
+      @for (item of lastActivities; track $index) {
+        <div class="activity-item">
+          
+          <!-- Dynamic Icon Based on Action Type -->
+          @if (getActivityIconType(item.action) === 'add') {
+            <div class="activity-icon activity-icon-add">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </div>
+          }
+          @else if (getActivityIconType(item.action) === 'edit') {
+            <div class="activity-icon activity-icon-edit">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+              </svg>
+            </div>
+          }
+          @else if (getActivityIconType(item.action) === 'delete') {
+            <div class="activity-icon activity-icon-delete">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              </svg>
+            </div>
+          }
+          @else if (getActivityIconType(item.action) === 'approve') {
+            <div class="activity-icon activity-icon-approve">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+          }
+          @else {
+            <div class="activity-icon activity-icon-default">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+              </svg>
+            </div>
+          }
+
+          <!-- Activity Content with Parsed Message -->
+          <div class="activity-content">
+            <p class="activity-text"><strong>
+              {{ parseActivityMessage(item).label }}</strong>
+              @if (parseActivityMessage(item).details) {
+                <span class="activity-details">: {{ parseActivityMessage(item).details }}</span>
+              }
+            </p>
+            <span class="activity-time">
+              {{ formatRelativeTime(item.actionDate, item.actionTime) }}
+            </span>
+          </div>
+        </div>
+      }
     </div>
-    <div class="activity-item">
-      <div class="activity-icon activity-icon-edit">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
-          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-        </svg>
-      </div>
-      <div class="activity-content">
-        <p class="activity-text"><strong>עודכן:</strong> פרטי שכר למחלקת פיתוח</p>
-        <span class="activity-time">לפני 5 שעות</span>
-      </div>
+  }
+
+  <!-- Empty State -->
+  @else {
+    <div class="activity-empty">
+      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="16" x2="12" y2="12"></line>
+        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+      </svg>
+      <p>אין פעילות אחרונה להצגה</p>
     </div>
-    <div class="activity-item">
-      <div class="activity-icon activity-icon-check">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
-          <polyline points="20 6 9 17 4 12"></polyline>
-        </svg>
-      </div>
-      <div class="activity-content">
-        <p class="activity-text"><strong>אושר:</strong> דוח נוכחות חודש מרץ</p>
-        <span class="activity-time">אתמול</span>
-      </div>
-    </div>
-  </div>
+  }
 </section>
+
+<!-- Notifications Modal -->
+<app-notifications-modal
+  (close)="onNotificationsClose()">
+</app-notifications-modal>

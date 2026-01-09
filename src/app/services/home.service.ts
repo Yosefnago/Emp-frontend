@@ -1,5 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { Observable } from "rxjs";
+import { LastActivity } from "../model";
 
 @Injectable({
     providedIn: 'root'
@@ -7,8 +9,6 @@ import { Injectable } from "@angular/core";
 
 export class HomeService {
     
-    private apiUrlEmployee = 'http://localhost:8090/employees';
-    private apiUrlSalary ='http://localhost:8090/salary';
     private apiUrlDashboard = 'http://localhost:8090/dashboard';
 
     constructor(private http : HttpClient){}
@@ -17,6 +17,11 @@ export class HomeService {
     loadDashboardStats() {
         return this.http.get(
             `${this.apiUrlDashboard}/stats`
+        );
+    }
+    loadLastActivities(): Observable<LastActivity[]> {
+        return this.http.get<LastActivity[]>(
+            `${this.apiUrlDashboard}/activity`
         );
     }
 }

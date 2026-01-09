@@ -1,0 +1,203 @@
+@if (isVisible) {
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h2>הוסף עובד חדש</h2>
+        <button class="close-btn" (click)="closeModal()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="modal-body">
+        <form (ngSubmit)="onSubmit()">
+          
+          <!-- Personal Information Section -->
+          <div class="form-section">
+            <h3 class="section-title">פרטים אישיים</h3>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="firstName">שם פרטי <span class="required">*</span></label>
+                <input
+                  type="text"
+                  id="firstName"
+                  name="firstName"
+                  [(ngModel)]="employee.firstName"
+                  [class.error]="isFieldInvalid(employee.firstName)"
+                  placeholder="הזן שם פרטי"
+                />
+                @if (isFieldInvalid(employee.firstName)) {
+                  <span class="error-message">שדה חובה</span>
+                }
+              </div>
+
+              <div class="form-group">
+                <label for="lastName">שם משפחה <span class="required">*</span></label>
+                <input
+                  type="text"
+                  id="lastName"
+                  name="lastName"
+                  [(ngModel)]="employee.lastName"
+                  [class.error]="isFieldInvalid(employee.lastName)"
+                  placeholder="הזן שם משפחה"
+                />
+                @if (isFieldInvalid(employee.lastName)) {
+                  <span class="error-message">שדה חובה</span>
+                }
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="personalId">תעודת זהות <span class="required">*</span></label>
+                <input
+                  type="text"
+                  id="personalId"
+                  name="personalId"
+                  [(ngModel)]="employee.personalId"
+                  [class.error]="isFieldInvalid(employee.personalId)"
+                  placeholder="הזן מספר ת.ז"
+                  maxlength="9"
+                />
+                @if (isFieldInvalid(employee.personalId)) {
+                  <span class="error-message">שדה חובה</span>
+                }
+              </div>
+
+              <div class="form-group">
+                <label for="phone">טלפון <span class="required">*</span></label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  [(ngModel)]="employee.phone"
+                  [class.error]="isFieldInvalid(employee.phone)"
+                  placeholder="הזן מספר טלפון"
+                  maxlength="10"
+                />
+                @if (isFieldInvalid(employee.phone)) {
+                  <span class="error-message">שדה חובה</span>
+                }
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group full-width">
+                <label for="email">אימייל <span class="required">*</span></label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  [(ngModel)]="employee.email"
+                  [class.error]="isFieldInvalid(employee.email)"
+                  placeholder="example@company.com"
+                  email="true"
+                />
+                @if (isFieldInvalid(employee.email)) {
+                  <span class="error-message">שדה חובה</span>
+                }
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group full-width">
+                <label for="address">כתובת</label>
+                <input
+                  type="text"
+                  id="address"
+                  name="address"
+                  [(ngModel)]="employee.address"
+                  placeholder="רחוב, עיר"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Work Information Section -->
+          <div class="form-section">
+            <h3 class="section-title">פרטי עבודה</h3>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="position">תפקיד <span class="required">*</span></label>
+                <input
+                  type="text"
+                  id="position"
+                  name="position"
+                  [(ngModel)]="employee.position"
+                  [class.error]="isFieldInvalid(employee.position)"
+                  placeholder="הזן תפקיד"
+                />
+                @if (isFieldInvalid(employee.position)) {
+                  <span class="error-message">שדה חובה</span>
+                }
+              </div>
+
+              <div class="form-group">
+                <label for="department">מחלקה <span class="required">*</span></label>
+                <select
+                  id="department"
+                  name="department"
+                  [(ngModel)]="employee.department"
+                  [class.error]="isFieldInvalid(employee.department)"
+                >
+                  <option value="">בחר מחלקה</option>
+                  @for (dept of departments; track $index) {
+                    <option [value]="dept">{{ dept }}</option>
+                  }
+                </select>
+                @if (isFieldInvalid(employee.department)) {
+                  <span class="error-message">שדה חובה</span>
+                }
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="hireDate">תאריך תחילת עבודה <span class="required">*</span></label>
+                <input
+                  type="date"
+                  id="hireDate"
+                  name="hireDate"
+                  [(ngModel)]="employee.hireDate"
+                  [class.error]="isFieldInvalid(employee.hireDate)"
+                />
+                @if (isFieldInvalid(employee.hireDate)) {
+                  <span class="error-message">שדה חובה</span>
+                }
+              </div>
+
+              <div class="form-group">
+                <label for="status">סטטוס</label>
+                <select
+                  id="status"
+                  name="status"
+                  [(ngModel)]="employee.status"
+                >
+                  @for (status of statuses; track $index) {
+                    <option [value]="status.value">{{ status.label }}</option>
+                  }
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Modal Footer -->
+          <div class="modal-footer">
+            <button type="button" class="btn-cancel" (click)="closeModal()">
+              ביטול
+            </button>
+            <button type="submit" class="btn-submit">
+              הוסף עובד
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+}
