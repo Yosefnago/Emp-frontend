@@ -130,7 +130,7 @@
             </td>
             <td class="id-number">{{ employee.idNumber }}</td>
             <td class="email">{{ employee.email }}</td>
-            <td class="phone">{{ employee.phone }}</td>
+            <td class="phone">{{ employee.phoneNumber }}</td>
             <td>
               <span class="department-badge">{{ employee.department }}</span>
             </td>
@@ -142,7 +142,7 @@
             </td>
             <td>
               <div class="action-buttons">
-                <button class="action-btn view-btn" (click)="viewEmployee(employee)" title="צפייה">
+                <button class="action-btn view-btn" (click)="viewEmployeeDetails(employee.idNumber)" title="צפייה">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                     <circle cx="12" cy="12" r="3"></circle>

@@ -1,17 +1,17 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './signIn/signIn';
-import { EventsComponent } from './events/events';
 import { HomeComponent } from './home/home';
-import { DashboardComponent } from './dashboard/dashboard.component'; // ✅ הוסף את זה!
-import { SalaryComponent } from './salary/salary';
+import { DashboardComponent } from './dashboard/dashboard.component'; 
 import { ErrorComponent } from './error/error.component';
 import { EmployeesComponent } from './employees/employees';
-import { DepartmentsComponent } from './departments/departments';
-import { AttendanceComponent } from './attendence/attendence';
-import { ProjectsComponent } from './projects/projects';
-import { ReportsComponent } from './reports/reports';
-import { SettingsComponent } from './settings/settings';
+import { EmployeeDetailsComponent } from './employees/empployee-details/employee-details.component';
+import { DepartmentComponent } from './departments/department.component';
+import { AttendanceComponent } from './attendence/attendance.component';
+import { SalaryComponent } from './salary/salary.component';
+import { EventsComponent } from './events/events.component';
+import { ReportsComponent } from './reports/reports.component';
+import { SettingsComponent } from './settings/settings.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -25,13 +25,13 @@ export const routes: Routes = [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: DashboardComponent }, 
       { path: 'employees', component: EmployeesComponent },
-      { path: 'departments', component: DepartmentsComponent },
+      { path: 'departments', component: DepartmentComponent },
       { path: 'attendance', component: AttendanceComponent },
       { path: 'salary', component: SalaryComponent },
-      { path: 'projects', component: ProjectsComponent },
       { path: 'reports', component: ReportsComponent },
       { path: 'settings', component: SettingsComponent },
       { path: 'events', component: EventsComponent },
+      { path: 'employees/details', component: EmployeeDetailsComponent }
     ]
   },
   { path: '**', redirectTo: 'error' }

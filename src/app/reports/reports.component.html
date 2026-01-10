@@ -1,0 +1,213 @@
+<!-- reports.component.html -->
+<div class="reports-container">
+  <!-- Header -->
+  <div class="reports-header">
+    <button class="back-button" (click)="goBack()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      <span>חזור</span>
+    </button>
+    <div class="header-content">
+      <h1 class="page-title">דוחות</h1>
+      <p class="page-subtitle">דוחות וניתוחים עסקיים</p>
+    </div>
+  </div>
+
+  <!-- Filters Section -->
+  <section class="filters-section">
+    <div class="filter-group">
+      <div class="filter-item">
+        <label class="filter-label">סוג דוח</label>
+        <select [(ngModel)]="selectedReportType" (change)="onReportTypeChange()" class="filter-select">
+          <option value="employees">דוח עובדים</option>
+          <option value="salary">דוח משכורות</option>
+          <option value="attendance">דוח נוכחות</option>
+          <option value="performance">דוח ביצועים</option>
+          <option value="departments">דוח מחלקות</option>
+        </select>
+      </div>
+
+      <div class="filter-item">
+        <label class="filter-label">תאריך התחלה</label>
+        <input type="date" [(ngModel)]="startDate" class="filter-select">
+      </div>
+
+      <div class="filter-item">
+        <label class="filter-label">תאריך סיום</label>
+        <input type="date" [(ngModel)]="endDate" class="filter-select">
+      </div>
+
+      <button class="filter-btn generate-btn" (click)="generateReport()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="12" y1="13" x2="12" y2="19"/>
+          <line x1="9" y1="16" x2="15" y2="16"/>
+        </svg>
+        צור דוח
+      </button>
+    </div>
+  </section>
+
+  <!-- Statistics Cards -->
+  <section class="stats-section">
+    <div class="stats-grid">
+      <div class="stat-card stat-card-blue">
+        <div class="stat-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+        </div>
+        <div class="stat-info">
+          <p class="stat-label">סה"כ עובדים</p>
+          <p class="stat-value">{{ getStatistics()?.totalEmployees }}</p>
+        </div>
+      </div>
+
+      <div class="stat-card stat-card-green">
+        <div class="stat-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
+        </div>
+        <div class="stat-info">
+          <p class="stat-label">סה"כ משכורות</p>
+          <p class="stat-value">₪{{ formatNumber(getStatistics()?.totalPayroll) }}</p>
+        </div>
+      </div>
+
+      <div class="stat-card stat-card-orange">
+        <div class="stat-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+            <path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/>
+          </svg>
+        </div>
+        <div class="stat-info">
+          <p class="stat-label">שיעור נוכחות</p>
+          <p class="stat-value">{{ getStatistics()?.attendanceRate }}%</p>
+        </div>
+      </div>
+
+      <div class="stat-card stat-card-purple">
+        <div class="stat-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+        </div>
+        <div class="stat-info">
+          <p class="stat-label">מחלקות פעילות</p>
+          <p class="stat-value">{{ getStatistics()?.activeDepartments }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Charts Section -->
+  <section class="charts-section">
+    <div class="chart-container">
+      <h3 class="chart-title">📊 התפלגות עובדים לפי מחלקה</h3>
+      <div class="chart-placeholder">
+        <div class="department-bars">
+          @for (dept of departmentData; track dept.name) {
+            <div class="bar-item">
+              <div class="bar-label">{{ dept.name }}</div>
+              <div class="bar-container">
+                <div class="bar" [style.width.%]="(dept.count / 15) * 100">
+                  {{ dept.count }}
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-container">
+      <h3 class="chart-title">💰 התפלגות משכורות לפי תפקיד</h3>
+      <div class="chart-placeholder">
+        <div class="salary-distribution">
+          @for (position of positionData; track position.name) {
+            <div class="distribution-item">
+              <span class="position-name">{{ position.name }}</span>
+              <span class="position-percentage">{{ position.percentage }}%</span>
+              <div class="progress-bar">
+                <div class="progress-fill" [style.width.%]="position.percentage"></div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Reports List -->
+  <section class="reports-list-section">
+    <h3 class="section-title">📄 דוחות אחרונים</h3>
+    <div class="reports-grid">
+      @for (report of generatedReports; track report.id) {
+        <div class="report-item">
+          <div class="report-header">
+            <div class="report-icon" [class]="'icon-' + report.type">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
+                <polyline points="14 2 14 8 20 8"/>
+              </svg>
+            </div>
+            <div class="report-info">
+              <h4 class="report-title">{{ report.title }}</h4>
+              <p class="report-date">{{ report.createdAt | date:'dd/MM/yyyy HH:mm' }}</p>
+            </div>
+          </div>
+          <div class="report-actions">
+            <button class="action-btn view-btn" (click)="viewReport(report.id)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+              </svg>
+              צפה
+            </button>
+            <button class="action-btn download-btn" (click)="downloadReport(report.id)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+              </svg>
+              הורד
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- Export Options -->
+  <section class="export-section">
+    <h3 class="section-title">📥 ייצוא דוח</h3>
+    <div class="export-buttons">
+      <button class="export-btn export-pdf" (click)="exportToPDF()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
+          <text x="8" y="16" font-size="8" fill="white">PDF</text>
+        </svg>
+        ייצוא כ-PDF
+      </button>
+      <button class="export-btn export-excel" (click)="exportToExcel()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
+        </svg>
+        ייצוא כ-Excel
+      </button>
+      <button class="export-btn export-csv" (click)="exportToCSV()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
+        </svg>
+        ייצוא כ-CSV
+      </button>
+    </div>
+  </section>
+</div>

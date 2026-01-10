@@ -75,12 +75,12 @@
                   type="tel"
                   id="phone"
                   name="phone"
-                  [(ngModel)]="employee.phone"
-                  [class.error]="isFieldInvalid(employee.phone)"
+                  [(ngModel)]="employee.phoneNumber"
+                  [class.error]="isFieldInvalid(employee.phoneNumber)"
                   placeholder="הזן מספר טלפון"
                   maxlength="10"
                 />
-                @if (isFieldInvalid(employee.phone)) {
+                @if (isFieldInvalid(employee.phoneNumber)) {
                   <span class="error-message">שדה חובה</span>
                 }
               </div>

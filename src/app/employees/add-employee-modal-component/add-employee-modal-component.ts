@@ -21,7 +21,7 @@ export class AddEmployeeModalComponent {
     lastName: '',
     personalId: '',
     email: '',
-    phone: '',
+    phoneNumber: '',
     address: '',
     position: '',
     department: '',
@@ -68,7 +68,7 @@ export class AddEmployeeModalComponent {
       lastName: '',
       personalId: '',
       email: '',
-      phone: '',
+      phoneNumber: '',
       address: '',
       position: '',
       department: '',
@@ -95,7 +95,7 @@ export class AddEmployeeModalComponent {
       this.employee.lastName &&
       this.employee.personalId &&
       this.employee.email &&
-      this.employee.phone &&
+      this.employee.phoneNumber &&
       this.employee.position &&
       this.employee.department &&
       this.employee.hireDate

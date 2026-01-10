@@ -1,0 +1,258 @@
+<!-- events.component.html -->
+<div class="events-container">
+  <!-- Header -->
+  <div class="events-header">
+    <button class="back-button" (click)="goBack()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      <span>חזור</span>
+    </button>
+    <div class="header-content">
+      <h1 class="page-title">אירועים</h1>
+      <p class="page-subtitle">ניהול אירועים וימים חשובים</p>
+    </div>
+  </div>
+
+  <!-- Tabs Navigation -->
+  <div class="tabs-section">
+    <div class="tabs-header">
+      <button 
+        class="tab-button"
+        [class.active]="activeTab === 'upcoming'"
+        (click)="switchTab('upcoming')">
+        אירועים קרובים
+      </button>
+      <button 
+        class="tab-button"
+        [class.active]="activeTab === 'past'"
+        (click)="switchTab('past')">
+        אירועים שעברו
+      </button>
+      <button 
+        class="tab-button"
+        [class.active]="activeTab === 'create'"
+        (click)="switchTab('create')">
+        + אירוע חדש
+      </button>
+    </div>
+  </div>
+
+  <!-- Upcoming Events Tab -->
+  @if (activeTab === 'upcoming') {
+    <section class="events-section">
+      <h3 class="section-title">📅 אירועים קרובים</h3>
+      
+      @if (upcomingEvents.length > 0) {
+        <div class="events-grid">
+          @for (event of upcomingEvents; track event.id) {
+            <div class="event-card" [class]="'priority-' + event.priority.toLowerCase()">
+              <div class="event-header">
+                <div class="event-date">
+                  <div class="date-day">{{ event.date | date:'dd' }}</div>
+                  <div class="date-month">{{ getMonthName(event.date) }}</div>
+                </div>
+                <div class="event-info">
+                  <h4 class="event-title">{{ event.title }}</h4>
+                  <p class="event-time">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                    {{ event.time }}
+                  </p>
+                </div>
+              </div>
+
+              <div class="event-body">
+                <p class="event-description">{{ event.description }}</p>
+                <div class="event-details">
+                  @if (event.location) {
+                    <span class="detail-badge">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5z"/>
+                      </svg>
+                      {{ event.location }}
+                    </span>
+                  }
+                  @if (event.attendees) {
+                    <span class="detail-badge">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                      </svg>
+                      {{ event.attendees }} משתתפים
+                    </span>
+                  }
+                </div>
+              </div>
+
+              <div class="event-footer">
+                <span class="priority-badge" [class]="'badge-' + event.priority.toLowerCase()">
+                  {{ translatePriority(event.priority) }}
+                </span>
+                <button class="event-action-btn" (click)="editEvent(event.id)">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z"></path>
+                    <path d="M20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      } @else {
+        <div class="empty-state">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+            <line x1="16" y1="2" x2="16" y2="6" />
+            <line x1="8" y1="2" x2="8" y2="6" />
+            <line x1="3" y1="10" x2="21" y2="10" />
+          </svg>
+          <p>אין אירועים קרובים</p>
+        </div>
+      }
+    </section>
+  }
+
+  <!-- Past Events Tab -->
+  @if (activeTab === 'past') {
+    <section class="events-section">
+      <h3 class="section-title">📆 אירועים שעברו</h3>
+      
+      @if (pastEvents.length > 0) {
+        <div class="events-timeline">
+          @for (event of pastEvents; track event.id) {
+            <div class="timeline-item">
+              <div class="timeline-marker"></div>
+              <div class="timeline-content">
+                <div class="event-card-past">
+                  <div class="past-event-header">
+                    <h4 class="event-title">{{ event.title }}</h4>
+                    <span class="past-date">{{ event.date | date:'dd/MM/yyyy' }}</span>
+                  </div>
+                  <p class="event-description">{{ event.description }}</p>
+                  @if (event.summary) {
+                    <div class="event-summary">
+                      <p class="summary-label">סיכום:</p>
+                      <p class="summary-text">{{ event.summary }}</p>
+                    </div>
+                  }
+                  <div class="event-details">
+                    @if (event.location) {
+                      <span class="detail-badge">📍 {{ event.location }}</span>
+                    }
+                    @if (event.attendees) {
+                      <span class="detail-badge">👥 {{ event.attendees }} משתתפים</span>
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      } @else {
+        <div class="empty-state">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+            <line x1="16" y1="2" x2="16" y2="6" />
+            <line x1="8" y1="2" x2="8" y2="6" />
+            <line x1="3" y1="10" x2="21" y2="10" />
+          </svg>
+          <p>אין אירועים שעברו</p>
+        </div>
+      }
+    </section>
+  }
+
+  <!-- Create Event Tab -->
+  @if (activeTab === 'create') {
+    <section class="create-event-section">
+      <h3 class="section-title">➕ אירוע חדש</h3>
+      
+      <form (ngSubmit)="createEvent()" #eventForm="ngForm" class="event-form">
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">שם האירוע</label>
+            <input 
+              type="text" 
+              [(ngModel)]="newEvent.title" 
+              name="title"
+              class="form-input"
+              placeholder="הזן שם האירוע"
+              required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">תאריך</label>
+            <input 
+              type="date" 
+              [(ngModel)]="newEvent.date" 
+              name="date"
+              class="form-input"
+              required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">שעה</label>
+            <input 
+              type="time" 
+              [(ngModel)]="newEvent.time" 
+              name="time"
+              class="form-input"
+              required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">עדיפות</label>
+            <select [(ngModel)]="newEvent.priority" name="priority" class="form-input">
+              <option value="LOW">נמוכה</option>
+              <option value="MEDIUM">בינונית</option>
+              <option value="HIGH">גבוהה</option>
+            </select>
+          </div>
+
+          <div class="form-group full-width">
+            <label class="form-label">תיאור</label>
+            <textarea 
+              [(ngModel)]="newEvent.description" 
+              name="description"
+              class="form-textarea"
+              placeholder="תיאור האירוע"
+              rows="4"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">מיקום</label>
+            <input 
+              type="text" 
+              [(ngModel)]="newEvent.location" 
+              name="location"
+              class="form-input"
+              placeholder="מיקום האירוע">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">מספר משתתפים</label>
+            <input 
+              type="number" 
+              [(ngModel)]="newEvent.attendees" 
+              name="attendees"
+              class="form-input"
+              placeholder="0">
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="submit-btn" [disabled]="!eventForm.valid">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+            </svg>
+            יצור אירוע
+          </button>
+          <button type="button" class="cancel-btn" (click)="resetForm()">ביטול</button>
+        </div>
+      </form>
+    </section>
+  }
+</div>

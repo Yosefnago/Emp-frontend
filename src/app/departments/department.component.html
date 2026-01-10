@@ -1,0 +1,131 @@
+<!-- department.component.html -->
+<div class="department-container">
+  <!-- Header with Department Selector -->
+  <div class="details-header">
+    <button class="back-button" (click)="goBack()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      <span>חזור</span>
+    </button>
+    <div class="header-content">
+      <select class="department-selector" [(ngModel)]="selectedDepartment" (change)="onDepartmentChange()">
+        <option value="">בחר מחלקה</option>
+        @for (dept of departments; track $index) {
+          <option [value]="dept">{{ dept }}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  @if (department) {
+    <!-- Statistics Cards -->
+    <section class="statistics-section">
+      <div class="stats-grid">
+        <div class="stat-card stat-card-orange">
+          <div class="stat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+          </div>
+          <div class="stat-info">
+            <p class="stat-label">תאריך הקמה</p>
+            <p class="stat-value">{{ department?.foundedDate }}</p>
+          </div>
+        </div>
+
+        <div class="stat-card stat-card-purple">
+          <div class="stat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+            </svg>
+          </div>
+          <div class="stat-info">
+            <p class="stat-label">תקציב שנתי</p>
+            <p class="stat-value">₪{{ formatNumber(department?.budget) }}</p>
+          </div>
+        </div>
+
+        <div class="stat-card stat-card-green">
+          <div class="stat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+              <path d="M20 10c0 7-3 11-8 11s-8-4-8-11" />
+              <circle cx="12" cy="4" r="3" />
+            </svg>
+          </div>
+          <div class="stat-info">
+            <p class="stat-label">מנהל המחלקה</p>
+            <p class="stat-value">{{ department?.manager }}</p>
+          </div>
+        </div>
+
+        <div class="stat-card stat-card-blue">
+          <div class="stat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+            </svg>
+          </div>
+          <div class="stat-info">
+            <p class="stat-label">סה"כ עובדים</p>
+            <p class="stat-value">{{ department?.totalEmployees }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Department Details -->
+    <section class="details-section">
+      <h3 class="details-header-title">📋 פרטי המחלקה</h3>
+      <div class="details-grid">
+        <div class="detail-item">
+          <label class="detail-label">שם המחלקה</label>
+          <p class="detail-value">{{ department?.name }}</p>
+        </div>
+        <div class="detail-item">
+          <label class="detail-label">קוד המחלקה</label>
+          <p class="detail-value">{{ department?.code }}</p>
+        </div>
+        <div class="detail-item">
+          <label class="detail-label">מנהל</label>
+          <p class="detail-value">{{ department?.manager }}</p>
+        </div>
+        <div class="detail-item">
+          <label class="detail-label">טלפון</label>
+          <p class="detail-value">{{ department?.phone }}</p>
+        </div>
+        <div class="detail-item">
+          <label class="detail-label">קומה</label>
+          <p class="detail-value">{{ department?.floor }}</p>
+        </div>
+        <div class="detail-item">
+          <label class="detail-label">דוא"ל</label>
+          <p class="detail-value">{{ department?.email }}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Employees List -->
+    <section class="employees-section">
+      <h3 class="details-header-title">👥 עובדי המחלקה</h3>
+      <div class="employees-grid">
+        @for (employee of department?.employees; track employee.id) {
+          <div class="employee-card">
+            <div class="employee-avatar">{{ getInitials(employee.name) }}</div>
+            <h4 class="employee-name">{{ employee.name }}</h4>
+            <p class="employee-position">{{ employee.position }}</p>
+            <p class="employee-email">{{ employee.email }}</p>
+          </div>
+        }
+      </div>
+    </section>
+  } @else {
+    <div class="empty-state">
+      <p>בחר מחלקה כדי להצג את הפרטים</p>
+    </div>
+  }
+</div>

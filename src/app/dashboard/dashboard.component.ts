@@ -16,7 +16,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   @ViewChild(NotificationsModalComponent) notificationsModal!: NotificationsModalComponent;
 
   numberOfEmployees = 0;
-  numberOfAttendants = 15;
+  numberOfAttendants = 0;
   monthlySalaryTotal = 10000;
   projectsOnboard = 5;
   notificationCount = 0;
@@ -65,6 +65,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   loadStats() {
     this.homeService.loadDashboardStats().subscribe((stats: any) => {
       this.numberOfEmployees = stats.numberOfEmployees;
+      this.numberOfAttendants = stats.numberOfAttendants;
     });
   }
 
@@ -78,18 +79,28 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
   getActivityIconType(action: string): string {
     const lowerAction = action.toLowerCase();
+    
+    // Check for add/create operations
     if (lowerAction.includes('add') || lowerAction.includes('create')) {
       return 'add';
     }
+    
+    // Check for update/edit operations
     if (lowerAction.includes('update') || lowerAction.includes('edit')) {
       return 'edit';
     }
+    
+    // Check for delete/remove operations
     if (lowerAction.includes('delete') || lowerAction.includes('remove')) {
       return 'delete';
     }
+    
+    // Check for approval operations
     if (lowerAction.includes('approve')) {
       return 'approve';
     }
+    
+    // Default for unknown operations
     return 'default';
   }
 

@@ -4,13 +4,14 @@ import { FormsModule } from '@angular/forms';
 import { EmployeeService } from '../services/employee.service';
 import { NotificationService } from '../services/notificationService.service';
 import { AddEmployeeModalComponent } from './add-employee-modal-component/add-employee-modal-component';
+import { Router } from '@angular/router';
 
 interface Employee {
   id: number;
   name: string;
   idNumber: string;
   email: string;
-  phone: string;
+  phoneNumber: string;
   department: string;
   attendanceStatus: 'present' | 'absent' | 'late' | 'vacation';
   selected?: boolean;
@@ -37,7 +38,7 @@ export class EmployeesComponent implements OnInit {
   isSearchExpanded = false;
   searchQuery = '';
 
-  constructor(private empService: EmployeeService,private notifService: NotificationService) {}
+  constructor(private empService: EmployeeService,private notifService: NotificationService,private router: Router) {}
   ngOnInit() {
     
     this.loadEmployees();
@@ -52,7 +53,7 @@ export class EmployeesComponent implements OnInit {
         name: emp.firstName.concat(' ',emp.lastName),
         idNumber: emp.personalId,
         email: emp.email,
-        phone: emp.phone,
+        phoneNumber: emp.phoneNumber,
         department: emp.department,
         attendanceStatus: emp.status
       }));
@@ -103,7 +104,7 @@ export class EmployeesComponent implements OnInit {
       this.employees = this.allEmployees.filter(emp => 
         emp.name.toLowerCase().includes(query) ||
         emp.email.toLowerCase().includes(query) ||
-        emp.phone.includes(query) ||
+        emp.phoneNumber.includes(query) ||
         emp.idNumber.includes(query) ||
         emp.department.toLowerCase().includes(query)
       );
@@ -153,17 +154,15 @@ export class EmployeesComponent implements OnInit {
     console.log(`${selectedCount} employees selected`);
   }
 
-  viewEmployee(employee: Employee) {
-    
-    this.empService.loadEmployee(employee.idNumber).subscribe(data => {
-      this.notifService.show('Employee details loaded successfully.',true);
+  viewEmployeeDetails(personalId: string): void {
+    this.router.navigate(['/home/employees/details'], {
+      queryParams: { id: personalId }
     });
-    
   }
 
   editEmployee(employee: Employee) {
     
-    this.empService.loadEmployee(employee.idNumber).subscribe(data => {
+    this.empService.getEmployeeByPersonalId(employee.idNumber).subscribe(data => {
       this.notifService.show('Employee data loaded for editing.',true);
     });
   }

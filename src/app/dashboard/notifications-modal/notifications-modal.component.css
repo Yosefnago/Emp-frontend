@@ -21,7 +21,7 @@
 .notifications-container {
   position: fixed;
   top: 80px;
-  left: 60px;
+  left: 100px;
   width: 420px;
   max-height: 600px;
   background: white;

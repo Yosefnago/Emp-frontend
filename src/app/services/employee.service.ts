@@ -35,11 +35,10 @@ export class EmployeeService {
         return this.http.post(`${this.apiUrlEmployee}/addEmployee`,request);
     }
 
-    loadEmployee(personalId:string){
-    
+    getEmployeeByPersonalId(personalId:string){
+
         return this.http.get(`${this.apiUrlEmployee}/${personalId}`);
     }
-    
     deleteEmployee(personalId: string) {
         return this.http.delete(
             `${this.apiUrlEmployee}/delete/${personalId}`

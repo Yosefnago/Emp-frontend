@@ -1,0 +1,421 @@
+<!-- Header Section -->
+<div class="employee-details-container">
+  <!-- Back Button & Title -->
+  <div class="details-header">
+    <button class="back-button" (click)="goBack()" aria-label="חזור">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      <span>חזור</span>
+    </button>
+    <div class="header-content">
+      <h1 class="employee-name">{{ employee?.firstName }} {{ employee?.lastName }}</h1>
+      <p class="personal-id">ת.ז: {{ employee?.personalId }}</p>
+    </div>
+  </div>
+
+  <!-- Employee Statistics Cards -->
+  <section class="statistics-section">
+    <div class="stats-grid">
+      <div class="stat-card stat-card-blue">
+        <div class="stat-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+            <path d="M20 10c0 7-3 11-8 11s-8-4-8-11" />
+            <circle cx="12" cy="4" r="3" />
+          </svg>
+        </div>
+        <div class="stat-info">
+          <p class="stat-label">תפקיד</p>
+          <p class="stat-value">{{ employee?.position }}</p>
+        </div>
+      </div>
+
+      <div class="stat-card stat-card-green">
+        <div class="stat-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+            <line x1="16" y1="2" x2="16" y2="6" />
+            <line x1="8" y1="2" x2="8" y2="6" />
+            <line x1="3" y1="10" x2="21" y2="10" />
+          </svg>
+        </div>
+        <div class="stat-info">
+          <p class="stat-label">תאריך התחלה</p>
+          <p class="stat-value">{{ employee?.startDate | date:'dd/MM/yyyy' }}</p>
+        </div>
+      </div>
+
+      <div class="stat-card stat-card-purple">
+        <div class="stat-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+            <path d="M23 3v6h-6" />
+            <path d="M1 21v-6h6" />
+            <path d="M3.51 9a9 9 0 0 1 14.85-4M20.49 15a9 9 0 0 1-14.85 4" />
+          </svg>
+        </div>
+        <div class="stat-info">
+          <p class="stat-label">חודשים בחברה</p>
+          <p class="stat-value">{{ calculateMonthsInCompany() }}</p>
+        </div>
+      </div>
+
+      <div class="stat-card stat-card-orange">
+        <div class="stat-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+            <path d="M6 9h12M6 9a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2M6 9v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V9" />
+            <path d="M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v1H9V5z" />
+          </svg>
+        </div>
+        <div class="stat-info">
+          <p class="stat-label">ימי חופש שנתיים</p>
+          <p class="stat-value">{{ employee?.annualDaysOff || '0' }} ימים</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Attendance Statistics -->
+  <section class="attendance-stats-section">
+    <h2 class="section-title">📊 נתוני נוכחות</h2>
+    <div class="attendance-stats-grid">
+      <div class="attendance-stat-card">
+        <div class="stat-badge badge-present">
+          <span class="badge-value">{{ attendanceStats?.presentDays || 0 }}</span>
+        </div>
+        <p class="stat-description">ימי נוכחות החודש</p>
+      </div>
+
+      <div class="attendance-stat-card">
+        <div class="stat-badge badge-absent">
+          <span class="badge-value">{{ attendanceStats?.absentDays || 0 }}</span>
+        </div>
+        <p class="stat-description">ימי בחירה</p>
+      </div>
+
+      <div class="attendance-stat-card">
+        <div class="stat-badge badge-sick">
+          <span class="badge-value">{{ attendanceStats?.sickDays || 0 }}</span>
+        </div>
+        <p class="stat-description">ימי מחלה</p>
+      </div>
+
+      <div class="attendance-stat-card">
+        <div class="stat-badge badge-vacation">
+          <span class="badge-value">{{ attendanceStats?.vacationDays || 0 }}</span>
+        </div>
+        <p class="stat-description">ימי חופשה</p>
+      </div>
+
+      <div class="attendance-stat-card">
+        <div class="stat-badge badge-rate">
+          <span class="badge-value">{{ attendanceStats?.attendanceRate || '0' }}%</span>
+        </div>
+        <p class="stat-description">שיעור נוכחות</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tabs Navigation -->
+  <div class="tabs-container">
+    <div class="tabs-header">
+      <button
+        class="tab-button"
+        [class.active]="activeTab === 'personal'"
+        (click)="switchTab('personal')">
+        👤 פרטים אישיים
+      </button>
+      <button
+        class="tab-button"
+        [class.active]="activeTab === 'documents'"
+        (click)="switchTab('documents')">
+        📄 מסמכים
+      </button>
+      <button
+        class="tab-button"
+        [class.active]="activeTab === 'salary'"
+        (click)="switchTab('salary')">
+        💰 משכורת
+      </button>
+      <button
+        class="tab-button"
+        [class.active]="activeTab === 'attendance'"
+        (click)="switchTab('attendance')">
+        📋 נוכחות
+      </button>
+    </div>
+
+    <!-- Personal Details Tab -->
+    @if (activeTab === 'personal') {
+      <div class="tab-content personal-details-tab">
+        <div class="details-section">
+          <h3 class="details-header-title">📋 פרטים אישיים</h3>
+          <div class="details-grid">
+            <div class="detail-item">
+              <label class="detail-label">שם פרטי</label>
+              <p class="detail-value">{{ employee?.firstName }}</p>
+            </div>
+            <div class="detail-item">
+              <label class="detail-label">שם משפחה</label>
+              <p class="detail-value">{{ employee?.lastName }}</p>
+            </div>
+            <div class="detail-item">
+              <label class="detail-label">תעודת זהות</label>
+              <p class="detail-value">{{ employee?.personalId }}</p>
+            </div>
+            <div class="detail-item">
+              <label class="detail-label">מין</label>
+              <p class="detail-value">{{ employee?.gender === 'M' ? 'זכר' : 'נקבה' }}</p>
+            </div>
+            <div class="detail-item">
+              <label class="detail-label">תאריך לידה</label>
+              <p class="detail-value">{{ employee?.birthDate | date:'dd/MM/yyyy' }}</p>
+            </div>
+            <div class="detail-item">
+              <label class="detail-label">מצב משפחתי</label>
+              <p class="detail-value">{{ translateMaritalStatus(employee?.maritalStatus) }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="details-section">
+          <h3 class="details-header-title">📞 פרטי קשר</h3>
+          <div class="details-grid">
+            <div class="detail-item">
+              <label class="detail-label">טלפון נייד</label>
+              <p class="detail-value">{{ employee?.phoneNumber }}</p>
+            </div>
+            <div class="detail-item">
+              <label class="detail-label">דוא"ל</label>
+              <p class="detail-value">{{ employee?.email }}</p>
+            </div>
+            <div class="detail-item">
+              <label class="detail-label">כתובת</label>
+              <p class="detail-value">{{ employee?.address }}</p>
+            </div>
+            <div class="detail-item">
+              <label class="detail-label">עיר</label>
+              <p class="detail-value">{{ employee?.city }}</p>
+            </div>
+            <div class="detail-item">
+              <label class="detail-label">מיקוד</label>
+              <p class="detail-value">{{ employee?.zipCode }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="details-section">
+          <h3 class="details-header-title">💼 פרטי משרה</h3>
+          <div class="details-grid">
+            <div class="detail-item">
+              <label class="detail-label">תפקיד</label>
+              <p class="detail-value">{{ employee?.position }}</p>
+            </div>
+            <div class="detail-item">
+              <label class="detail-label">מחלקה</label>
+              <p class="detail-value">{{ employee?.department }}</p>
+            </div>
+            <div class="detail-item">
+              <label class="detail-label">תאריך התחלה</label>
+              <p class="detail-value">{{ employee?.startDate | date:'dd/MM/yyyy' }}</p>
+            </div>
+            <div class="detail-item">
+              <label class="detail-label">סוג משרה</label>
+              <p class="detail-value">{{ translateEmploymentType(employee?.employmentType) }}</p>
+            </div>
+            <div class="detail-item">
+              <label class="detail-label">סטטוס</label>
+              <p class="detail-value">
+                <span [class]="'status-badge status-' + employee?.status?.toLowerCase()">
+                  {{ translateStatus(employee?.status) }}
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Documents Tab -->
+    @if (activeTab === 'documents') {
+      <div class="tab-content documents-tab">
+        <div class="documents-grid">
+          @if (documents && documents.length > 0) {
+            @for (doc of documents; track doc.id) {
+              <div class="document-card">
+                <div class="document-icon">
+                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <polyline points="14 2 14 8 20 8" />
+                    <line x1="12" y1="13" x2="12" y2="17" />
+                    <line x1="10" y1="15" x2="14" y2="15" />
+                  </svg>
+                </div>
+                <h4 class="document-name">{{ doc.name }}</h4>
+                <p class="document-type">{{ doc.type }}</p>
+                <p class="document-date">{{ doc.uploadDate | date:'dd/MM/yyyy' }}</p>
+                <div class="document-actions">
+                  <button class="doc-btn btn-view">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                      <circle cx="12" cy="12" r="3" />
+                    </svg>
+                    צפה
+                  </button>
+                  <button class="doc-btn btn-download">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                      <polyline points="7 10 12 15 17 10" />
+                      <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
+                    הורד
+                  </button>
+                </div>
+              </div>
+            }
+          } @else {
+            <div class="empty-state">
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <polyline points="14 2 14 8 20 8" />
+              </svg>
+              <p>אין מסמכים להצגה</p>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Salary Tab -->
+    @if (activeTab === 'salary') {
+      <div class="tab-content salary-tab">
+        <div class="salary-section">
+          <h3 class="details-header-title">💰 פרטי משכורת</h3>
+          <div class="details-grid">
+            <div class="detail-item">
+              <label class="detail-label">שכר שעתי</label>
+              <p class="detail-value">₪{{ formatNumber(employee?.baseSalary) }}</p>
+            </div>
+            <div class="detail-item">
+              <label class="detail-label">בונוס</label>
+              <p class="detail-value">₪{{ formatNumber(employee?.bonus) }}</p>
+            </div>
+            <div class="detail-item">
+              <label class="detail-label">קצבה</label>
+              <p class="detail-value">₪{{ formatNumber(employee?.allowance) }}</p>
+            </div>
+            <div class="detail-item">
+              <label class="detail-label">סה"כ משכורת החודש</label>
+              <p class="detail-value total-salary">₪{{ formatNumber(calculateTotalSalary()) }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="salary-section">
+          <h3 class="details-header-title">📊 היסטוריית משכורות</h3>
+          <div class="salary-history">
+            @if (salaryHistory && salaryHistory.length > 0) {
+              <div class="salary-table">
+                <div class="table-header">
+                  <div class="table-cell">חודש</div>
+                  <div class="table-cell">משכורת בסיסית</div>
+                  <div class="table-cell">בונוס</div>
+                  <div class="table-cell">ניכויים</div>
+                  <div class="table-cell">סה"כ</div>
+                </div>
+                @for (salary of salaryHistory; track salary.id) {
+                  <div class="table-row">
+                    <div class="table-cell">{{ salary.month }}/{{ salary.year }}</div>
+                    <div class="table-cell">₪{{ formatNumber(salary.baseSalary) }}</div>
+                    <div class="table-cell">₪{{ formatNumber(salary.bonus) }}</div>
+                    <div class="table-cell">₪{{ formatNumber(salary.deductions) }}</div>
+                    <div class="table-cell total-salary">₪{{ formatNumber(salary.total) }}</div>
+                  </div>
+                }
+              </div>
+            } @else {
+              <div class="empty-state">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5">
+                  <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                </svg>
+                <p>אין היסטוריית משכורות</p>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Attendance Tab -->
+    @if (activeTab === 'attendance') {
+      <div class="tab-content attendance-tab">
+        <div class="attendance-filters">
+          <h3 class="details-header-title">📋 רשומות נוכחות</h3>
+          <div class="filter-group">
+            <select [(ngModel)]="selectedYear" (change)="filterAttendance()" class="filter-select">
+              <option value="">בחר שנה</option>
+              @for (year of availableYears; track year) {
+                <option [value]="year">{{ year }}</option>
+              }
+            </select>
+            <select [(ngModel)]="selectedMonth" (change)="filterAttendance()" class="filter-select">
+              <option value="">בחר חודש</option>
+              <option value="1">ינואר</option>
+              <option value="2">פברואר</option>
+              <option value="3">מרץ</option>
+              <option value="4">אפריל</option>
+              <option value="5">מאי</option>
+              <option value="6">יוני</option>
+              <option value="7">יולי</option>
+              <option value="8">אוגוסט</option>
+              <option value="9">ספטמבר</option>
+              <option value="10">אוקטובר</option>
+              <option value="11">נובמבר</option>
+              <option value="12">דצמבר</option>
+            </select>
+            <button class="filter-reset-btn" (click)="clearFilters()">נקה סינון</button>
+          </div>
+        </div>
+
+        <div class="attendance-records">
+          @if (filteredAttendanceRecords && filteredAttendanceRecords.length > 0) {
+            <div class="attendance-table">
+              <div class="table-header">
+                <div class="table-cell">תאריך</div>
+                <div class="table-cell">יום בשבוע</div>
+                <div class="table-cell">שעת הגעה</div>
+                <div class="table-cell">שעת עזיבה</div>
+                <div class="table-cell">סטטוס</div>
+                <div class="table-cell">הערות</div>
+              </div>
+              @for (record of filteredAttendanceRecords; track record.id) {
+                <div class="table-row">
+                  <div class="table-cell">{{ record.date | date:'dd/MM/yyyy' }}</div>
+                  <div class="table-cell">{{ getDayOfWeek(record.date) }}</div>
+                  <div class="table-cell">{{ record.checkInTime || '-' }}</div>
+                  <div class="table-cell">{{ record.checkOutTime || '-' }}</div>
+                  <div class="table-cell">
+                    <span [class]="'attendance-badge badge-' + record.status?.toLowerCase()">
+                      {{ translateAttendanceStatus(record.status) }}
+                    </span>
+                  </div>
+                  <div class="table-cell">{{ record.notes || '-' }}</div>
+                </div>
+              }
+            </div>
+          } @else {
+            <div class="empty-state">
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                <line x1="16" y1="2" x2="16" y2="6" />
+                <line x1="8" y1="2" x2="8" y2="6" />
+                <line x1="3" y1="10" x2="21" y2="10" />
+              </svg>
+              <p>אין רשומות נוכחות</p>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>
