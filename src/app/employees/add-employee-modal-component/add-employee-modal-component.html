@@ -106,13 +106,37 @@
 
             <div class="form-row">
               <div class="form-group full-width">
-                <label for="address">כתובת</label>
+                <label for="address">רחוב</label>
                 <input
                   type="text"
                   id="address"
                   name="address"
                   [(ngModel)]="employee.address"
-                  placeholder="רחוב, עיר"
+                  placeholder="רחוב"
+                />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group full-width">
+                <label for="address">עיר</label>
+                <input
+                  type="text"
+                  id="address"
+                  name="address"
+                  [(ngModel)]="employee.city"
+                  placeholder="עיר"
+                />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group full-width">
+                <label for="address">מדינה</label>
+                <input
+                  type="text"
+                  id="address"
+                  name="address"
+                  [(ngModel)]="employee.country"
+                  placeholder="מדינה"
                 />
               </div>
             </div>

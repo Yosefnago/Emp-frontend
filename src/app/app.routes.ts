@@ -12,6 +12,7 @@ import { SalaryComponent } from './salary/salary.component';
 import { EventsComponent } from './events/events.component';
 import { ReportsComponent } from './reports/reports.component';
 import { SettingsComponent } from './settings/settings.component';
+import { AuditLogsComponent } from './audit/audit.logs';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -31,7 +32,8 @@ export const routes: Routes = [
       { path: 'reports', component: ReportsComponent },
       { path: 'settings', component: SettingsComponent },
       { path: 'events', component: EventsComponent },
-      { path: 'employees/details', component: EmployeeDetailsComponent }
+      { path: 'employees/details', component: EmployeeDetailsComponent },
+      { path: 'logs', component: AuditLogsComponent }
     ]
   },
   { path: '**', redirectTo: 'error' }

@@ -1,6 +1,4 @@
-/* ============================================
-   Employee Details Container & Layout
-   ============================================ */
+/* Employee Details Container & Layout */
 .employee-details-container {
   width: 100%;
   max-width: 1400px;
@@ -11,9 +9,7 @@
   min-height: 100vh;
 }
 
-/* ============================================
-   Header Section
-   ============================================ */
+/* Header Section */
 .details-header {
   display: flex;
   align-items: center;
@@ -64,9 +60,7 @@
   margin: 0;
 }
 
-/* ============================================
-   Statistics Section
-   ============================================ */
+/* Statistics Section */
 .statistics-section {
   margin-bottom: 40px;
 }
@@ -134,9 +128,7 @@
   margin: 0;
 }
 
-/* ============================================
-   Attendance Statistics Section
-   ============================================ */
+/* Attendance Statistics Section */
 .attendance-stats-section {
   margin-bottom: 40px;
   padding: 30px;
@@ -211,9 +203,7 @@
   font-weight: 600;
 }
 
-/* ============================================
-   Tabs Navigation
-   ============================================ */
+/* Tabs Navigation */
 .tabs-container {
   background: transparent;
   border-radius: 0;
@@ -268,9 +258,7 @@
   }
 }
 
-/* ============================================
-   Personal Details Tab
-   ============================================ */
+/* Personal Details Tab */
 .personal-details-tab {
   display: flex;
   flex-direction: column;
@@ -290,6 +278,70 @@
   margin: 0 0 20px 0;
   text-align: right;
   direction: rtl;
+}
+
+/* Section Header with Edit/Save Button */
+.section-header-with-button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 16px;
+  direction: rtl;
+}
+
+.section-header-with-button .details-header-title {
+  margin: 0;
+  flex: 1;
+  text-align: right;
+}
+
+.edit-save-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border: 1px solid #e0e7ff;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.edit-save-btn:hover {
+  transform: scale(1.05);
+}
+
+.btn-edit {
+  color: #3b82f6;
+  border-color: #3b82f6;
+  background: #eff6ff;
+}
+
+.btn-edit:hover {
+  background: #dbeafe;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+}
+
+.btn-save {
+  color: #10b981;
+  border-color: #10b981;
+  background: #f0fdf4;
+}
+
+.btn-save:hover {
+  background: #dcfce7;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+}
+
+.edit-save-btn svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 2;
 }
 
 .details-grid {
@@ -326,6 +378,24 @@
   direction: rtl;
 }
 
+.detail-input {
+  padding: 10px 12px;
+  border: 1px solid #e0e7ff;
+  border-radius: 6px;
+  font-size: 14px;
+  background: white;
+  color: #1a1a1a;
+  text-align: right;
+  direction: rtl;
+  transition: all 0.3s ease;
+}
+
+.detail-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
 .status-badge {
   display: inline-block;
   padding: 6px 12px;
@@ -350,9 +420,7 @@
   color: #854d0e;
 }
 
-/* ============================================
-   Documents Tab
-   ============================================ */
+/* Documents Tab */
 .documents-tab {
   padding: 30px;
 }
@@ -456,9 +524,7 @@
   box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 }
 
-/* ============================================
-   Salary Tab
-   ============================================ */
+/* Salary Tab */
 .salary-tab {
   padding: 30px;
 }
@@ -521,9 +587,7 @@
   color: #495057;
 }
 
-/* ============================================
-   Attendance Tab
-   ============================================ */
+/* Attendance Tab */
 .attendance-tab {
   padding: 30px;
 }
@@ -635,9 +699,7 @@
   color: #7c2d12;
 }
 
-/* ============================================
-   Empty State
-   ============================================ */
+/* Empty State */
 .empty-state {
   display: flex;
   flex-direction: column;
@@ -658,9 +720,7 @@
   margin: 0;
 }
 
-/* ============================================
-   Responsive Design
-   ============================================ */
+/* Responsive Design */
 @media (max-width: 1024px) {
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -748,6 +808,11 @@
   .tab-content {
     padding: 20px;
   }
+
+  .section-header-with-button {
+    flex-direction: column;
+    align-items: flex-end;
+  }
 }
 
 @media (max-width: 480px) {
@@ -796,16 +861,12 @@
   }
 }
 
-/* ============================================
-   Utility Classes
-   ============================================ */
+/* Utility Classes */
 .fade-in {
   animation: fadeIn 0.3s ease;
 }
 
-/* ============================================
-   Accessibility
-   ============================================ */
+/* Accessibility */
 button:focus,
 select:focus {
   outline: 2px solid #3b82f6;

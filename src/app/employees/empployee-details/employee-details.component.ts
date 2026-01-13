@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { EmployeeService } from '../../services/employee.service';
+import { EmployeeService, UpdateEmployeeRequest } from '../../services/employee.service';
+import { NotificationService } from '../../services/notificationService.service';
 
 /**
  * Employee Details Component
@@ -30,6 +31,7 @@ export class EmployeeDetailsComponent implements OnInit {
   
   // Employee data
   employee: any = null;
+  employeeBackup: any = null; // For reverting changes
   documents: any[] = [];
   salaryHistory: any[] = [];
   attendanceRecords: any[] = [];
@@ -55,10 +57,14 @@ export class EmployeeDetailsComponent implements OnInit {
   isLoading: boolean = true;
   errorMessage: string = '';
 
+  // Edit mode flags
+  isEditMode: boolean = false;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private employeeService: EmployeeService
+    private employeeService: EmployeeService,
+    private notificationService: NotificationService
   ) {}
 
   /**
@@ -98,22 +104,31 @@ export class EmployeeDetailsComponent implements OnInit {
     this.employeeService.getEmployeeByPersonalId(personalId).subscribe({
       next: (employee) => {
         this.employee = employee;
+        this.employeeBackup = JSON.parse(JSON.stringify(employee)); 
         this.initializeAvailableYears();
         this.loadAttendanceStats();
+        this.isLoading = false;
       },
       error: () => {
-        this.errorMessage = 'שגיאה בטעינת נתוני העובד';
         this.isLoading = false;
-        
       }
     });
 
-    }
+    // Load documents
+    
+
+    // Load salary history
+    
+
+    // Load attendance records
+    
+  }
+
   /**
    * Initialize available years for attendance filtering
    * Generates list of years from 3 years ago to current year
    */
-   initializeAvailableYears(): void {
+  initializeAvailableYears(): void {
     const currentYear = new Date().getFullYear();
     this.availableYears = [];
     
@@ -237,17 +252,84 @@ export class EmployeeDetailsComponent implements OnInit {
   }
 
   /**
+   * Toggle edit mode for employee details
+   * Enables/disables editing of personal information
+   */
+  toggleEditMode(): void {
+    this.isEditMode = !this.isEditMode;
+    
+    // If exiting edit mode without saving, revert changes
+    if (!this.isEditMode) {
+      this.employee = JSON.parse(JSON.stringify(this.employeeBackup));
+    }
+  }
+
+  /**
+   * Save changes to employee data
+   * Makes API request to update employee information
+   * Handles both personal details and salary information
+   */
+  saveChanges(): void {
+    if (!this.employee) {
+        return;
+    }
+
+    this.isLoading = true;
+
+    const updateRequest: UpdateEmployeeRequest = {
+        firstName: this.employee.firstName,
+        lastName: this.employee.lastName,
+        email: this.employee.email,
+        personalId: this.employee.personalId,
+        gender: this.employee.gender,
+        birthDate: this.employee.birthDate,
+        familyStatus: this.employee.familyStatus,
+        phone: this.employee.phone,
+        address: this.employee.address,
+        city: this.employee.city,
+        country: this.employee.country,
+        position: this.employee.position,
+        department: this.employee.department,
+        hireDate: this.employee.hireDate,
+        jobType: this.employee.jobType,
+        status: this.employee.status
+      };
+
+      this.employeeService.updateEmployee(updateRequest, this.employee.personalId).subscribe({
+          next: () => {
+              this.employeeBackup = JSON.parse(JSON.stringify(this.employee)); 
+              this.notificationService.show('הנתונים נשמרו בהצלחה', true);
+          },
+          error: () => {
+              this.notificationService.show('שגיאה בשמירת הנתונים', false);
+          },
+          complete: () => {
+              this.isLoading = false;
+              this.isEditMode = false;
+          }
+      });
+    }
+
+  /**
+   * Cancel editing and revert to backup
+   */
+  cancelEdit(): void {
+    this.employee = JSON.parse(JSON.stringify(this.employeeBackup));
+    this.isEditMode = false;
+  }
+
+  /**
    * Calculate the number of months the employee has been in the company
    * Based on employee's start date
    * 
    * @returns - Number of months (as string)
    */
   calculateMonthsInCompany(): string {
-    if (!this.employee?.startDate) {
+    if (!this.employee?.hireDate) {
       return '0';
     }
 
-    const startDate = new Date(this.employee.startDate);
+    const startDate = new Date(this.employee.hireDate);
     const now = new Date();
     
     let months = 0;
@@ -297,6 +379,7 @@ export class EmployeeDetailsComponent implements OnInit {
       'ACTIVE': 'פעיל',
       'INACTIVE': 'לא פעיל',
       'ON_LEAVE': 'בחופשה',
+      'ON LEAVE': 'בחופשה',
       'TERMINATED': 'הסתיים'
     };
     return statusMap[status?.toUpperCase()] || status;
@@ -327,7 +410,9 @@ export class EmployeeDetailsComponent implements OnInit {
   translateEmploymentType(type: string): string {
     const typeMap: { [key: string]: string } = {
       'FULL_TIME': 'משרה מלאה',
+      'FULL-TIME': 'משרה מלאה',
       'PART_TIME': 'משרה חלקית',
+      'PART-TIME': 'משרה חלקית',
       'TEMPORARY': 'זמני',
       'CONTRACTOR': 'קבלן'
     };

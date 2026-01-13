@@ -14,6 +14,26 @@ export interface AddEmployeeRequest {
     hireDate: Date
     status: string
 }
+
+export interface UpdateEmployeeRequest {
+    firstName: string;
+    lastName: string;
+    email: string;
+    personalId: string;
+    gender: string;
+    birthDate: string;
+    familyStatus: string;
+    phone: string;
+    address: string;
+    city: string;
+    country: string;
+    position: string;
+    department: string;
+    hireDate: string;
+    jobType: string;
+    status: string;
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -42,6 +62,12 @@ export class EmployeeService {
     deleteEmployee(personalId: string) {
         return this.http.delete(
             `${this.apiUrlEmployee}/delete/${personalId}`
+        );
+    }
+    updateEmployee(updatedData: UpdateEmployeeRequest, personalId: string) {
+        return this.http.put(
+            `${this.apiUrlEmployee}/updateEmployeeDetails/${personalId}`,
+            updatedData
         );
     }
     
