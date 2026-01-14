@@ -38,8 +38,8 @@ export class AttendanceComponent implements OnInit {
   this.allRecords = [
     {
       id: 1,
-      date: new Date(2025, 11, 15), // Changed to 2025
-      employeeName: 'יוסף נג',
+      date: new Date(2026, 11, 15), 
+      employeeName: 'יוסף נאגו',
       employeePosition: 'Senior Developer',
       checkInTime: '08:30',
       checkOutTime: '17:15',
@@ -48,7 +48,7 @@ export class AttendanceComponent implements OnInit {
     },
     {
       id: 2,
-      date: new Date(2025, 11, 16),
+      date: new Date(2026, 11, 16),
       employeeName: 'מרים כהן',
       employeePosition: 'QA Engineer',
       checkInTime: '09:00',
@@ -58,7 +58,7 @@ export class AttendanceComponent implements OnInit {
     },
     {
       id: 3,
-      date: new Date(2025, 11, 17),
+      date: new Date(2026, 11, 17),
       employeeName: 'אלחנן ברק',
       employeePosition: 'DevOps',
       checkInTime: null,
@@ -68,7 +68,7 @@ export class AttendanceComponent implements OnInit {
     },
     {
       id: 4,
-      date: new Date(2025, 11, 18),
+      date: new Date(2026, 11, 18),
       employeeName: 'שרה זילברמן',
       employeePosition: 'Frontend Developer',
       checkInTime: '08:15',
@@ -78,7 +78,7 @@ export class AttendanceComponent implements OnInit {
     },
     {
       id: 5,
-      date: new Date(2025, 11, 19),
+      date: new Date(2026, 11, 19),
       employeeName: 'מיכאל ספיר',
       employeePosition: 'Backend Developer',
       checkInTime: null,
@@ -88,7 +88,7 @@ export class AttendanceComponent implements OnInit {
     },
     {
       id: 6,
-      date: new Date(2025, 11, 22),
+      date: new Date(2026, 11, 22),
       employeeName: 'נעמי רוזנטל',
       employeePosition: 'UI/UX Designer',
       checkInTime: '08:45',
@@ -98,7 +98,7 @@ export class AttendanceComponent implements OnInit {
     },
     {
       id: 7,
-      date: new Date(2025, 11, 23),
+      date: new Date(2026, 11, 23),
       employeeName: 'יוסף נג',
       employeePosition: 'Senior Developer',
       checkInTime: null,
@@ -108,7 +108,7 @@ export class AttendanceComponent implements OnInit {
     },
     {
       id: 8,
-      date: new Date(2025, 11, 24),
+      date: new Date(2026, 11, 24),
       employeeName: 'מרים כהן',
       employeePosition: 'QA Engineer',
       checkInTime: '08:30',
@@ -118,7 +118,7 @@ export class AttendanceComponent implements OnInit {
     },
     {
       id: 9,
-      date: new Date(2025, 11, 5),
+      date: new Date(2026, 11, 5),
       employeeName: 'אלחנן ברק',
       employeePosition: 'DevOps',
       checkInTime: '08:00',
@@ -128,7 +128,7 @@ export class AttendanceComponent implements OnInit {
     },
     {
       id: 10,
-      date: new Date(2025, 11, 6),
+      date: new Date(2026, 11, 6),
       employeeName: 'שרה זילברמן',
       employeePosition: 'Frontend Developer',
       checkInTime: '09:15',

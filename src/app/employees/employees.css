@@ -539,3 +539,193 @@
     min-width: 900px;
   }
 }
+/* Employee Archive Modal Styles */
+.employee-archive-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Fade in animation for overlay */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Modal Content Container */
+.employee-archive-modal-content {
+  background: white;
+  border-radius: 16px;
+  padding: 32px;
+  width: 90%;
+  max-width: 420px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  text-align: center;
+}
+
+/* Slide up animation for modal */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Icon wrapper */
+.modal-icon-wrapper {
+  margin-bottom: 20px;
+}
+
+.modal-warning-icon {
+  color: #f59e0b;
+  animation: scaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Modal Title */
+.employee-archive-modal-content h2 {
+  margin: 0 0 12px 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #1f2937;
+  letter-spacing: -0.5px;
+}
+
+/* Modal Description */
+.employee-archive-modal-content p {
+  font-size: 15px;
+  color: #6b7280;
+  margin: 12px 0 0 0;
+  line-height: 1.6;
+}
+
+/* Action Buttons Container */
+.employee-archive-modal-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+/* Cancel Button */
+.employee-archive-modal-actions .cancel-btn {
+  flex: 1;
+  padding: 12px 16px;
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  font-family: inherit;
+}
+
+.employee-archive-modal-actions .cancel-btn:hover {
+  background: #e5e7eb;
+  border-color: #d1d5db;
+}
+
+.employee-archive-modal-actions .cancel-btn:active {
+  transform: scale(0.98);
+}
+
+/* Confirm Button - Destructive action */
+.employee-archive-modal-actions .confirm-btn {
+  flex: 1;
+  padding: 12px 16px;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+  font-family: inherit;
+}
+
+.employee-archive-modal-actions .confirm-btn:hover {
+  background: #dc2626;
+  box-shadow: 0 6px 20px rgba(220, 38, 38, 0.35);
+  transform: translateY(-1px);
+}
+
+.employee-archive-modal-actions .confirm-btn:active {
+  transform: translateY(0);
+}
+
+.employee-archive-modal-actions .confirm-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ===== RTL SUPPORT FOR HEBREW ===== */
+[dir="rtl"] .employee-archive-modal-content {
+  text-align: right;
+}
+
+[dir="rtl"] .employee-archive-modal-content h2 {
+  text-align: right;
+}
+
+[dir="rtl"] .employee-archive-modal-content p {
+  text-align: right;
+}
+
+[dir="rtl"] .employee-archive-modal-actions {
+  flex-direction: row-reverse;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 480px) {
+  .employee-archive-modal-content {
+    width: 95%;
+    padding: 24px;
+  }
+
+  .employee-archive-modal-content h2 {
+    font-size: 20px;
+  }
+
+  .employee-archive-modal-content p {
+    font-size: 14px;
+  }
+
+  .employee-archive-modal-actions .cancel-btn,
+  .employee-archive-modal-actions .confirm-btn {
+    padding: 11px 12px;
+    font-size: 14px;
+  }
+}

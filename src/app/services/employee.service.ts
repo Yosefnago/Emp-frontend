@@ -60,9 +60,7 @@ export class EmployeeService {
         return this.http.get(`${this.apiUrlEmployee}/${personalId}`);
     }
     deleteEmployee(personalId: string) {
-        return this.http.delete(
-            `${this.apiUrlEmployee}/delete/${personalId}`
-        );
+        return this.http.post(`${this.apiUrlEmployee}/delete/${personalId}`, {});
     }
     updateEmployee(updatedData: UpdateEmployeeRequest, personalId: string) {
         return this.http.put(

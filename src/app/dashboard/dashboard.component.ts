@@ -77,81 +77,60 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     });
   }
 
-  getActivityIconType(action: string): string {
-    const lowerAction = action.toLowerCase();
-    
-    // Check for add/create operations
-    if (lowerAction.includes('add') || lowerAction.includes('create')) {
-      return 'add';
+  getActivityIconType(action: string | undefined): string {
+
+    if (!action) {
+      return 'default';
+    }
+
+    const upperAction = action.toUpperCase();
+
+    switch(upperAction) {
+      case 'ADD':
+        return 'add';
+      case 'DELETE':
+        return 'delete';
+      case 'UPDATE':
+        return 'edit';
+      case 'ARCHIVE':
+        return 'delete';
+      case 'RESTORE':
+        return 'restore';
+      default:
+        return 'default';
+      
     }
     
-    // Check for update/edit operations
-    if (lowerAction.includes('update') || lowerAction.includes('edit')) {
-      return 'edit';
-    }
-    
-    // Check for delete/remove operations
-    if (lowerAction.includes('delete') || lowerAction.includes('remove')) {
-      return 'delete';
-    }
-    
-    // Check for approval operations
-    if (lowerAction.includes('approve')) {
-      return 'approve';
-    }
-    
-    // Default for unknown operations
-    return 'default';
   }
-
+  getActivityMessage(item: LastActivity) {
+    return this.parseActivityMessage(item);
+  }
   parseActivityMessage(activity: LastActivity): { label: string; details: string } {
-    const action = activity.action.toLowerCase();
+    const action = activity.action.toUpperCase();
     const userName = activity.fromUser;
-    let employeeName = '';
+    const affectedEmployee = activity.affectedEmployee || '';
 
-    if (action.includes('add new employee')) {
-      const parts = activity.action.split('add new employee');
-      if (parts.length > 1) {
-        employeeName = parts[1].trim();
-      }
-    } else if (action.includes('added new employee')) {
-      const parts = activity.action.split('added new employee');
-      if (parts.length > 1) {
-        employeeName = parts[1].trim();
-      }
-    }
+    const actionLabels: { [key: string]: string } = {
+      'ADD': 'הוסיף',
+      'DELETE': 'מחק',
+      'UPDATE': 'עדכן',
+      'ARCHIVE': 'העביר לארכיון',
+      'RESTORE': 'שחזר'
+    };
 
-    if (action.includes('add') && action.includes('employee')) {
+    const hebrewAction = actionLabels[action] || action;
+
+    // Return formatted message
+    if (affectedEmployee) {
       return {
-        label: `${userName} הוסיף עובד חדש`,
-        details: employeeName || ''
-      };
-    }
-
-    if (action.includes('update') && action.includes('employee')) {
-      return {
-        label: `${userName} עדכן עובד`,
-        details: employeeName || ''
-      };
-    }
-
-    if (action.includes('delete') && action.includes('employee')) {
-      return {
-        label: `${userName} מחק עובד`,
-        details: employeeName || ''
-      };
-    }
-
-    if (action.includes('approve')) {
-      return {
-        label: `${userName} אישר`,
-        details: ''
+        label: `${userName} ${hebrewAction}`,
+        details: affectedEmployee
       };
     }
 
     return {
-      label: `${userName}`,
-      details: activity.action
+      label: `${userName} ${hebrewAction}`,
+      details: ''
     };
   }
 

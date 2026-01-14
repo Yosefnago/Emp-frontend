@@ -2,37 +2,11 @@
   <!-- Header -->
   <div class="audit-header">
     <h1>פעולות אחרונות</h1>
-    <p class="subtitle">צפה בכל</p>
+    <p class="subtitle">רישום מלא של כל הפעילויות במערכת</p>
   </div>
 
   <!-- Filters Section -->
   <div class="filters-section">
-    <div class="filter-controls">
-      <select
-        [(ngModel)]="filterStatus"
-        (ngModelChange)="applyFilters()"
-        class="filter-select"
-      >
-        <option value="all">כל הסטטוסים</option>
-        <option value="success">הצליח</option>
-        <option value="failed">נכשל</option>
-      </select>
-
-      <select
-        [(ngModel)]="filterAction"
-        (ngModelChange)="applyFilters()"
-        class="filter-select"
-      >
-        <option value="all">כל הפעולות</option>
-        <option value="CREATE">הוסף</option>
-        <option value="UPDATE">עדכן</option>
-        <option value="DELETE">מחק</option>
-        <option value="VIEW">הצג</option>
-        <option value="EXPORT">ייצא</option>
-        <option value="LOGIN">התחבר</option>
-      </select>
-    </div>
-
     <div class="filter-group">
       <input
         type="text"
@@ -42,48 +16,59 @@
         class="search-input"
       />
     </div>
+
+    <div class="filter-controls">
+      
+      <select
+        [(ngModel)]="filterAction"
+        (ngModelChange)="applyFilters()"
+        class="filter-select"
+      >
+        <option value="all">כל הפעולות</option>
+        <option value="ADD">הוספה</option>
+        <option value="DELETE">מחיקה</option>
+        <option value="UPDATE">עדכון</option>
+        <option value="ARCHIVE">ארכיון</option>
+        <option value="RESTORE">שחזור</option>
+      </select>
+    </div>
   </div>
 
-  <!-- Logs List Section -->
+  <!-- Logs Content Section -->
   <div class="logs-content">
-    <!-- Left Side - Logs List -->
+    <!-- Logs List -->
     <div class="logs-list-section">
-      <div class="logs-list">
-        @for (item of filteredLogs.slice(0, 5); track $index) {
-          <div class="log-timestamp">{{ formatDate(item.timestamp) }}</div>
-          <div class="log-main">
-            <div class="log-header">
-              <span class="log-user">{{ item.userName }}</span>
-              <span [class]="'log-status status-' + item.status">
-                {{ item.status === 'success' ? '✓' : '✗' }}
-              </span>
+      @if (filteredLogs.length > 0) {
+        <div class="logs-list">
+          @for (item of filteredLogs; track item.id) {
+            <div [class]="'log-item type-' + item.action.toLowerCase()">
+              <div class="log-timestamp">
+                {{ (item.dateAction) }}
+              </div>
+              <div class="log-main">
+                <div class="log-header">
+                  <span class="log-user">{{ item.fromUser }}</span>
+                
+                </div>
+                <div class="log-description">{{ getActivityMessage(item).label }} ,{{ getActivityMessage(item).details }}</div>
+                <div class="log-resource">
+                  {{ formatRelativeTime(item.dateAction, item.timeAction) }}
+                </div>
+              </div>
             </div>
-            <div class="log-description">{{ item.details }}</div>
-            <div class="log-resource">{{ item.resource }} • {{ item.resourceId }}</div>
-          </div>
-        }
-        <!-- Empty State -->
-         @if (filteredLogs.length === 0) {
-          <div class="empty-state">
-            <p>לא נמצאו רישומי ביקורת התואמים לסנני שלך</p>
-          </div>
-         }
-      </div>
+          }
+        </div>
+      } @else {
+        <div class="empty-state">
+          <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+          <p>לא נמצאו רישומי ביקורת התואמים לסננים שלך</p>
+        </div>
+      }
     </div>
 
-    <!-- Right Side - Action Buttons -->
-    <div class="actions-panel">
-      <div class="actions-header">פעולות אחרונות</div>
-      <div class="actions-list">
-        @for (item of filteredLogs.slice(0, 5); track $index) {
-          <button class="action-button"
-                  [class]="'action-type-' + item.action.toLowerCase()">
-            <span class="action-icon">{{ getActionIcon(item.action) }}</span>
-            <span class="action-text">{{ item.actionLabel }}</span>
-            <span class="action-user">{{ item.userName }}</span>
-          </button>
-        }
-      </div>
-    </div>
-  </div>
+
 </div>

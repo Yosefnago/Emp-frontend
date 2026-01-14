@@ -37,6 +37,8 @@ export class EmployeesComponent implements OnInit {
   totalPages = 1;
   isSearchExpanded = false;
   searchQuery = '';
+  isEmployeeArchiveModalOpen = false;
+   private employeeToArchive: Employee | null = null;
 
   constructor(private empService: EmployeeService,private notifService: NotificationService,private router: Router) {}
   ngOnInit() {
@@ -151,7 +153,6 @@ export class EmployeesComponent implements OnInit {
 
   onRowSelect() {
     const selectedCount = this.employees.filter(e => e.selected).length;
-    console.log(`${selectedCount} employees selected`);
   }
 
   viewEmployeeDetails(personalId: string): void {
@@ -160,17 +161,29 @@ export class EmployeesComponent implements OnInit {
     });
   }
 
-  editEmployee(employee: Employee) {
-    
-    this.empService.getEmployeeByPersonalId(employee.idNumber).subscribe(data => {
-      this.notifService.show('Employee data loaded for editing.',true);
-    });
-  }
-
   deleteEmployee(employee: Employee) {
-    this.empService.deleteEmployee(employee.idNumber).subscribe(() => {
-      this.notifService.show('Employee deleted successfully.',true);
-      this.loadEmployees();
-    });
+    this.employeeToArchive = employee;
+    this.isEmployeeArchiveModalOpen = true;
   }
+  closeEmployeeArchiveModal() {
+    this.isEmployeeArchiveModalOpen = false;
+    this.employeeToArchive = null;
+  }
+  confirmArchive(){
+    if (!this.employeeToArchive) {
+      return;
+    }
+
+      this.empService.deleteEmployee(this.employeeToArchive.idNumber).subscribe(
+        () => {
+          this.notifService.show(`${this.employeeToArchive?.name} הועבר לארכיון בהצלחה.`, true);
+          this.closeEmployeeArchiveModal();
+          this.loadEmployees();
+        },
+        () => {
+          this.notifService.show('נכשל העברת העובד לארכיון.', false);
+          this.closeEmployeeArchiveModal();
+        }
+      );
+    }
 }

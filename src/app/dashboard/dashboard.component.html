@@ -188,13 +188,13 @@
           <!-- Activity Content with Parsed Message -->
           <div class="activity-content">
             <p class="activity-text"><strong>
-              {{ parseActivityMessage(item).label }}</strong>
-              @if (parseActivityMessage(item).details) {
-                <span class="activity-details">: {{ parseActivityMessage(item).details }}</span>
+              {{ getActivityMessage(item).label }}</strong>
+              @if (getActivityMessage(item).details) {
+                <span class="activity-details">: {{ getActivityMessage(item).details }}</span>
               }
             </p>
             <span class="activity-time">
-              {{ formatRelativeTime(item.actionDate, item.actionTime) }}
+              {{ formatRelativeTime(item.dateAction, item.timeAction) }}
             </span>
           </div>
         </div>
