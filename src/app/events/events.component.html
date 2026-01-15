@@ -46,21 +46,21 @@
       
       @if (upcomingEvents.length > 0) {
         <div class="events-grid">
-          @for (event of upcomingEvents; track event.id) {
+          @for (event of upcomingEvents; track event.eventName) {
             <div class="event-card" [class]="'priority-' + event.priority.toLowerCase()">
               <div class="event-header">
                 <div class="event-date">
-                  <div class="date-day">{{ event.date | date:'dd' }}</div>
-                  <div class="date-month">{{ getMonthName(event.date) }}</div>
+                  <div class="date-day">{{ event.eventDate| date:'dd' }}</div>
+                  <div class="date-month">{{ getMonthName(event.eventDate) }}</div>
                 </div>
                 <div class="event-info">
-                  <h4 class="event-title">{{ event.title }}</h4>
+                  <h4 class="event-title">{{ event.eventName }}</h4>
                   <p class="event-time">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                       <circle cx="12" cy="12" r="10"></circle>
                       <polyline points="12 6 12 12 16 14"></polyline>
                     </svg>
-                    {{ event.time }}
+                    {{ event.eventTime }}
                   </p>
                 </div>
               </div>
@@ -76,12 +76,12 @@
                       {{ event.location }}
                     </span>
                   }
-                  @if (event.attendees) {
+                  @if (event.numberOfAttendance) {
                     <span class="detail-badge">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                       </svg>
-                      {{ event.attendees }} משתתפים
+                      {{ event.numberOfAttendance }} משתתפים
                     </span>
                   }
                 </div>
@@ -91,7 +91,7 @@
                 <span class="priority-badge" [class]="'badge-' + event.priority.toLowerCase()">
                   {{ translatePriority(event.priority) }}
                 </span>
-                <button class="event-action-btn" (click)="editEvent(event.id)">
+                <button class="event-action-btn" (click)="editEvent(event.eventName)">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z"></path>
                     <path d="M20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path>
@@ -122,28 +122,28 @@
       
       @if (pastEvents.length > 0) {
         <div class="events-timeline">
-          @for (event of pastEvents; track event.id) {
+          @for (event of pastEvents; track event.eventName) {
             <div class="timeline-item">
               <div class="timeline-marker"></div>
               <div class="timeline-content">
                 <div class="event-card-past">
                   <div class="past-event-header">
-                    <h4 class="event-title">{{ event.title }}</h4>
-                    <span class="past-date">{{ event.date | date:'dd/MM/yyyy' }}</span>
+                    <h4 class="event-title">{{ event.eventName }}</h4>
+                    <span class="past-date">{{ event.eventDate | date:'dd/MM/yyyy' }}</span>
                   </div>
                   <p class="event-description">{{ event.description }}</p>
-                  @if (event.summary) {
+                  @if (event.description) {
                     <div class="event-summary">
                       <p class="summary-label">סיכום:</p>
-                      <p class="summary-text">{{ event.summary }}</p>
+                      <p class="summary-text">{{ event.description }}</p>
                     </div>
                   }
                   <div class="event-details">
                     @if (event.location) {
                       <span class="detail-badge">📍 {{ event.location }}</span>
                     }
-                    @if (event.attendees) {
-                      <span class="detail-badge">👥 {{ event.attendees }} משתתפים</span>
+                    @if (event.numberOfAttendance) {
+                      <span class="detail-badge">👥 {{ event.numberOfAttendance }} משתתפים</span>
                     }
                   </div>
                 </div>
@@ -176,7 +176,7 @@
             <label class="form-label">שם האירוע</label>
             <input 
               type="text" 
-              [(ngModel)]="newEvent.title" 
+              [(ngModel)]="newEvent.eventName" 
               name="title"
               class="form-input"
               placeholder="הזן שם האירוע"
@@ -187,7 +187,7 @@
             <label class="form-label">תאריך</label>
             <input 
               type="date" 
-              [(ngModel)]="newEvent.date" 
+              [(ngModel)]="newEvent.eventDate" 
               name="date"
               class="form-input"
               required>
@@ -197,7 +197,7 @@
             <label class="form-label">שעה</label>
             <input 
               type="time" 
-              [(ngModel)]="newEvent.time" 
+              [(ngModel)]="newEvent.eventTime" 
               name="time"
               class="form-input"
               required>
@@ -236,7 +236,7 @@
             <label class="form-label">מספר משתתפים</label>
             <input 
               type="number" 
-              [(ngModel)]="newEvent.attendees" 
+              [(ngModel)]="newEvent.numberOfAttendance" 
               name="attendees"
               class="form-input"
               placeholder="0">

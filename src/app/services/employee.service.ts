@@ -48,11 +48,11 @@ export class EmployeeService {
 
     loadAllEmployees() {
         return this.http.get<any[]>(
-            `${this.apiUrlEmployee}/loadAll`
+            `${this.apiUrlEmployee}`
         );
     }
     addEmployee(request: AddEmployeeRequest) {
-        return this.http.post(`${this.apiUrlEmployee}/addEmployee`,request);
+        return this.http.post(`${this.apiUrlEmployee}/add`,request);
     }
 
     getEmployeeByPersonalId(personalId:string){
@@ -60,11 +60,11 @@ export class EmployeeService {
         return this.http.get(`${this.apiUrlEmployee}/${personalId}`);
     }
     deleteEmployee(personalId: string) {
-        return this.http.post(`${this.apiUrlEmployee}/delete/${personalId}`, {});
+        return this.http.delete(`${this.apiUrlEmployee}/${personalId}`, {});
     }
     updateEmployee(updatedData: UpdateEmployeeRequest, personalId: string) {
         return this.http.put(
-            `${this.apiUrlEmployee}/updateEmployeeDetails/${personalId}`,
+            `${this.apiUrlEmployee}/${personalId}`,
             updatedData
         );
     }
