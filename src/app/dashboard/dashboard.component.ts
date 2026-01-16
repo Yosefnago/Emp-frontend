@@ -4,6 +4,7 @@ import { HomeService } from '../services/home.service';
 import { CommonModule } from '@angular/common';
 import { NotificationsModalComponent } from './notifications-modal/notifications-modal.component';
 import { LastActivity } from '../models/LastActivity';
+import { NotificationsEventsService } from '../services/NotificationsEventsService';
 
 @Component({
   selector: 'app-dashboard',
@@ -22,7 +23,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   notificationCount = 0;
   lastActivities: LastActivity[] = [];
 
-  constructor(private router: Router, private homeService: HomeService) {}
+  constructor(private router: Router, private homeService: HomeService,private notificationService: NotificationsEventsService) {}
 
   ngAfterViewInit(): void {
     setTimeout(() => {
@@ -33,6 +34,11 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.loadStats();
     this.loadLastActivities();
+    this.loadNotificationCount(); 
+
+    setInterval(() => {
+      this.loadNotificationCount();
+    }, 600000);
   }
 
   navigateTo(route: string) {
@@ -46,9 +52,19 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   }
 
   onNotificationsClose() {
-    this.updateNotificationCount();
+    this.loadNotificationCount();
   }
 
+  loadNotificationCount() {
+    this.notificationService.getUnreadCount().subscribe({
+      next: (count) => {
+        this.notificationCount = count;
+      },
+      error: (err) => {
+        console.error('Failed to load notification count', err);
+      }
+    });
+  }
   updateNotificationCount() {
     if (this.notificationsModal) {
       this.notificationCount = this.notificationsModal.getUnreadCount();

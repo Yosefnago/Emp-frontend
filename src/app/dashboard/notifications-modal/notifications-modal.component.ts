@@ -1,14 +1,7 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-interface Notification {
-  id: number;
-  type: 'message' | 'event' | 'alert';
-  title: string;
-  message: string;
-  time: string;
-  read: boolean;
-}
+import { NotificationsEventsService } from '../../services/NotificationsEventsService';
+import { AppNotification } from '../../models/AppNotification';
 
 @Component({
   selector: 'app-notifications-modal',
@@ -17,40 +10,30 @@ interface Notification {
   templateUrl: './notifications-modal.component.html',
   styleUrls: ['./notifications-modal.component.css']
 })
-export class NotificationsModalComponent {
+export class NotificationsModalComponent implements OnInit {
   @Output() close = new EventEmitter<void>();
 
   isVisible = false;
+  notifications: AppNotification[] = [];
 
-  notifications: Notification[] = [
-    {
-      id: 1,
-      type: 'message',
-      title: 'הודעה חדשה',
-      message: 'יש לך הודעה חדשה מעובד',
-      time: 'לפני 5 דקות',
-      read: false
-    },
-    {
-      id: 2,
-      type: 'event',
-      title: 'אירוע קרוב',
-      message: 'פגישת צוות מחר בשעה 10:00',
-      time: 'לפני שעה',
-      read: false
-    },
-    {
-      id: 3,
-      type: 'alert',
-      title: 'התראה',
-      message: 'נדרשת אישור בקשת חופשה',
-      time: 'לפני 3 שעות',
-      read: true
-    }
-  ];
+  constructor(private noteService: NotificationsEventsService) {}
+
+  ngOnInit() {
+    this.loadNotifications();
+    this.getUnreadCount();
+  }
+
+  loadNotifications() {
+    this.noteService.getNotifications().subscribe({
+      next: (data) => {
+        this.notifications = data;
+      }
+    });
+  }
 
   open() {
     this.isVisible = true;
+    this.loadNotifications(); // Refresh when opening
   }
 
   closeModal() {
@@ -58,27 +41,58 @@ export class NotificationsModalComponent {
     this.close.emit();
   }
 
-  markAsRead(notification: Notification) {
-    notification.read = true;
+  markAsRead(notification: AppNotification) {
+    this.noteService.markAsRead(notification.id).subscribe({
+      next: () => {
+        notification.isRead = true;
+      }
+    });
   }
 
   markAllAsRead() {
-    this.notifications.forEach(n => n.read = true);
+    this.noteService.markAllAsRead().subscribe({
+      next: () => {
+        this.notifications.forEach(n => n.isRead = true);
+      }
+    });
   }
 
-  deleteNotification(notification: Notification) {
-    this.notifications = this.notifications.filter(n => n.id !== notification.id);
+  deleteNotification(notification: AppNotification) {
+    this.noteService.deleteNotification(notification.id).subscribe({
+      next: () => {
+        this.notifications = this.notifications.filter(n => n.id !== notification.id);
+      }
+    });
   }
 
   clearAll() {
-    this.notifications = [];
+    this.noteService.clearAll().subscribe({
+      next: () => {
+        this.notifications = [];
+      }
+    });
   }
 
   getUnreadCount(): number {
-    return this.notifications.filter(n => !n.read).length;
+    return this.notifications.filter(n => !n.isRead).length;
   }
 
   getIconClass(type: string): string {
-    return `notification-icon-${type}`;
+    const iconMap: { [key: string]: string } = {
+      'EVENT_REMINDER': 'notification-icon-event',
+      'EVENT_TODAY': 'notification-icon-event',
+      'BIRTHDAY_REMINDER': 'notification-icon-alert'
+    };
+    return iconMap[type] || 'notification-icon-message';
+  }
+
+  getNotificationType(type: string): 'message' | 'event' | 'alert' {
+    if (type === 'EVENT_REMINDER' || type === 'EVENT_TODAY') {
+      return 'event';
+    }
+    if (type === 'BIRTHDAY_REMINDER') {
+      return 'alert';
+    }
+    return 'message';
   }
 }
