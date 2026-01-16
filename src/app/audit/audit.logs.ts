@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuditLogService } from '../services/audit-log.service';
-import { AuditLog } from '../model';
+import { AuditLog } from '../models/AuditLog';
 
 
 @Component({

@@ -1,38 +1,9 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { AddEmployeeRequest, Employee, UpdateEmployeeRequest } from "../models/Employee";
 
 
-export interface AddEmployeeRequest {
-    firstName: string,
-    lastName: string,
-    personalId: string,
-    email: string,
-    phone: string,
-    address: string,
-    position: string,
-    department: string,
-    hireDate: Date
-    status: string
-}
 
-export interface UpdateEmployeeRequest {
-    firstName: string;
-    lastName: string;
-    email: string;
-    personalId: string;
-    gender: string;
-    birthDate: string;
-    familyStatus: string;
-    phone: string;
-    address: string;
-    city: string;
-    country: string;
-    position: string;
-    department: string;
-    hireDate: string;
-    jobType: string;
-    status: string;
-}
 
 @Injectable({
     providedIn: 'root'
@@ -47,7 +18,7 @@ export class EmployeeService {
     constructor(private http: HttpClient) {}
 
     loadAllEmployees() {
-        return this.http.get<any[]>(
+        return this.http.get<Employee[]>(
             `${this.apiUrlEmployee}`
         );
     }
@@ -70,3 +41,4 @@ export class EmployeeService {
     }
     
 }
+

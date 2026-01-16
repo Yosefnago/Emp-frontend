@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { EmployeeService, UpdateEmployeeRequest } from '../../services/employee.service';
+import { EmployeeService } from '../../services/employee.service';
 import { NotificationService } from '../../services/notificationService.service';
+import { UpdateEmployeeRequest } from '../../models/Employee';
 
 /**
  * Employee Details Component
@@ -369,23 +370,6 @@ export class EmployeeDetailsComponent implements OnInit {
   }
 
   /**
-   * Translate English employment status to Hebrew
-   * 
-   * @param status - English status string
-   * @returns - Hebrew status translation
-   */
-  translateStatus(status: string): string {
-    const statusMap: { [key: string]: string } = {
-      'ACTIVE': 'פעיל',
-      'INACTIVE': 'לא פעיל',
-      'ON_LEAVE': 'בחופשה',
-      'ON LEAVE': 'בחופשה',
-      'TERMINATED': 'הסתיים'
-    };
-    return statusMap[status?.toUpperCase()] || status;
-  }
-
-  /**
    * Translate English marital status to Hebrew
    * 
    * @param status - English marital status
@@ -420,6 +404,19 @@ export class EmployeeDetailsComponent implements OnInit {
   }
 
   /**
+  * Translate English employment status to Hebrew
+  * 
+  * @param status - English status string
+  * @returns - Hebrew status translation
+  */
+  translateStatus(status: string): string {
+    const statusMap: { [key: string]: string } = {
+      'ACTIVE': 'פעיל',         
+      'INACTIVE': 'לא פעיל'     
+    };
+    return statusMap[status?.toUpperCase()] || status;
+  }
+  /**
    * Translate English attendance status to Hebrew
    * 
    * @param status - English attendance status
@@ -427,11 +424,11 @@ export class EmployeeDetailsComponent implements OnInit {
    */
   translateAttendanceStatus(status: string): string {
     const statusMap: { [key: string]: string } = {
-      'PRESENT': 'נוכח',
-      'ABSENT': 'חסר',
-      'SICK': 'מחלה',
-      'VACATION': 'חופשה',
-      'LATE': 'מאחר'
+      'PRESENT': 'נוכח',         
+      'ABSENT': 'נעדר',          
+      'LATE': 'איחור',           
+      'VACATION': 'חופשה',       
+      'SICK': 'מחלה'            
     };
     return statusMap[status?.toUpperCase()] || status;
   }

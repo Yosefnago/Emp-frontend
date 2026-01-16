@@ -5,17 +5,8 @@ import { EmployeeService } from '../services/employee.service';
 import { NotificationService } from '../services/notificationService.service';
 import { AddEmployeeModalComponent } from './add-employee-modal-component/add-employee-modal-component';
 import { Router } from '@angular/router';
+import { Employee } from '../models/Employee';
 
-interface Employee {
-  id: number;
-  name: string;
-  idNumber: string;
-  email: string;
-  phoneNumber: string;
-  department: string;
-  attendanceStatus: 'present' | 'absent' | 'late' | 'vacation';
-  selected?: boolean;
-}
 
 @Component({
   selector: 'app-employees',
@@ -57,7 +48,7 @@ export class EmployeesComponent implements OnInit {
         email: emp.email,
         phoneNumber: emp.phoneNumber,
         department: emp.department,
-        attendanceStatus: emp.status
+        attendanceStatus: emp.statusAttendance
       }));
 
       this.allEmployees = [...this.employees]; 

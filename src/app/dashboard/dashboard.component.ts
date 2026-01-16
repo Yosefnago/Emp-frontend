@@ -1,9 +1,9 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { HomeService } from '../services/home.service';
-import { LastActivity } from '../model';
 import { CommonModule } from '@angular/common';
 import { NotificationsModalComponent } from './notifications-modal/notifications-modal.component';
+import { LastActivity } from '../models/LastActivity';
 
 @Component({
   selector: 'app-dashboard',

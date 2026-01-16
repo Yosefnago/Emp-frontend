@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { AuditLog } from "../model";
 import { Observable } from "rxjs";
+import { AuditLog } from "../models/AuditLog";
 
 
 
