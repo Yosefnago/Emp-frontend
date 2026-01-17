@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { EmployeeService } from '../services/employee.service';
-import { NotificationService } from '../services/notificationService.service';
+import { SystemMessages } from '../services/systemMessagesService';
 import { AddEmployeeModalComponent } from './add-employee-modal-component/add-employee-modal-component';
 import { Router } from '@angular/router';
 import { Employee } from '../models/Employee';
@@ -31,7 +31,7 @@ export class EmployeesComponent implements OnInit {
   isEmployeeArchiveModalOpen = false;
    private employeeToArchive: Employee | null = null;
 
-  constructor(private empService: EmployeeService,private notifService: NotificationService,private router: Router) {}
+  constructor(private empService: EmployeeService,private systemService: SystemMessages,private router: Router) {}
   ngOnInit() {
     
     this.loadEmployees();
@@ -65,10 +65,10 @@ export class EmployeesComponent implements OnInit {
 
   onEmployeeAdded(employeeData: any) {
     this.empService.addEmployee(employeeData).subscribe(() => {
-      this.notifService.show('Employee added successfully.',true);
+      this.systemService.show('Employee added successfully.',true);
       this.loadEmployees();
     }), () => {
-      this.notifService.show('Failed to add employee.',false);
+      this.systemService.show('Failed to add employee.',false);
     }
     
   }
@@ -167,12 +167,12 @@ export class EmployeesComponent implements OnInit {
 
       this.empService.deleteEmployee(this.employeeToArchive.idNumber).subscribe(
         () => {
-          this.notifService.show(`${this.employeeToArchive?.name} הועבר לארכיון בהצלחה.`, true);
+          this.systemService.show(`${this.employeeToArchive?.name} הועבר לארכיון בהצלחה.`, true);
           this.closeEmployeeArchiveModal();
           this.loadEmployees();
         },
         () => {
-          this.notifService.show('נכשל העברת העובד לארכיון.', false);
+          this.systemService.show('נכשל העברת העובד לארכיון.', false);
           this.closeEmployeeArchiveModal();
         }
       );

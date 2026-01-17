@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { LoginService } from '../services/login.service';
 import {Router} from '@angular/router';
 import {firstValueFrom} from 'rxjs';
-import { NotificationService } from '../services/notificationService.service';
+import {SystemMessages } from '../services/systemMessagesService';
 import { WebSocketService } from '../services/web-socket.service';
 
 @Component({
@@ -23,7 +23,7 @@ export class LoginComponent {
   constructor(
     private loginService: LoginService,
     private router: Router,
-    private notificationService: NotificationService,
+    private systemService: SystemMessages,
     private wsService: WebSocketService
 
   ) {}
@@ -32,7 +32,7 @@ export class LoginComponent {
   async onLogin() {
     
     if(!this.username || !this.password){
-        this.notificationService.show('נא למלא את השדות בהתאם',false);
+        this.systemService.show('נא למלא את השדות בהתאם',false);
         return;
     } 
     try {
@@ -45,10 +45,10 @@ export class LoginComponent {
       this.wsService.connect(token);
 
       this.router.navigate(['/home']);
-      this.notificationService.show('התחברת בהצלחה' ,true);
+      this.systemService.show('התחברת בהצלחה' ,true);
     
     } catch (err) {
-      this.notificationService.show('שם משתמש או סיסמא שגויים',false);
+      this.systemService.show('שם משתמש או סיסמא שגויים',false);
     }
   }
   goToRegister() {

@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { EmployeeService } from '../../services/employee.service';
-import { NotificationService } from '../../services/notificationService.service';
+import { SystemMessages } from '../../services/systemMessagesService';
 import { UpdateEmployeeRequest } from '../../models/Employee';
 
 /**
@@ -65,7 +65,7 @@ export class EmployeeDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private employeeService: EmployeeService,
-    private notificationService: NotificationService
+    private systemService: SystemMessages
   ) {}
 
   /**
@@ -299,10 +299,10 @@ export class EmployeeDetailsComponent implements OnInit {
       this.employeeService.updateEmployee(updateRequest, this.employee.personalId).subscribe({
           next: () => {
               this.employeeBackup = JSON.parse(JSON.stringify(this.employee)); 
-              this.notificationService.show('הנתונים נשמרו בהצלחה', true);
+              this.systemService.show('הנתונים נשמרו בהצלחה', true);
           },
           error: () => {
-              this.notificationService.show('שגיאה בשמירת הנתונים', false);
+              this.systemService.show('שגיאה בשמירת הנתונים', false);
           },
           complete: () => {
               this.isLoading = false;

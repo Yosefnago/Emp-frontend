@@ -1,10 +1,9 @@
 import {Component} from '@angular/core';
 import {FormsModule} from '@angular/forms';
-import {MatSnackBar} from '@angular/material/snack-bar';
 import {Router} from '@angular/router';
 import {RegisterService} from '../services/register.service';
 import {CommonModule} from '@angular/common';
-import { NotificationService } from '../services/notificationService.service';
+import {SystemMessages } from '../services/systemMessagesService';
 
 
 @Component({
@@ -26,25 +25,25 @@ export class RegisterComponent {
   constructor(
     private registerService: RegisterService,
     private router:Router,
-    private notificationService: NotificationService
+    private systemService: SystemMessages 
   ) {
   }
 
 
   onRegister() {
     if (this.password !== this.confirmPassword) {
-      this.notificationService.show('הסיסמאות אינן זהות',false);
+      this.systemService.show('הסיסמאות אינן זהות',false);
       return;
     }
 
     this.registerService.register(this.username,this.email ,this.password).subscribe({
 
       next: () => {
-        this.notificationService.show('נרשמת בהצלחה',true);
+        this.systemService.show('נרשמת בהצלחה',true);
         this.router.navigate(['/login']);
       },
       error: () => {
-        this.notificationService.show('שגיאה בהרשמה, נסה שוב במועד מאוחר יותר',false);
+        this.systemService.show('שגיאה בהרשמה, נסה שוב במועד מאוחר יותר',false);
       }
     });
   }
