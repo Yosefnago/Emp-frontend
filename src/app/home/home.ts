@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { LoginService } from '../services/login.service';
 
 @Component({
   selector: 'app-home',
@@ -18,9 +19,10 @@ export class HomeComponent implements OnInit {
   monthlySalaryTotal = 0;
   projectsOnboard = 0;
   
-  constructor(private router: Router) {}
+  constructor(private router: Router,private loginService: LoginService) {}
 
   ngOnInit() {
+  
     // Track current route for active state
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
@@ -41,7 +43,17 @@ export class HomeComponent implements OnInit {
   }
 
   onLogout() {
-    this.router.navigate(['/login']);
+    this.loginService.logout().subscribe({
+      next: () => {
+        this.loginService.clearSession();
+        this.router.navigate(['/login']);
+      },
+      error: () => {
+        this.loginService.clearSession();
+        this.router.navigate(['/login']);
+      }
+    });
+    
   }
   getUsername() {
     
