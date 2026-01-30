@@ -1,53 +1,102 @@
 import { Injectable } from "@angular/core";
-import { Router } from "@angular/router";
+import { Client, IMessage } from '@stomp/stompjs';
+import { Observable, Subject } from "rxjs";
 
+export interface ConnectionStatus {
+  connected: boolean;
+  error?: string;
+}
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class WebSocketService {
 
-    private ws: WebSocket | null = null;
-    private url = 'ws://localhost:8090/server-status';
+  private url = 'ws://localhost:8090/server-status';
+  private client?: Client;
+  private connectionStatus$ = new Subject<ConnectionStatus>();
 
-    constructor(private router: Router){}
+  get connectionStatus(): Observable<ConnectionStatus> {
+    return this.connectionStatus$.asObservable();
+  }
 
-    connect(token :string):void{
+  get isConnected(): boolean {
+    return this.client?.active ?? false;
+  }
 
-        const connectionUrlWithToken = `${this.url}?token=${token}`;
-        
-        if(this.ws && this.ws.readyState === WebSocket.OPEN){
-            this.ws.close();
-        }
-
-        this.ws = new WebSocket(connectionUrlWithToken);
-
-        this.ws.onopen = () => {
-            console.log("WS connected successfully via service.");
-        }
-
-        this.ws.onclose = () => {
-            console.log("WS connection closed.");
-
-            console.warn("Server connection lost. Redirecting to error page.");
-
-            this.router.navigate(['/error'], { 
-                queryParams: { message: 'Lost connection to the server' } 
-            });
-        };
-        this.ws.onerror = (error) => {
-            console.error("WS error:", error);
-            this.router.navigate(['/error'], { 
-                queryParams: { message: 'Connection failure' } 
-            });
-        };
-
+  connect(token: string): void {
+    if (this.client?.active) {
+      return;
     }
-    disconnect(): void {
 
-        if (this.ws) {
-            this.ws.close();
-            this.ws = null;
-        }
+
+    this.client = new Client({
+      brokerURL: this.url,
+      
+      connectHeaders: {
+        'Authorization': `Bearer ${token}`
+      },
+      
+      reconnectDelay: 5000,
+      heartbeatIncoming: 4000, 
+      heartbeatOutgoing: 4000,
+      
+      onConnect: (frame) => {
+        this.connectionStatus$.next({ connected: true });
+      },
+
+      onDisconnect: () => {
+        this.connectionStatus$.next({ 
+          connected: false, 
+          error: 'Server connection lost' 
+        });
+      },
+
+      onStompError: (frame) => {
+        this.connectionStatus$.next({
+          connected: false,
+          error: frame.headers['message'] || 'STOMP error'
+        });
+      },
+
+      onWebSocketClose: () => {
+        this.connectionStatus$.next({ 
+          connected: false,
+          error: 'Server connection lost' 
+        });
+      },
+
+      onWebSocketError: () => {
+        this.connectionStatus$.next({ 
+          connected: false, 
+          error: 'WebSocket connection failed'
+        });
+      }
+    });
+
+    this.client.activate();
+  }
+
+  subscribe(destination: string, callback: (message: IMessage) => void) {
+    if (!this.client?.active) {
+      throw new Error('WebSocket not connected');
     }
+    return this.client.subscribe(destination, callback);
+  }
+
+  send(destination: string, body: any): void {
+    if (!this.client?.active) {
+      throw new Error('WebSocket not connected');
+    }
+    this.client.publish({
+      destination,
+      body: JSON.stringify(body)
+    });
+  }
+
+  disconnect(): void {
+    if (this.client) {
+      this.client.deactivate();
+      this.client = undefined;
+      this.connectionStatus$.next({ connected: false });
+    }
+  }
 }

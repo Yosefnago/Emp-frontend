@@ -24,8 +24,6 @@ export class LoginComponent {
     private loginService: LoginService,
     private router: Router,
     private systemService: SystemMessages,
-    private wsService: WebSocketService
-
   ) {}
 
 
@@ -42,7 +40,6 @@ export class LoginComponent {
       const token = response.token;
       sessionStorage.setItem('token', token);
       sessionStorage.setItem('username', this.username);
-      this.wsService.connect(token);
 
       this.router.navigate(['/home']);
       this.systemService.show('התחברת בהצלחה' ,true);
