@@ -5,6 +5,7 @@ import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
 import { WebSocketService } from './services/web-socket.service';
 import { Subscription } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
+import { AuthService } from './services/auth-service';
 
 @Component({
   selector: 'app-root',
@@ -19,31 +20,34 @@ export class App implements OnInit, OnDestroy {
 
   constructor(
     private router: Router, 
-    private ws: WebSocketService
+    private ws: WebSocketService,
+    private authService: AuthService,
   ) {}
 
   ngOnInit(): void {
-    const tk = sessionStorage.getItem('token');
     
-    if (tk === null) {
-
+    
+    const hasToken = this.authService.hasAccessToken();
+    
+    if (!hasToken) {
+      
       this.router.events.pipe(
         filter(event => event instanceof NavigationEnd),
         take(1)
-
       ).subscribe(() => {
-
-        if (!sessionStorage.getItem('token') && this.router.url !== '/login') {
+        
+        if (!this.authService.hasAccessToken() && this.router.url !== '/login') {
           this.router.navigate(['/login']);
         }
-        
       });
       return;
     }
 
-    this.ws.connect(tk);
+    
+    this.ws.connect();
     
     this.wsSubscription = this.ws.connectionStatus.subscribe(status => {
+      
       if (this.isInitialConnection) {
         if (status.connected) {
           this.isInitialConnection = false;

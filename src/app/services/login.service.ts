@@ -1,23 +1,37 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { AuthService } from './auth-service';
 import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService {
-  private apiUrl = 'http://localhost:8090/auth/login'
-  private api = 'http://localhost:8090/auth'
 
-  constructor(private http: HttpClient) {}
-
+  constructor(private authService: AuthService) {}
+  
+  /**
+   * Authenticates user with username and password.
+   * Delegates to AuthService for actual authentication.
+   * 
+   * @param username user's username
+   * @param password user's password
+   * @returns Observable with authentication response
+   */
   login(username: string, password: string): Observable<any> {
-    return this.http.post(this.apiUrl, { username, password });
+    return this.authService.login(username, password);
   }
-  logout(): Observable<void> {
-    return this.http.post<void>(`${this.api}/logout`, {});
+
+  /**
+   * Logs out the current user.
+   */
+  logout(): void {
+    this.authService.logout();
   }
+
+  /**
+   * Clears the session storage.
+   */
   clearSession(): void {
-    sessionStorage.clear();
+    this.authService.clearSession();
   }
 }

@@ -43,17 +43,8 @@ export class HomeComponent implements OnInit {
   }
 
   onLogout() {
-    this.loginService.logout().subscribe({
-      next: () => {
-        this.loginService.clearSession();
-        this.router.navigate(['/login']);
-      },
-      error: () => {
-        this.loginService.clearSession();
-        this.router.navigate(['/login']);
-      }
-    });
-    
+    this.loginService.logout()
+    this.router.navigate(['/login']);  
   }
   getUsername() {
     

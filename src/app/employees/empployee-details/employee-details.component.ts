@@ -285,7 +285,7 @@ export class EmployeeDetailsComponent implements OnInit {
         gender: this.employee.gender,
         birthDate: this.employee.birthDate,
         familyStatus: this.employee.familyStatus,
-        phone: this.employee.phone,
+        phoneNumber: this.employee.phoneNumber,
         address: this.employee.address,
         city: this.employee.city,
         country: this.employee.country,

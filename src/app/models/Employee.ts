@@ -14,7 +14,7 @@ export interface AddEmployeeRequest {
     lastName: string,
     personalId: string,
     email: string,
-    phone: string,
+    phoneNumber: string,
     address: string,
     position: string,
     department: string,
@@ -30,7 +30,7 @@ export interface UpdateEmployeeRequest {
     gender: string;
     birthDate: string;
     familyStatus: string;
-    phone: string;
+    phoneNumber: string;
     address: string;
     city: string;
     country: string;
