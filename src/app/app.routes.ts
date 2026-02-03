@@ -1,18 +1,18 @@
 import { Routes } from '@angular/router';
-import { LoginComponent } from './login/login.component';
-import { RegisterComponent } from './signIn/signIn';
-import { HomeComponent } from './home/home';
-import { DashboardComponent } from './dashboard/dashboard.component'; 
-import { ErrorComponent } from './error/error.component';
-import { EmployeesComponent } from './employees/employees';
-import { EmployeeDetailsComponent } from './employees/empployee-details/employee-details.component';
-import { DepartmentComponent } from './departments/department.component';
-import { AttendanceComponent } from './attendence/attendance.component';
-import { SalaryComponent } from './salary/salary.component';
-import { EventsComponent } from './events/events.component';
-import { ReportsComponent } from './reports/reports.component';
-import { SettingsComponent } from './settings/settings.component';
-import { AuditLogsComponent } from './audit/audit.logs';
+import { LoginComponent } from './features/auth/login/login.component';
+import { RegisterComponent } from './features/auth/register/signIn';
+import { HomeComponent } from './layout/main-layout/home';
+import { DashboardComponent } from './features/dashboard/dashboard.component';
+import { ErrorComponent } from './features/error/error.component';
+import { EmployeesComponent } from './features/employees/employees';
+import { EmployeeDetailsComponent } from './features/employees/empployee-details/employee-details.component';
+import { DepartmentComponent } from './features/departments/department.component';
+import { AttendanceComponent } from './features/attendance/attendance.component';
+import { SalaryComponent } from './features/salary/salary.component';
+import { EventsComponent } from './features/events/events.component';
+import { ReportsComponent } from './features/reports/reports.component';
+import { SettingsComponent } from './features/settings/settings.component';
+import { AuditLogsComponent } from './features/audit/audit.logs';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -24,7 +24,7 @@ export const routes: Routes = [
     component: HomeComponent,
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      { path: 'dashboard', component: DashboardComponent }, 
+      { path: 'dashboard', component: DashboardComponent },
       { path: 'employees', component: EmployeesComponent },
       { path: 'departments', component: DepartmentComponent },
       { path: 'attendance', component: AttendanceComponent },

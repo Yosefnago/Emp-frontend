@@ -2,15 +2,15 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
-import { WebSocketService } from './services/web-socket.service';
+import { WebSocketService, ConnectionStatus } from './core/services/web-socket.service';
 import { Subscription } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
-import { AuthService } from './services/auth-service';
+import { AuthService } from './core/auth/auth.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet,MatIconModule,MatButtonModule],
+  imports: [RouterOutlet, MatIconModule, MatButtonModule],
   template: `<router-outlet></router-outlet>`
 })
 export class App implements OnInit, OnDestroy {
@@ -19,23 +19,23 @@ export class App implements OnInit, OnDestroy {
   private isInitialConnection = true;
 
   constructor(
-    private router: Router, 
+    private router: Router,
     private ws: WebSocketService,
     private authService: AuthService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-    
-    
+
+
     const hasToken = this.authService.hasAccessToken();
-    
+
     if (!hasToken) {
-      
+
       this.router.events.pipe(
         filter(event => event instanceof NavigationEnd),
         take(1)
       ).subscribe(() => {
-        
+
         if (!this.authService.hasAccessToken() && this.router.url !== '/login') {
           this.router.navigate(['/login']);
         }
@@ -43,11 +43,11 @@ export class App implements OnInit, OnDestroy {
       return;
     }
 
-    
+
     this.ws.connect();
-    
-    this.wsSubscription = this.ws.connectionStatus.subscribe(status => {
-      
+
+    this.wsSubscription = this.ws.connectionStatus.subscribe((status: ConnectionStatus) => {
+
       if (this.isInitialConnection) {
         if (status.connected) {
           this.isInitialConnection = false;
@@ -57,7 +57,7 @@ export class App implements OnInit, OnDestroy {
 
       if (!status.connected && status.error) {
         sessionStorage.clear();
-        this.router.navigate(['/error'], { 
+        this.router.navigate(['/error'], {
           queryParams: { message: 'Server is currently unavailable. Please try again later.' }
         });
       }
