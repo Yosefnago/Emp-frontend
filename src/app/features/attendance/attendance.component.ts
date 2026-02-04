@@ -15,7 +15,7 @@ export class AttendanceComponent implements OnInit {
   selectedYear: number = new Date().getFullYear();
   selectedMonth: string = '';
   selectedDepartment: string = '';
-  selectedEmployeeName: string = ''; // Using name for filtering as ID might redundant in this simple mock
+  selectedEmployeeName: string = ''; 
   expandedId: number | null = null;
 
   filteredRecords: any[] = [];
@@ -237,7 +237,7 @@ export class AttendanceComponent implements OnInit {
 
   translateStatus(status: string): string {
     const statusMap: { [key: string]: string } = {
-      'PRESENT': 'נוכח',
+      'PRESENT': 'נוכחות',
       'ABSENT': 'חסר',
       'SICK': 'מחלה',
       'VACATION': 'חופשה'

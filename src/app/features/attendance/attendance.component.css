@@ -202,17 +202,6 @@
   color: #0f172a;
 }
 
-.clickable-name {
-  color: #2563eb;
-  cursor: pointer;
-  text-decoration: underline;
-  text-underline-offset: 4px;
-}
-
-.clickable-name:hover {
-  color: #1d4ed8;
-}
-
 .dept-badge {
   display: inline-block;
   padding: 4px 10px;
