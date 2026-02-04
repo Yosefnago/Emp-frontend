@@ -53,9 +53,11 @@
 
 .page-title {
   font-size: 28px;
-  font-weight: 700;
+  font-weight: 600;
+  /* Reduced from 700 */
   color: #1a1a1a;
   margin: 0;
+  letter-spacing: -0.5px;
 }
 
 .page-subtitle {
@@ -137,54 +139,256 @@
 }
 
 /* Table Styles */
+/* Table Container - Scrollable */
 .table-container {
   background: white;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   overflow: hidden;
-  margin-bottom: 40px;
+  /* Contains the rounded corners */
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
 }
 
 .attendance-table {
+  display: block;
   width: 100%;
-  border-collapse: collapse;
+}
+
+.attendance-table thead {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.attendance-table tbody {
+  display: block;
+  max-height: 500px;
+  /* Adjust height as needed */
+  overflow-y: auto;
+  width: 100%;
+}
+
+.attendance-table tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.attendance-table th,
+.attendance-table td {
+  padding: 14px;
   text-align: right;
   direction: rtl;
-}
-
-.attendance-table th {
-  background: #f8fafc;
-  padding: 16px;
-  font-size: 13px;
-  font-weight: 600;
-  color: #64748b;
-  text-transform: uppercase;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.attendance-table td {
-  padding: 16px;
   border-bottom: 1px solid #f1f5f9;
-  font-size: 14px;
-  color: #334155;
-  transition: background-color 0.2s;
 }
 
-.record-row:hover td {
-  background-color: #f8fafc;
+/* Header Right */
+.header-right {
+  display: flex;
+  gap: 10px;
+}
+
+/* Buttons */
+.add-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: #10b981;
+  border: 1px solid #059669;
+  border-radius: 8px;
   cursor: pointer;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  direction: ltr;
 }
 
-.record-row.expanded-row td {
-  background-color: #eff6ff;
-  border-bottom-color: transparent;
+.add-btn:hover {
+  background: #059669;
 }
 
-/* Cell Specific Styles */
+/* Inputs */
+.edit-input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.edit-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.select-input {
+  background-color: white;
+}
+
+/* Actions */
+.actions-cell {
+  display: flex;
+  /* Not applied on td if display table-cell, handled by flex content inside if needed */
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+/* Because we changed to display: block/table for scroll, td behaves correctly. 
+   But let's wrap actions content in a div if needed for flex gap. 
+   Actually standard td allows inline-block buttons. Let's make them inline-flex.
+*/
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: transparent;
+  color: #64748b;
+}
+
+.action-btn:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.save-btn {
+  color: #10b981;
+}
+
+.save-btn:hover {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.cancel-btn {
+  color: #64748b;
+}
+
+.cancel-btn:hover {
+  background: #f1f5f9;
+}
+
+.delete-btn {
+  color: #ef4444;
+}
+
+.delete-btn:hover {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.edit-btn {
+  color: #3b82f6;
+}
+
+.edit-btn:hover {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+
+/* New Summary Section */
+.summary-section {
+  background: white;
+  padding: 20px 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 30px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.summary-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+}
+
+.s-label {
+  font-size: 13px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.s-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.val-green {
+  color: #10b981;
+}
+
+.val-red {
+  color: #ef4444;
+}
+
+.val-orange {
+  color: #f59e0b;
+}
+
+.val-purple {
+  color: #8b5cf6;
+}
+
+.val-blue {
+  color: #3b82f6;
+}
+
+/* Footer Actions */
+.footer-actions {
+  display: flex;
+  justify-content: center;
+  /* Or end? User asked for button down. usually centered or end */
+  padding-bottom: 40px;
+}
+
+.send-payroll-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 30px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
+}
+
+.send-payroll-btn:hover {
+  background: #2563eb;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px -1px rgba(59, 130, 246, 0.4);
+}
+
 .date-cell {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
 }
 
 .date-text {
@@ -210,6 +414,7 @@
   border-radius: 20px;
   font-size: 12px;
   font-weight: 500;
+  white-space: nowrap;
 }
 
 .stat-badge {
@@ -242,158 +447,71 @@
   color: #581c87;
 }
 
-.expand-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #94a3b8;
-  transition: transform 0.3s ease;
-}
-
-.expand-icon.expanded {
-  transform: rotate(180deg);
-  color: #3b82f6;
-}
-
-/* Details Row */
-.details-row td {
-  padding: 0;
-  border-bottom: 1px solid #e2e8f0;
-  background-color: #f8fafc;
-}
-
-.details-content {
-  padding: 20px;
-  display: flex;
-  gap: 20px;
-  animation: slideDown 0.3s ease;
-}
-
-.detail-item {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.detail-item label {
-  font-size: 12px;
-  font-weight: 600;
-  color: #64748b;
-}
-
-.detail-item span {
-  font-size: 14px;
-  color: #334155;
-}
-
-/* Empty State */
-.empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 20px;
-  color: #94a3b8;
-  gap: 16px;
-}
-
-.empty-state p {
-  margin: 0;
-  font-size: 15px;
-}
-
 /* Responsive Table */
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
 
-  .attendance-table th:nth-child(3),
-  /* Position */
-  .attendance-table td:nth-child(3),
-  .attendance-table th:nth-child(5),
-  /* CheckIn */
-  .attendance-table td:nth-child(5),
-  .attendance-table th:nth-child(6),
-  /* CheckOut */
-  .attendance-table td:nth-child(6) {
-    display: none;
+  .attendance-table th,
+  .attendance-table td {
+    padding: 10px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 900px) {
+  .table-container {
+    overflow-x: auto;
+    display: block;
+    /* Override flex column to allow scroll */
+  }
+
+  .attendance-table {
+    min-width: 900px;
+    /* Force scroll */
+    display: table;
+  }
+
+  .attendance-table thead,
+  .attendance-table tbody,
+  .attendance-table tr {
+    display: table-row-group;
+    /* Reset from block for horizontal scroll */
+  }
+
+  .attendance-table tr {
+    display: table-row;
+  }
+
+  .attendance-table thead {
+    display: table-header-group;
+  }
+
+  /* Fix fixed height scrolling on mobile if we switch to horizontal scroll */
+  .attendance-table tbody {
+    display: table-row-group;
+    overflow-y: visible;
+    max-height: none;
   }
 }
 
 @media (max-width: 768px) {
-  .table-container {
-    overflow-x: auto;
+  .header-content {
+    text-align: center;
   }
 
-  .attendance-table {
-    min-width: 800px;
-    /* Force scroll on mobile */
+  .attendance-header {
+    flex-direction: column;
+    gap: 20px;
   }
 
   .filter-group {
     flex-direction: column;
-    align-items: stretch;
   }
 
   .filter-item {
     width: 100%;
   }
 
-  /* Keep table horizontally scrollable but layout stacked */
-  .attendance-container {
-    padding: 15px;
+  .summary-row {
+    justify-content: center;
   }
-}
-
-/* Summary Grid - Keep existing styles but refine */
-.summary-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 20px;
-}
-
-.summary-card {
-  padding: 24px;
-  border-radius: 12px;
-  color: white;
-  text-align: center;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s;
-}
-
-.summary-card:hover {
-  transform: translateY(-2px);
-}
-
-.summary-label {
-  font-size: 13px;
-  font-weight: 500;
-  opacity: 0.9;
-  margin: 0 0 8px 0;
-  letter-spacing: 0.5px;
-}
-
-.summary-value {
-  font-size: 32px;
-  font-weight: 700;
-  margin: 0;
-  line-height: 1;
-}
-
-.summary-present {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-}
-
-.summary-absent {
-  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-}
-
-.summary-sick {
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-}
-
-.summary-vacation {
-  background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
-}
-
-.summary-rate {
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
 }

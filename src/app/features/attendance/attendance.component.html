@@ -2,13 +2,22 @@
 <div class="attendance-container">
   <!-- Header with Filters -->
   <div class="attendance-header">
-    <button class="back-button" (click)="goBack()">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <line x1="19" y1="12" x2="5" y2="12"></line>
-        <polyline points="12 19 5 12 12 5"></polyline>
-      </svg>
-      <span>חזור</span>
-    </button>
+    <div class="header-right">
+      <button class="back-button" (click)="goBack()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        <span>חזור</span>
+      </button>
+      <button class="add-btn" (click)="addRecord()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        <span>הוסף רשומה</span>
+      </button>
+    </div>
     <div class="header-content">
       <h1 class="page-title">רשומות נוכחות</h1>
       <p class="page-subtitle">ניהול נוכחות עובדים</p>
@@ -87,35 +96,135 @@
             <th>שעות</th>
             <th>סוג</th>
             <th>נסיעות</th>
+            <th>פעולות</th>
           </tr>
         </thead>
         <tbody>
           @for (record of filteredRecords; track record.id) {
-          <tr class="record-row" [class.expanded-row]="expandedId === record.id">
-            <td (click)="toggleRecord(record.id)">
+          <tr class="record-row" [class.editing]="editingRecordId === record.id">
+
+            <!-- Date -->
+            <td>
+              @if (editingRecordId === record.id) {
+              <input type="date" [(ngModel)]="tempRecord.date" class="edit-input date-input">
+              } @else {
               <div class="date-cell">
                 <span class="date-text">{{ record.date | date:'dd/MM/yyyy' }}</span>
                 <span class="day-text">{{ getDayOfWeek(record.date) }}</span>
               </div>
+              }
             </td>
+
+            <!-- Employee Name -->
             <td class="font-medium">
+              @if (editingRecordId === record.id) {
+              <input type="text" [(ngModel)]="tempRecord.employeeName" class="edit-input">
+              } @else {
               {{ record.employeeName }}
+              }
             </td>
-            <td>{{ record.employeePosition }}</td>
+
+            <!-- Position -->
             <td>
+              @if (editingRecordId === record.id) {
+              <input type="text" [(ngModel)]="tempRecord.employeePosition" class="edit-input">
+              } @else {
+              {{ record.employeePosition }}
+              }
+            </td>
+
+            <!-- Department -->
+            <td>
+              @if (editingRecordId === record.id) {
+              <select [(ngModel)]="tempRecord.department" class="edit-input select-input">
+                @for(dept of departments; track dept) {
+                <option [value]="dept">{{ dept }}</option>
+                }
+              </select>
+              } @else {
               <span class="dept-badge">{{ record.department || '-' }}</span>
+              }
             </td>
-            <td>{{ record.checkInTime || '-' }}</td>
-            <td>{{ record.checkOutTime || '-' }}</td>
-            <td>{{ calculateWorkHours(record.checkInTime, record.checkOutTime) }}</td>
+
+            <!-- Check In -->
             <td>
+              @if (editingRecordId === record.id) {
+              <input type="time" [(ngModel)]="tempRecord.checkInTime" class="edit-input time-input">
+              } @else {
+              {{ record.checkInTime || '-' }}
+              }
+            </td>
+
+            <!-- Check Out -->
+            <td>
+              @if (editingRecordId === record.id) {
+              <input type="time" [(ngModel)]="tempRecord.checkOutTime" class="edit-input time-input">
+              } @else {
+              {{ record.checkOutTime || '-' }}
+              }
+            </td>
+
+            <!-- Hours (Calculated) -->
+            <td>{{ calculateWorkHours(editingRecordId === record.id ? tempRecord.checkInTime : record.checkInTime,
+              editingRecordId === record.id ? tempRecord.checkOutTime : record.checkOutTime) }}</td>
+
+            <!-- Status/Type -->
+            <td>
+              @if (editingRecordId === record.id) {
+              <select [(ngModel)]="tempRecord.status" class="edit-input select-input">
+                <option value="PRESENT">נוכחות</option>
+                <option value="ABSENT">חסר</option>
+                <option value="SICK">מחלה</option>
+                <option value="VACATION">חופשה</option>
+              </select>
+              } @else {
               <span class="stat-badge" [class]="'badge-' + record.status?.toLowerCase()">
                 {{ translateStatus(record.status) }}
               </span>
+              }
             </td>
+
+            <!-- Travel -->
             <td>
+              @if (editingRecordId === record.id) {
+              <input type="checkbox" [(ngModel)]="tempRecord.travelAllowance">
+              } @else {
               {{ record.travelAllowance ? 'כן' : 'לא' }}
+              }
             </td>
+
+            <!-- Actions -->
+            <td class="actions-cell">
+              @if (editingRecordId === record.id) {
+              <button class="action-btn save-btn" (click)="saveRecord()" title="שמור">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                  <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                  <polyline points="7 3 7 8 15 8"></polyline>
+                </svg>
+              </button>
+              <button class="action-btn cancel-btn" (click)="cancelEdit()" title="ביטול">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+              <button class="action-btn delete-btn" (click)="deleteRecord(record.id)" title="מחק">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+              </button>
+              } @else {
+              <button class="action-btn edit-btn" (click)="startEdit(record)" title="ערוך">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+              </button>
+              }
+            </td>
+
           </tr>
           }
         </tbody>
@@ -136,28 +245,47 @@
 
   <!-- Statistics Summary -->
   <section class="summary-section">
-    <h3 class="section-title">📊 סיכום נוכחות</h3>
-    <div class="summary-grid">
-      <div class="summary-card summary-present">
-        <p class="summary-label">ימים נוכחים</p>
-        <p class="summary-value">{{ getSummary()?.presentDays }}</p>
+    <div class="summary-row">
+      <div class="summary-item">
+        <span class="s-label">סה"כ ימי עבודה</span>
+        <span class="s-value">{{ getSummary()?.presentDays + getSummary()?.absentDays }}</span>
       </div>
-      <div class="summary-card summary-absent">
-        <p class="summary-label">ימים חסרים</p>
-        <p class="summary-value">{{ getSummary()?.absentDays }}</p>
+      <div class="summary-item">
+        <span class="s-label">ימים נוכחים</span>
+        <span class="s-value val-green">{{ getSummary()?.presentDays }}</span>
       </div>
-      <div class="summary-card summary-sick">
-        <p class="summary-label">ימי מחלה</p>
-        <p class="summary-value">{{ getSummary()?.sickDays }}</p>
+      <div class="summary-item">
+        <span class="s-label">ימים חסרים</span>
+        <span class="s-value val-red">{{ getSummary()?.absentDays }}</span>
       </div>
-      <div class="summary-card summary-vacation">
-        <p class="summary-label">ימי חופש</p>
-        <p class="summary-value">{{ getSummary()?.vacationDays }}</p>
+      <div class="summary-item">
+        <span class="s-label">ימי מחלה</span>
+        <span class="s-value val-orange">{{ getSummary()?.sickDays }}</span>
       </div>
-      <div class="summary-card summary-rate">
-        <p class="summary-label">שיעור נוכחות</p>
-        <p class="summary-value">{{ getSummary()?.attendanceRate }}%</p>
+      <div class="summary-item">
+        <span class="s-label">ימי חופשה</span>
+        <span class="s-value val-purple">{{ getSummary()?.vacationDays }}</span>
+      </div>
+      <div class="summary-item">
+        <span class="s-label">שיעור נוכחות</span>
+        <span class="s-value val-blue">{{ getSummary()?.attendanceRate }}%</span>
+      </div>
+      <div class="summary-item">
+        <span class="s-label">סה"כ שעות</span>
+        <span class="s-value">{{ getSummary()?.totalHours }}</span>
       </div>
     </div>
   </section>
+
+  <!-- Footer Actions -->
+  <div class="footer-actions">
+    <button class="send-payroll-btn">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="22" y1="2" x2="11" y2="13"></line>
+        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+      </svg>
+      שלח לשכר
+    </button>
+  </div>
+
 </div>
