@@ -57,6 +57,16 @@
         </select>
       </div>
 
+      <div class="filter-item">
+        <label class="filter-label">עובד</label>
+        <select [(ngModel)]="selectedEmployeeName" (change)="filterAttendance()" class="filter-select">
+          <option value="">כל העובדים</option>
+          @for (emp of availableEmployees; track emp.name) {
+          <option [value]="emp.name">{{ emp.name }}</option>
+          }
+        </select>
+      </div>
+
       <button class="filter-reset-btn" (click)="clearFilters()">נקה סינון</button>
     </div>
   </section>
@@ -81,14 +91,17 @@
         </thead>
         <tbody>
           @for (record of filteredRecords; track record.id) {
-          <tr class="record-row" [class.expanded-row]="expandedId === record.id" (click)="toggleRecord(record.id)">
-            <td>
+          <tr class="record-row" [class.expanded-row]="expandedId === record.id">
+            <td (click)="toggleRecord(record.id)">
               <div class="date-cell">
                 <span class="date-text">{{ record.date | date:'dd/MM/yyyy' }}</span>
                 <span class="day-text">{{ getDayOfWeek(record.date) }}</span>
               </div>
             </td>
-            <td class="font-medium">{{ record.employeeName }}</td>
+            <td class="font-medium clickable-name"
+              (click)="selectedEmployeeName = record.employeeName; filterAttendance()">
+              {{ record.employeeName }}
+            </td>
             <td>{{ record.employeePosition }}</td>
             <td>
               <span class="dept-badge">{{ record.department || '-' }}</span>

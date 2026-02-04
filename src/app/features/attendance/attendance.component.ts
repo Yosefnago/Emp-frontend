@@ -15,6 +15,7 @@ export class AttendanceComponent implements OnInit {
   selectedYear: number = new Date().getFullYear();
   selectedMonth: string = '';
   selectedDepartment: string = '';
+  selectedEmployeeName: string = ''; // Using name for filtering as ID might redundant in this simple mock
   expandedId: number | null = null;
 
   filteredRecords: any[] = [];
@@ -23,11 +24,15 @@ export class AttendanceComponent implements OnInit {
 
   departments: string[] = ['פיתוח', 'משאבי אנוש', 'מכירות', 'בדיקות', 'עיצוב', 'ניהול המוצר'];
 
+  // Unique employees for the filter dropdown
+  uniqueEmployees: { name: string, department: string }[] = [];
+
   constructor(private router: Router) { }
 
   ngOnInit(): void {
     this.initializeYears();
     this.loadAttendanceData();
+    this.extractUniqueEmployees();
   }
 
   initializeYears(): void {
@@ -35,6 +40,26 @@ export class AttendanceComponent implements OnInit {
     for (let i = 0; i < 5; i++) {
       this.availableYears.push(currentYear - i);
     }
+  }
+
+  extractUniqueEmployees(): void {
+    const map = new Map();
+    for (const record of this.allRecords) {
+      if (!map.has(record.employeeName)) {
+        map.set(record.employeeName, {
+          name: record.employeeName,
+          department: record.department
+        });
+      }
+    }
+    this.uniqueEmployees = Array.from(map.values());
+  }
+
+  get availableEmployees() {
+    if (!this.selectedDepartment) {
+      return this.uniqueEmployees;
+    }
+    return this.uniqueEmployees.filter(emp => emp.department === this.selectedDepartment);
   }
 
   loadAttendanceData(): void {
@@ -184,8 +209,9 @@ export class AttendanceComponent implements OnInit {
       let yearMatch = !this.selectedYear || recordYear === +this.selectedYear;
       let monthMatch = !this.selectedMonth || recordMonth === this.selectedMonth;
       let departmentMatch = !this.selectedDepartment || record.department === this.selectedDepartment;
+      let employeeMatch = !this.selectedEmployeeName || record.employeeName === this.selectedEmployeeName;
 
-      return yearMatch && monthMatch && departmentMatch;
+      return yearMatch && monthMatch && departmentMatch && employeeMatch;
     });
 
     this.filteredRecords.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -195,6 +221,7 @@ export class AttendanceComponent implements OnInit {
     this.selectedYear = new Date().getFullYear();
     this.selectedMonth = '';
     this.selectedDepartment = '';
+    this.selectedEmployeeName = '';
     this.filterAttendance();
     this.expandedId = null;
   }
