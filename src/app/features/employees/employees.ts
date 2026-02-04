@@ -48,7 +48,7 @@ export class EmployeesComponent implements OnInit {
         email: emp.email,
         phoneNumber: emp.phoneNumber,
         department: emp.department,
-        attendanceStatus: emp.statusAttendance
+        address: emp.address
       }));
 
       this.allEmployees = [...this.employees];
@@ -107,12 +107,7 @@ export class EmployeesComponent implements OnInit {
 
   updateStats() {
     this.totalEmployees = this.employees.length;
-    this.activeEmployees = this.employees.filter(e =>
-      e.attendanceStatus === 'present' || e.attendanceStatus === 'late'
-    ).length;
-    this.inactiveEmployees = this.employees.filter(e =>
-      e.attendanceStatus === 'absent' || e.attendanceStatus === 'vacation'
-    ).length;
+    
   }
 
   getInitials(name: string): string {

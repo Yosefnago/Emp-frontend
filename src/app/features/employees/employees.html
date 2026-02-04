@@ -106,7 +106,7 @@
           <th>אימייל</th>
           <th>טלפון</th>
           <th>מחלקה</th>
-          <th>סטטוס נוכחות</th>
+          <th>כתובת</th>
           <th>פעולות</th>
         </tr>
       </thead>
@@ -135,9 +135,9 @@
               <span class="department-badge">{{ employee.department }}</span>
             </td>
             <td>
-              <span class="status-badge" [ngClass]="getStatusClass(employee.attendanceStatus)">
+              <span class="status-badge" [ngClass]="getStatusClass(employee.address)">
                 <span class="status-dot"></span>
-                {{ getStatusText(employee.attendanceStatus) }}
+                {{ getStatusText(employee.address) }}
               </span>
             </td>
             <td>

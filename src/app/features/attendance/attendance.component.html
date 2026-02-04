@@ -29,8 +29,8 @@
     <div class="filter-group">
       <div class="filter-item">
         <label class="filter-label">שנה</label>
-        <select [(ngModel)]="selectedYear" (change)="filterAttendance()" class="filter-select">
-          <option value="">כל השנים</option>
+        <select [(ngModel)]="selectedYear" class="filter-select">
+          <option value="">בחר שנה</option>
           @for (year of availableYears; track year) {
           <option [value]="year">{{ year }}</option>
           }
@@ -39,8 +39,8 @@
 
       <div class="filter-item">
         <label class="filter-label">חודש</label>
-        <select [(ngModel)]="selectedMonth" (change)="filterAttendance()" class="filter-select">
-          <option value="">כל החודשים</option>
+        <select [(ngModel)]="selectedMonth" class="filter-select">
+          <option value="">בחר חודש</option>
           <option value="1">ינואר</option>
           <option value="2">פברואר</option>
           <option value="3">מרץ</option>
@@ -58,25 +58,25 @@
 
       <div class="filter-item">
         <label class="filter-label">מחלקה</label>
-        <select [(ngModel)]="selectedDepartment" (change)="filterAttendance()" class="filter-select">
-          <option value="">כל המחלקות</option>
+        <select [(ngModel)]="selectedDepartment" class="filter-select">
+          <option value="">בחר מחלקה</option>
           @for (dept of departments; track dept) {
-          <option [value]="dept">{{ dept }}</option>
+            <option [value]="dept">{{ dept }}</option>
           }
         </select>
       </div>
 
       <div class="filter-item">
         <label class="filter-label">עובד</label>
-        <select [(ngModel)]="selectedEmployeeName" (change)="filterAttendance()" class="filter-select">
-          <option value="">כל העובדים</option>
+        <select [(ngModel)]="selectedEmployeeName" class="filter-select">
+          <option value="">בחר עובד</option>
           @for (emp of availableEmployees; track emp.name) {
-          <option [value]="emp.name">{{ emp.name }}</option>
+            <option [value]="emp.name">{{ emp.name }}</option>
           }
         </select>
       </div>
-
-      <button class="filter-reset-btn" (click)="clearFilters()">נקה סינון</button>
+      <button class="search-button" (click)="loadAttendanceData()">חפש</button>
+      <button class="filter-reset-btn" (click)="clearFilters()">נקה סינון</button>      
     </div>
   </section>
 
@@ -118,18 +118,18 @@
             <!-- Employee Name -->
             <td class="font-medium">
               @if (editingRecordId === record.id) {
-              <input type="text" [(ngModel)]="tempRecord.employeeName" class="edit-input">
+              <input type="text" [(ngModel)]="tempRecord.name" class="edit-input">
               } @else {
-              {{ record.employeeName }}
+              {{ record.name }}
               }
             </td>
 
             <!-- Position -->
             <td>
               @if (editingRecordId === record.id) {
-              <input type="text" [(ngModel)]="tempRecord.employeePosition" class="edit-input">
+              <input type="text" [(ngModel)]="tempRecord.position" class="edit-input">
               } @else {
-              {{ record.employeePosition }}
+              {{ record.position }}
               }
             </td>
 

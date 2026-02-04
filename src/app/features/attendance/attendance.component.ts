@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AttendanceService } from '../../core/services/attendance.service';
+import { SearchQuery } from '../../core/models/Attendance';
 
 @Component({
   selector: 'app-attendance',
@@ -12,27 +14,38 @@ import { Router } from '@angular/router';
   styleUrls: ['./attendance.component.css']
 })
 export class AttendanceComponent implements OnInit {
-  selectedYear: number = new Date().getFullYear();
+  selectedYear: string = new Date().getFullYear().toString();
   selectedMonth: string = '';
   selectedDepartment: string = '';
   selectedEmployeeName: string = ''; 
-  expandedId: number | null = null;
+  
 
   filteredRecords: any[] = [];
   allRecords: any[] = [];
   availableYears: number[] = [];
 
-  departments: string[] = ['פיתוח', 'משאבי אנוש', 'מכירות', 'בדיקות', 'עיצוב', 'ניהול המוצר'];
+  departments: string[] = ['פיתוח', 'משאבי אנוש', 'מכירות', 'שיווק', 'תמיכה', 'ניהול', 'כספים'
+  ];
+
+
+  private readonly departmentMap: Record<string, string> = {
+    'פיתוח': 'DEV',
+    'משאבי אנוש': 'HR',
+    'מכירות': 'SALES',
+    'שיווק': 'MARKETING',
+    'תמיכה': 'IT',
+    'ניהול': 'MANAGEMENT',
+    'כספים': 'Finance'
+  };
 
   // Unique employees for the filter dropdown
   uniqueEmployees: { name: string, department: string }[] = [];
 
-  constructor(private router: Router) { }
+  constructor(private router: Router,private attendanceService: AttendanceService) { }
 
   ngOnInit(): void {
     this.initializeYears();
-    this.loadAttendanceData();
-    this.extractUniqueEmployees();
+    this.initilazieMapOfEemployees();
   }
 
   initializeYears(): void {
@@ -41,193 +54,61 @@ export class AttendanceComponent implements OnInit {
       this.availableYears.push(currentYear - i);
     }
   }
-
-  extractUniqueEmployees(): void {
-    const map = new Map();
-    for (const record of this.allRecords) {
-      if (!map.has(record.employeeName)) {
-        map.set(record.employeeName, {
-          name: record.employeeName,
-          department: record.department
-        });
-      }
-    }
-    this.uniqueEmployees = Array.from(map.values());
+  initilazieMapOfEemployees(): void {
+    
+    this.attendanceService.loadMapOfEmployees().subscribe(employees => {
+      this.uniqueEmployees = employees;
+    });
   }
 
+  
   get availableEmployees() {
     if (!this.selectedDepartment) {
       return this.uniqueEmployees;
     }
-    return this.uniqueEmployees.filter(emp => emp.department === this.selectedDepartment);
+
+    const deptCode = this.departmentMap[this.selectedDepartment]; 
+    if (!deptCode) return []; 
+
+    return this.uniqueEmployees.filter(emp => emp.department === deptCode);
   }
 
   loadAttendanceData(): void {
-    this.allRecords = [
-      {
-        id: 1,
-        date: new Date(2026, 11, 15),
-        employeeName: 'יוסף נאגו',
-        employeePosition: 'Senior Developer',
-        department: 'פיתוח',
-        checkInTime: '08:30',
-        checkOutTime: '17:15',
-        status: 'PRESENT',
-        notes: ''
-      },
-      {
-        id: 2,
-        date: new Date(2026, 11, 16),
-        employeeName: 'מרים כהן',
-        employeePosition: 'QA Engineer',
-        department: 'בדיקות',
-        checkInTime: '09:00',
-        checkOutTime: '17:30',
-        status: 'PRESENT',
-        notes: ''
-      },
-      {
-        id: 3,
-        date: new Date(2026, 11, 17),
-        employeeName: 'אלחנן ברק',
-        employeePosition: 'DevOps',
-        department: 'פיתוח',
-        checkInTime: null,
-        checkOutTime: null,
-        status: 'SICK',
-        notes: 'כאב גרון'
-      },
-      {
-        id: 4,
-        date: new Date(2026, 11, 18),
-        employeeName: 'שרה זילברמן',
-        employeePosition: 'Frontend Developer',
-        department: 'פיתוח',
-        checkInTime: '08:15',
-        checkOutTime: '16:45',
-        status: 'PRESENT',
-        notes: ''
-      },
-      {
-        id: 5,
-        date: new Date(2026, 11, 19),
-        employeeName: 'מיכאל ספיר',
-        employeePosition: 'Backend Developer',
-        department: 'פיתוח',
-        checkInTime: null,
-        checkOutTime: null,
-        status: 'VACATION',
-        notes: 'חופשה שנתית'
-      },
-      {
-        id: 6,
-        date: new Date(2026, 11, 22),
-        employeeName: 'נעמי רוזנטל',
-        employeePosition: 'UI/UX Designer',
-        department: 'עיצוב',
-        checkInTime: '08:45',
-        checkOutTime: '17:00',
-        status: 'PRESENT',
-        notes: ''
-      },
-      {
-        id: 7,
-        date: new Date(2026, 11, 23),
-        employeeName: 'יוסף נג',
-        employeePosition: 'Senior Developer',
-        department: 'פיתוח',
-        checkInTime: null,
-        checkOutTime: null,
-        status: 'ABSENT',
-        notes: 'היעדרות לא מוצדקת'
-      },
-      {
-        id: 8,
-        date: new Date(2026, 11, 24),
-        employeeName: 'מרים כהן',
-        employeePosition: 'QA Engineer',
-        department: 'בדיקות',
-        checkInTime: '08:30',
-        checkOutTime: '17:15',
-        status: 'PRESENT',
-        notes: ''
-      },
-      {
-        id: 9,
-        date: new Date(2026, 11, 5),
-        employeeName: 'אלחנן ברק',
-        employeePosition: 'DevOps',
-        department: 'פיתוח',
-        checkInTime: '08:00',
-        checkOutTime: '17:00',
-        status: 'PRESENT',
-        notes: ''
-      },
-      {
-        id: 10,
-        date: new Date(2026, 11, 6),
-        employeeName: 'שרה זילברמן',
-        employeePosition: 'Frontend Developer',
-        department: 'פיתוח',
-        checkInTime: '09:15',
-        checkOutTime: '17:30',
-        status: 'PRESENT',
-        notes: ''
-      },
-      {
-        id: 11,
-        date: new Date(2026, 11, 6),
-        employeeName: 'דוד לוי',
-        employeePosition: 'HR Manager',
-        department: 'משאבי אנוש',
-        checkInTime: '08:00',
-        checkOutTime: '16:00',
-        status: 'PRESENT',
-        notes: ''
-      },
-      {
-        id: 12,
-        date: new Date(2026, 11, 6),
-        employeeName: 'רחל כהן',
-        employeePosition: 'Sales Manager',
-        department: 'מכירות',
-        checkInTime: '10:00',
-        checkOutTime: '19:00',
-        status: 'PRESENT',
-        notes: ''
-      }
-    ];
-
     this.filterAttendance();
   }
 
   filterAttendance(): void {
-    this.filteredRecords = this.allRecords.filter(record => {
-      const recordYear = record.date.getFullYear();
-      const recordMonth = (record.date.getMonth() + 1).toString();
 
-      let yearMatch = !this.selectedYear || recordYear === +this.selectedYear;
-      let monthMatch = !this.selectedMonth || recordMonth === this.selectedMonth;
-      let departmentMatch = !this.selectedDepartment || record.department === this.selectedDepartment;
-      let employeeMatch = !this.selectedEmployeeName || record.employeeName === this.selectedEmployeeName;
+    const departmentCode = this.selectedDepartment 
+        ? this.departmentMap[this.selectedDepartment] 
+        : '';
 
-      return yearMatch && monthMatch && departmentMatch && employeeMatch;
-    });
+    const query: SearchQuery = {
+      year: this.selectedYear,
+      month: this.selectedMonth,
+      department: departmentCode || '',
+      employeeName: this.selectedEmployeeName || ''
+    };
+    
+    this.attendanceService.loadAttendanceRecords(query).subscribe(records => {
 
-    this.filteredRecords.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      this.allRecords = records.map(record => ({
+        ...record,
+        date: new Date(record.date)
+      }));
+      
+      this.filteredRecords = [...this.allRecords];
+      
+      this.filteredRecords.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  });
   }
 
   clearFilters(): void {
-    this.selectedYear = new Date().getFullYear();
+    this.selectedYear = new Date().getFullYear().toString();
     this.selectedMonth = '';
     this.selectedDepartment = '';
     this.selectedEmployeeName = '';
     this.filterAttendance();
-    this.expandedId = null;
-  }
-
-  toggleRecord(id: number): void {
-    this.expandedId = this.expandedId === id ? null : id;
   }
 
   getDayOfWeek(date: Date): string {

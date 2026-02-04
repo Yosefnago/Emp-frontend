@@ -5,7 +5,7 @@ export interface Employee {
   email: string;
   phoneNumber: string;
   department: string;
-  attendanceStatus: 'present' | 'absent' | 'late' | 'vacation';
+  address: string;
   selected?: boolean;
 }
 

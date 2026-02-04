@@ -47,10 +47,8 @@ export class AddEmployeeModalComponent {
 
   // Status options
   statuses = [
-    { value: 'present', label: 'נוכח' },
-    { value: 'absent', label: 'נעדר' },
-    { value: 'late', label: 'איחור' },
-    { value: 'vacation', label: 'חופשה' }
+    { value: 'ACTIVE', label: 'פעיל' },
+    { value: 'INACTIVE', label: 'לא פעיל' },
   ];
 
   open() {
