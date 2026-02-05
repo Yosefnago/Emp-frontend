@@ -61,7 +61,7 @@
         <select [(ngModel)]="selectedDepartment" class="filter-select">
           <option value="">בחר מחלקה</option>
           @for (dept of departments; track dept) {
-            <option [value]="dept">{{ dept }}</option>
+          <option [value]="dept">{{ dept }}</option>
           }
         </select>
       </div>
@@ -71,12 +71,12 @@
         <select [(ngModel)]="selectedEmployeeName" class="filter-select">
           <option value="">בחר עובד</option>
           @for (emp of availableEmployees; track emp.name) {
-            <option [value]="emp.name">{{ emp.name }}</option>
+          <option [value]="emp.name">{{ emp.name }}</option>
           }
         </select>
       </div>
       <button class="search-button" (click)="loadAttendanceData()">חפש</button>
-      <button class="filter-reset-btn" (click)="clearFilters()">נקה סינון</button>      
+      <button class="filter-reset-btn" (click)="clearFilters()">נקה סינון</button>
     </div>
   </section>
 
@@ -89,23 +89,22 @@
           <tr>
             <th>תאריך</th>
             <th>שם העובד</th>
-            <th>תפקיד</th>
-            <th>מחלקה</th>
             <th>כניסה</th>
             <th>יציאה</th>
             <th>שעות</th>
             <th>סוג</th>
             <th>נסיעות</th>
+            <th>הערות</th>
             <th>פעולות</th>
           </tr>
         </thead>
         <tbody>
-          @for (record of filteredRecords; track record.id) {
-          <tr class="record-row" [class.editing]="editingRecordId === record.id">
+          @for (record of filteredRecords; track record.uiId) {
+          <tr class="record-row" [class.editing]="editingRecordId === record.uiId">
 
             <!-- Date -->
             <td>
-              @if (editingRecordId === record.id) {
+              @if (editingRecordId === record.uiId) {
               <input type="date" [(ngModel)]="tempRecord.date" class="edit-input date-input">
               } @else {
               <div class="date-cell">
@@ -117,38 +116,17 @@
 
             <!-- Employee Name -->
             <td class="font-medium">
-              @if (editingRecordId === record.id) {
+              @if (editingRecordId === record.uiId) {
               <input type="text" [(ngModel)]="tempRecord.name" class="edit-input">
               } @else {
               {{ record.name }}
               }
             </td>
 
-            <!-- Position -->
-            <td>
-              @if (editingRecordId === record.id) {
-              <input type="text" [(ngModel)]="tempRecord.position" class="edit-input">
-              } @else {
-              {{ record.position }}
-              }
-            </td>
-
-            <!-- Department -->
-            <td>
-              @if (editingRecordId === record.id) {
-              <select [(ngModel)]="tempRecord.department" class="edit-input select-input">
-                @for(dept of departments; track dept) {
-                <option [value]="dept">{{ dept }}</option>
-                }
-              </select>
-              } @else {
-              <span class="dept-badge">{{ record.department || '-' }}</span>
-              }
-            </td>
 
             <!-- Check In -->
             <td>
-              @if (editingRecordId === record.id) {
+              @if (editingRecordId === record.uiId) {
               <input type="time" [(ngModel)]="tempRecord.checkInTime" class="edit-input time-input">
               } @else {
               {{ record.checkInTime || '-' }}
@@ -157,7 +135,7 @@
 
             <!-- Check Out -->
             <td>
-              @if (editingRecordId === record.id) {
+              @if (editingRecordId === record.uiId) {
               <input type="time" [(ngModel)]="tempRecord.checkOutTime" class="edit-input time-input">
               } @else {
               {{ record.checkOutTime || '-' }}
@@ -165,12 +143,12 @@
             </td>
 
             <!-- Hours (Calculated) -->
-            <td>{{ calculateWorkHours(editingRecordId === record.id ? tempRecord.checkInTime : record.checkInTime,
-              editingRecordId === record.id ? tempRecord.checkOutTime : record.checkOutTime) }}</td>
+            <td>{{ calculateWorkHours(editingRecordId === record.uiId ? tempRecord.checkInTime : record.checkInTime,
+              editingRecordId === record.uiId ? tempRecord.checkOutTime : record.checkOutTime) }}</td>
 
             <!-- Status/Type -->
             <td>
-              @if (editingRecordId === record.id) {
+              @if (editingRecordId === record.uiId) {
               <select [(ngModel)]="tempRecord.status" class="edit-input select-input">
                 <option value="PRESENT">נוכחות</option>
                 <option value="ABSENT">חסר</option>
@@ -186,16 +164,25 @@
 
             <!-- Travel -->
             <td>
-              @if (editingRecordId === record.id) {
+              @if (editingRecordId === record.uiId) {
               <input type="checkbox" [(ngModel)]="tempRecord.travelAllowance">
               } @else {
               {{ record.travelAllowance ? 'כן' : 'לא' }}
               }
             </td>
 
+            <!-- Notes -->
+            <td>
+              @if (editingRecordId === record.uiId) {
+              <input type="text" [(ngModel)]="tempRecord.notes" class="edit-input">
+              } @else {
+              {{ record.notes }}
+              }
+            </td>
+
             <!-- Actions -->
             <td class="actions-cell">
-              @if (editingRecordId === record.id) {
+              @if (editingRecordId === record.uiId) {
               <button class="action-btn save-btn" (click)="saveRecord()" title="שמור">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>

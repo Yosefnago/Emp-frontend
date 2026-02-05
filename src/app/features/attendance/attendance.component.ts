@@ -17,8 +17,8 @@ export class AttendanceComponent implements OnInit {
   selectedYear: string = new Date().getFullYear().toString();
   selectedMonth: string = '';
   selectedDepartment: string = '';
-  selectedEmployeeName: string = ''; 
-  
+  selectedEmployeeName: string = '';
+
 
   filteredRecords: any[] = [];
   allRecords: any[] = [];
@@ -41,7 +41,7 @@ export class AttendanceComponent implements OnInit {
   // Unique employees for the filter dropdown
   uniqueEmployees: { name: string, department: string }[] = [];
 
-  constructor(private router: Router,private attendanceService: AttendanceService) { }
+  constructor(private router: Router, private attendanceService: AttendanceService) { }
 
   ngOnInit(): void {
     this.initializeYears();
@@ -55,20 +55,20 @@ export class AttendanceComponent implements OnInit {
     }
   }
   initilazieMapOfEemployees(): void {
-    
+
     this.attendanceService.loadMapOfEmployees().subscribe(employees => {
       this.uniqueEmployees = employees;
     });
   }
 
-  
+
   get availableEmployees() {
     if (!this.selectedDepartment) {
       return this.uniqueEmployees;
     }
 
-    const deptCode = this.departmentMap[this.selectedDepartment]; 
-    if (!deptCode) return []; 
+    const deptCode = this.departmentMap[this.selectedDepartment];
+    if (!deptCode) return [];
 
     return this.uniqueEmployees.filter(emp => emp.department === deptCode);
   }
@@ -79,9 +79,9 @@ export class AttendanceComponent implements OnInit {
 
   filterAttendance(): void {
 
-    const departmentCode = this.selectedDepartment 
-        ? this.departmentMap[this.selectedDepartment] 
-        : '';
+    const departmentCode = this.selectedDepartment
+      ? this.departmentMap[this.selectedDepartment]
+      : '';
 
     const query: SearchQuery = {
       year: this.selectedYear,
@@ -89,18 +89,20 @@ export class AttendanceComponent implements OnInit {
       department: departmentCode || '',
       employeeName: this.selectedEmployeeName || ''
     };
-    
+
     this.attendanceService.loadAttendanceRecords(query).subscribe(records => {
 
-      this.allRecords = records.map(record => ({
+      this.allRecords = records.map((record, index) => ({
         ...record,
+
+        uiId: `record-${index}-${Date.now()}`,
         date: new Date(record.date)
       }));
-      
+
       this.filteredRecords = [...this.allRecords];
-      
+
       this.filteredRecords.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-  });
+    });
   }
 
   clearFilters(): void {
@@ -144,15 +146,14 @@ export class AttendanceComponent implements OnInit {
   }
 
   attendanceTypes: string[] = ['נוכחות', 'תפקיד', 'חופשה', 'מחלה'];
-  editingRecordId: number | null = null;
+  editingRecordId: string | null = null;
   tempRecord: any = null;
 
-  // ... existing code ...
 
   startEdit(record: any): void {
-    this.editingRecordId = record.id;
+    this.editingRecordId = record.uiId;
     this.tempRecord = { ...record };
-    // Format date for input type="date"
+
     if (this.tempRecord.date instanceof Date) {
       this.tempRecord.date = this.tempRecord.date.toISOString().split('T')[0];
     }
@@ -167,23 +168,28 @@ export class AttendanceComponent implements OnInit {
     if (!this.tempRecord) return;
 
     const index = this.allRecords.findIndex(r => r.id === this.tempRecord.id);
+
     if (index !== -1) {
-      // Update existing record
+
       this.allRecords[index] = {
         ...this.tempRecord,
         date: new Date(this.tempRecord.date)
       };
     } else {
-      // Add new record (if it was a temporary new record)
+
       this.allRecords.unshift({
         ...this.tempRecord,
         date: new Date(this.tempRecord.date)
       });
     }
 
+    this.attendanceService.updateAttendanceRecord(this.tempRecord).subscribe(() => {
+      this.loadAttendanceData();
+    });
+
     this.editingRecordId = null;
     this.tempRecord = null;
-    this.filterAttendance();
+
   }
 
   addRecord(): void {
@@ -200,27 +206,20 @@ export class AttendanceComponent implements OnInit {
       notes: '',
       travelAllowance: false
     };
-    
-    // We add it to filteredRecords directly or handle it as a temporary unsaved row. 
-    // Simplified: Push to filteredRecords temporarily or just start editing a "ghost" record?
-    // Let's add it to allRecords and start editing.
-    // Note: To make it appear at the top, we might need to handle sorting.
-    
+
     this.allRecords.unshift({
-        ...newRecord,
-        date: new Date()
+      ...newRecord,
+      date: new Date()
     });
-    
-    this.filterAttendance(); // Refresh to show it (sorting might move it though if date is old)
+
+    this.filterAttendance();
     this.startEdit(this.allRecords.find(r => r.id === newId));
   }
 
   deleteRecord(id: number): void {
-      this.allRecords = this.allRecords.filter(r => r.id !== id);
-      this.filterAttendance();
+    this.allRecords = this.allRecords.filter(r => r.id !== id);
+    this.filterAttendance();
   }
-  
-  // ... existing code ...
 
   getSummary(): any {
     const presentDays = this.filteredRecords.filter(r => r.status === 'PRESENT').length;
@@ -233,14 +232,14 @@ export class AttendanceComponent implements OnInit {
 
     let totalMinutes = 0;
     this.filteredRecords.forEach(r => {
-        if (r.checkInTime && r.checkOutTime) {
-            const [inH, inM] = r.checkInTime.split(':').map(Number);
-            const [outH, outM] = r.checkOutTime.split(':').map(Number);
-            let mins = (outH * 60 + outM) - (inH * 60 + inM);
-            if (mins > 0) totalMinutes += mins;
-        }
+      if (r.checkInTime && r.checkOutTime) {
+        const [inH, inM] = r.checkInTime.split(':').map(Number);
+        const [outH, outM] = r.checkOutTime.split(':').map(Number);
+        let mins = (outH * 60 + outM) - (inH * 60 + inM);
+        if (mins > 0) totalMinutes += mins;
+      }
     });
-    
+
     const hours = Math.floor(totalMinutes / 60);
     const minutes = totalMinutes % 60;
     const totalHours = `${hours}:${minutes.toString().padStart(2, '0')}`;
