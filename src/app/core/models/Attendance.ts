@@ -20,3 +20,10 @@ export interface AttendanceRecord {
   notes: string;
   travelAllowance: boolean;
 }
+export interface AttendanceSummary {
+  personalId: string;
+  year: string;
+  month: string;
+  department: string;
+  employeeName: string;
+}

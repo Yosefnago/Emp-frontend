@@ -10,6 +10,7 @@
         </svg>
         <span>חזור</span>
       </button>
+      @if(!attendanceMonthSendedToPayroll) {
       <button class="add-btn" (click)="addRecord()">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -17,6 +18,7 @@
         </svg>
         <span>הוסף רשומה</span>
       </button>
+    }
     </div>
     <div class="header-content">
       <h1 class="page-title">רשומות נוכחות</h1>
@@ -95,7 +97,9 @@
             <th>סוג</th>
             <th>נסיעות</th>
             <th>הערות</th>
-            <th>פעולות</th>
+            @if(!attendanceMonthSendedToPayroll) {
+              <th>פעולות</th>
+            }
           </tr>
         </thead>
         <tbody>
@@ -180,6 +184,7 @@
               }
             </td>
 
+            @if (!attendanceMonthSendedToPayroll) {
             <!-- Actions -->
             <td class="actions-cell">
               @if (editingRecordId === record.uiId) {
@@ -211,7 +216,7 @@
               </button>
               }
             </td>
-
+            }
           </tr>
           }
         </tbody>
@@ -266,13 +271,19 @@
 
   <!-- Footer Actions -->
   <div class="footer-actions">
-    <button class="send-payroll-btn">
+    @if(!attendanceMonthSendedToPayroll) {  
+    <button class="send-payroll-btn" (click)="sendToPayroll()">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <line x1="22" y1="2" x2="11" y2="13"></line>
         <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
       </svg>
       שלח לשכר
     </button>
+  }@else {
+    <div class="sent-badge">
+      <span>הנתונים הועברו למחלקת שכר</span>
+    </div>
+  }
   </div>
 
 </div>

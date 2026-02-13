@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { AttendanceRecord, EmployeeOption, SearchQuery } from "../models/Attendance";
+import { AttendanceRecord, AttendanceSummary, EmployeeOption, SearchQuery } from "../models/Attendance";
 
 
 @Injectable({
@@ -31,5 +31,11 @@ export class AttendanceService {
             record
         );
 
+    }
+    sendToPayroll(record: AttendanceSummary) {
+        return this.http.post(
+            `${this.apiUrl}/payroll`,
+            record
+        );
     }
 }

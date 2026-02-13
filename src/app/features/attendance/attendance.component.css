@@ -54,13 +54,13 @@
 .page-title {
   font-size: 28px;
   font-weight: 600;
-  /* Reduced from 700 */
   color: #1a1a1a;
   margin: 0;
   letter-spacing: -0.5px;
 }
 
 .page-subtitle {
+  padding-top: 5px;
   font-size: 14px;
   color: #6c757d;
   margin: 0;
@@ -314,6 +314,11 @@
   color: #1e40af;
 }
 
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #64748b;
+}
 
 /* New Summary Section */
 .summary-section {
@@ -399,6 +404,17 @@
   background: #2563eb;
   transform: translateY(-2px);
   box-shadow: 0 6px 8px -1px rgba(59, 130, 246, 0.4);
+}
+
+.sent-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #f3f3f3; 
+  font-weight: 600;
+  padding: 10px;
+  background-color: #0b88d1d2;
+  border-radius: 5px;
 }
 
 .date-cell {

@@ -4,7 +4,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AttendanceService } from '../../core/services/attendance.service';
-import { SearchQuery } from '../../core/models/Attendance';
+import { AttendanceSummary, SearchQuery } from '../../core/models/Attendance';
+import { SystemMessages } from '../../core/services/system-messages.service';
 
 @Component({
   selector: 'app-attendance',
@@ -27,6 +28,7 @@ export class AttendanceComponent implements OnInit {
   departments: string[] = ['פיתוח', 'משאבי אנוש', 'מכירות', 'שיווק', 'תמיכה', 'ניהול', 'כספים'
   ];
 
+  attendanceMonthSendedToPayroll: boolean = false;
 
   private readonly departmentMap: Record<string, string> = {
     'פיתוח': 'DEV',
@@ -41,11 +43,12 @@ export class AttendanceComponent implements OnInit {
   // Unique employees for the filter dropdown
   uniqueEmployees: { name: string, department: string }[] = [];
 
-  constructor(private router: Router, private attendanceService: AttendanceService) { }
+  constructor(private router: Router, private attendanceService: AttendanceService,private systemMessages: SystemMessages) { }
 
   ngOnInit(): void {
     this.initializeYears();
     this.initilazieMapOfEemployees();
+    this.attendanceMonthSendedToPayroll = false;
   }
 
   initializeYears(): void {
@@ -110,7 +113,7 @@ export class AttendanceComponent implements OnInit {
     this.selectedMonth = '';
     this.selectedDepartment = '';
     this.selectedEmployeeName = '';
-    this.filterAttendance();
+    this.filteredRecords = [];
   }
 
   getDayOfWeek(date: Date): string {
@@ -151,6 +154,10 @@ export class AttendanceComponent implements OnInit {
 
 
   startEdit(record: any): void {
+    if(this.attendanceMonthSendedToPayroll){
+      return;
+    }
+
     this.editingRecordId = record.uiId;
     this.tempRecord = { ...record };
 
@@ -160,11 +167,17 @@ export class AttendanceComponent implements OnInit {
   }
 
   cancelEdit(): void {
+    if(this.attendanceMonthSendedToPayroll){
+      return;
+    }
     this.editingRecordId = null;
     this.tempRecord = null;
   }
 
   saveRecord(): void {
+    if(this.attendanceMonthSendedToPayroll){
+      return;
+    }
     if (!this.tempRecord) return;
 
     const index = this.allRecords.findIndex(r => r.id === this.tempRecord.id);
@@ -193,6 +206,9 @@ export class AttendanceComponent implements OnInit {
   }
 
   addRecord(): void {
+    if(this.attendanceMonthSendedToPayroll){
+      return;
+    }
     const newId = Math.max(...this.allRecords.map(r => r.id), 0) + 1;
     const newRecord = {
       id: newId,
@@ -217,6 +233,7 @@ export class AttendanceComponent implements OnInit {
   }
 
   deleteRecord(id: number): void {
+    if (this.attendanceMonthSendedToPayroll) return;
     this.allRecords = this.allRecords.filter(r => r.id !== id);
     this.filterAttendance();
   }
@@ -256,5 +273,82 @@ export class AttendanceComponent implements OnInit {
 
   goBack(): void {
     this.router.navigate(['/home']);
+  }
+  /// Payroll Integration --------------------- 
+  // to complete the payroll integration.
+  sendToPayroll(): void {
+
+    if(!this.attendanceRecordsValidort()){
+      return
+    }
+    
+     const attendanceSummary: AttendanceSummary = {
+      personalId: this.filteredRecords[0]?.personalId || '',
+      year: this.selectedYear,
+      month: this.selectedMonth,
+      department: this.selectedDepartment,
+      employeeName: this.selectedEmployeeName,
+    }; 
+    
+    console.log('Sending to payroll:', attendanceSummary);
+    
+    this.attendanceService.sendToPayroll(attendanceSummary).subscribe({
+      next: () => {
+        this.systemMessages.show('הנתונים נשלחו בהצלחה למחלקת השכר', true);
+        this.attendanceMonthSendedToPayroll = true;
+      },
+      error: () => {
+        this.systemMessages.show('אירעה שגיאה בשליחת הנתונים למחלקת השכר', false);
+      }
+    }); 
+  } 
+  attendanceRecordsValidort():boolean{
+
+    // validate that year is selected
+    if(this.selectedYear ==='' || this.selectedYear === null){
+      this.systemMessages.show('אנא בחר שנה', false);
+      return false;
+    }
+    // validate that month is selected
+    if(this.selectedMonth ==='' || this.selectedMonth === null){
+      this.systemMessages.show('אנא בחר חודש', false);
+      return false;
+    }
+    if(this.selectedDepartment ==='' || this.selectedDepartment === null){
+      this.systemMessages.show('אנא בחר מחלקה', false);
+      return false;
+    }
+    if(this.selectedEmployeeName ==='' || this.selectedEmployeeName === null){
+      this.systemMessages.show('אנא בחר שם עובד', false);
+      return false;
+    }
+    
+    // validate that if there any check-in time is after check-out time
+    const invalidCheckIn = this.filteredRecords.find(r => r.checkInTime > r.checkOutTime);
+
+    if (invalidCheckIn) {
+      const formattedDate = invalidCheckIn.date.toLocaleDateString();
+      this.systemMessages.show(`בתאריך ${formattedDate} יש רשומה עם שעת כניסה מאוחרת משעת יציאה`, false);
+      return false;
+    }
+    
+    // validate that if there any record with empty check-in time and status is PRESENT
+    const emptyCheckIn = this.filteredRecords.find(r => !r.checkInTime  && r.status === 'PRESENT');
+
+    if (emptyCheckIn) {
+      const formattedDate = emptyCheckIn.date.toLocaleDateString();
+      this.systemMessages.show(`בתאריך ${formattedDate} יש רשומה עם שעת כניסה ריקה`, false);
+      return false;
+    }
+
+    // validate that if there any record with empty check-out time and status is PRESENT
+    const emptyCheckOut = this.filteredRecords.find(r => !r.checkOutTime && r.status === 'PRESENT');
+
+    if (emptyCheckOut) {
+      const formattedDate = emptyCheckOut.date.toLocaleDateString();
+      this.systemMessages.show(`בתאריך ${formattedDate} יש רשומה עם שעת יציאה ריקה`, false);
+      return false;
+    }
+    return true;
   }
 }
