@@ -10,6 +10,7 @@ import { AttendanceRecord, AttendanceSummary, EmployeeOption, SearchQuery } from
 export class AttendanceService {
 
     private apiUrl = 'http://localhost:8090/attendance';
+    private payrollApiUrl = 'http://localhost:8090/salary';
 
     constructor(private http: HttpClient) { }
 
@@ -34,7 +35,7 @@ export class AttendanceService {
     }
     sendToPayroll(record: AttendanceSummary) {
         return this.http.post(
-            `${this.apiUrl}/payroll`,
+            `${this.payrollApiUrl}/payroll`,
             record
         );
     }
