@@ -19,6 +19,7 @@ export interface AttendanceRecord {
   status: string;
   notes: string;
   travelAllowance: boolean;
+  attendanceClosed: boolean; 
 }
 export interface AttendanceSummary {
   personalId: string;

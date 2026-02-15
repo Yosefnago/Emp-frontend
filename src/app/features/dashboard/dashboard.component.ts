@@ -112,6 +112,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         return 'delete';
       case 'RESTORE':
         return 'restore';
+      case 'SENT_TO_PAYROLL':
+        return 'send_to_payroll';
+      case 'GENERATED_PAYROLL':
+        return 'generate_payroll';    
       default:
         return 'default';
 
@@ -131,7 +135,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       'DELETE': 'מחק',
       'UPDATE': 'עדכן',
       'ARCHIVE': 'העביר לארכיון',
-      'RESTORE': 'שחזר'
+      'RESTORE': 'שחזר',
+      'SENT_TO_PAYROLL': 'נשלח לעיבוד שכר',
+      'GENERATED_PAYROLL': 'נוצר תלוש שכר'
     };
 
     const hebrewAction = actionLabels[action] || action;

@@ -19,7 +19,7 @@ export class AttendanceComponent implements OnInit {
   selectedMonth: string = '';
   selectedDepartment: string = '';
   selectedEmployeeName: string = '';
-
+ 
 
   filteredRecords: any[] = [];
   allRecords: any[] = [];
@@ -48,7 +48,6 @@ export class AttendanceComponent implements OnInit {
   ngOnInit(): void {
     this.initializeYears();
     this.initilazieMapOfEemployees();
-    this.attendanceMonthSendedToPayroll = false;
   }
 
   initializeYears(): void {
@@ -105,7 +104,20 @@ export class AttendanceComponent implements OnInit {
       this.filteredRecords = [...this.allRecords];
 
       this.filteredRecords.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+      this.checkIfPeriodClosed();
     });
+  }
+
+  checkIfPeriodClosed(): void {
+    if (this.filteredRecords.length === 0) {
+      this.attendanceMonthSendedToPayroll = false;
+      return;
+    }
+
+    this.attendanceMonthSendedToPayroll = this.filteredRecords.every(
+      record => record.attendanceClosed === true
+    );
   }
 
   clearFilters(): void {
@@ -114,6 +126,7 @@ export class AttendanceComponent implements OnInit {
     this.selectedDepartment = '';
     this.selectedEmployeeName = '';
     this.filteredRecords = [];
+    this.attendanceMonthSendedToPayroll = false;
   }
 
   getDayOfWeek(date: Date): string {
@@ -154,7 +167,8 @@ export class AttendanceComponent implements OnInit {
 
 
   startEdit(record: any): void {
-    if(this.attendanceMonthSendedToPayroll){
+    if (this.attendanceMonthSendedToPayroll) {
+      this.systemMessages.show('לא ניתן לערוך תקופה סגורה', false);
       return;
     }
 
@@ -167,7 +181,7 @@ export class AttendanceComponent implements OnInit {
   }
 
   cancelEdit(): void {
-    if(this.attendanceMonthSendedToPayroll){
+    if (this.attendanceMonthSendedToPayroll) {
       return;
     }
     this.editingRecordId = null;
@@ -175,7 +189,8 @@ export class AttendanceComponent implements OnInit {
   }
 
   saveRecord(): void {
-    if(this.attendanceMonthSendedToPayroll){
+    if (this.attendanceMonthSendedToPayroll) {
+      this.systemMessages.show('לא ניתן לשמור שינויים בתקופה סגורה', false);
       return;
     }
     if (!this.tempRecord) return;
@@ -206,7 +221,8 @@ export class AttendanceComponent implements OnInit {
   }
 
   addRecord(): void {
-    if(this.attendanceMonthSendedToPayroll){
+    if (this.attendanceMonthSendedToPayroll) {
+      this.systemMessages.show('לא ניתן להוסיף רשומות לתקופה סגורה', false);
       return;
     }
     const newId = Math.max(...this.allRecords.map(r => r.id), 0) + 1;
@@ -233,7 +249,10 @@ export class AttendanceComponent implements OnInit {
   }
 
   deleteRecord(id: number): void {
-    if (this.attendanceMonthSendedToPayroll) return;
+    if (this.attendanceMonthSendedToPayroll) {
+      this.systemMessages.show('לא ניתן למחוק רשומות מתקופה סגורה', false);
+      return;
+    }
     this.allRecords = this.allRecords.filter(r => r.id !== id);
     this.filterAttendance();
   }
@@ -278,6 +297,10 @@ export class AttendanceComponent implements OnInit {
   // to complete the payroll integration.
   sendToPayroll(): void {
 
+    if (this.attendanceMonthSendedToPayroll) {
+      this.systemMessages.show('תקופה זו כבר נסגרה ונשלחה לעיבוד שכר', false);
+      return;
+    }
     if(!this.attendanceRecordsValidort()){
       return
     }
@@ -289,16 +312,21 @@ export class AttendanceComponent implements OnInit {
       department: this.selectedDepartment,
       employeeName: this.selectedEmployeeName,
     }; 
-    
-    console.log('Sending to payroll:', attendanceSummary);
-    
+        
     this.attendanceService.sendToPayroll(attendanceSummary).subscribe({
       next: () => {
         this.systemMessages.show('הנתונים נשלחו בהצלחה למחלקת השכר', true);
         this.attendanceMonthSendedToPayroll = true;
+
+        this.loadAttendanceData();
       },
-      error: () => {
-        this.systemMessages.show('אירעה שגיאה בשליחת הנתונים למחלקת השכר', false);
+      error: (err) => {
+        if (err.error?.errorCode === 'EMP_003') {
+          this.systemMessages.show('תקופה זו כבר סגורה', false);
+          this.attendanceMonthSendedToPayroll = true;
+        } else {
+          this.systemMessages.show('אירעה שגיאה בשליחת הנתונים למחלקת השכר', false);
+        }
       }
     }); 
   } 

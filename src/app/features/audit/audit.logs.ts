@@ -64,7 +64,9 @@ export class AuditLogsComponent implements OnInit {
       'DELETE': 'מחיקה',
       'UPDATE': 'עדכון',
       'ARCHIVE': 'העביר לארכיון',
-      'RESTORE': 'שחזור'
+      'RESTORE': 'שחזור',
+      'SENT_TO_PAYROLL': 'נשלח לעיבוד שכר',
+      'GENERATED_PAYROLL': 'נוצר תלוש שכר'
     };
 
     const hebrewAction = actionLabels[action] || action;

@@ -20,7 +20,62 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   flex-direction: row-reverse;
 }
+.period-status-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 14px;
+}
 
+.period-status-badge.closed {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+.period-status-badge svg {
+  width: 16px;
+  height: 16px;
+}
+
+/*Period Closed Badge in Footer */
+.period-closed-badge {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border: 2px solid #f59e0b;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.period-closed-badge svg {
+  flex-shrink: 0;
+  color: #f59e0b;
+}
+
+.badge-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.badge-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #92400e;
+}
+
+.badge-subtitle {
+  font-size: 14px;
+  color: #78350f;
+}
 .back-button {
   display: flex;
   align-items: center;
@@ -161,7 +216,6 @@
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   overflow: hidden;
-  /* Contains the rounded corners */
   margin-bottom: 30px;
   display: flex;
   flex-direction: column;
@@ -181,7 +235,6 @@
 .attendance-table tbody {
   display: block;
   max-height: 500px;
-  /* Adjust height as needed */
   overflow-y: auto;
   width: 100%;
 }
@@ -250,16 +303,9 @@
 /* Actions */
 .actions-cell {
   display: flex;
-  /* Not applied on td if display table-cell, handled by flex content inside if needed */
   gap: 8px;
   justify-content: flex-end;
 }
-
-/* Because we changed to display: block/table for scroll, td behaves correctly. 
-   But let's wrap actions content in a div if needed for flex gap. 
-   Actually standard td allows inline-block buttons. Let's make them inline-flex.
-*/
-
 .action-btn {
   display: inline-flex;
   align-items: center;
@@ -320,7 +366,7 @@
   color: #64748b;
 }
 
-/* New Summary Section */
+/*Summary Section */
 .summary-section {
   background: white;
   padding: 20px 30px;
@@ -380,7 +426,6 @@
 .footer-actions {
   display: flex;
   justify-content: center;
-  /* Or end? User asked for button down. usually centered or end */
   padding-bottom: 40px;
 }
 
@@ -493,12 +538,10 @@
   .table-container {
     overflow-x: auto;
     display: block;
-    /* Override flex column to allow scroll */
   }
 
   .attendance-table {
     min-width: 900px;
-    /* Force scroll */
     display: table;
   }
 
@@ -506,7 +549,6 @@
   .attendance-table tbody,
   .attendance-table tr {
     display: table-row-group;
-    /* Reset from block for horizontal scroll */
   }
 
   .attendance-table tr {
@@ -517,7 +559,6 @@
     display: table-header-group;
   }
 
-  /* Fix fixed height scrolling on mobile if we switch to horizontal scroll */
   .attendance-table tbody {
     display: table-row-group;
     overflow-y: visible;
