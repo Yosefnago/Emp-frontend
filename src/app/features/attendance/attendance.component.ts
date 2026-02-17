@@ -6,11 +6,12 @@ import { Router } from '@angular/router';
 import { AttendanceService } from '../../core/services/attendance.service';
 import { AttendanceSummary, SearchQuery } from '../../core/models/Attendance';
 import { SystemMessages } from '../../core/services/system-messages.service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-attendance',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,MatProgressSpinnerModule],
   templateUrl: './attendance.component.html',
   styleUrls: ['./attendance.component.css']
 })
@@ -29,6 +30,7 @@ export class AttendanceComponent implements OnInit {
   ];
 
   attendanceMonthSendedToPayroll: boolean = false;
+  sending = false;
 
   private readonly departmentMap: Record<string, string> = {
     'פיתוח': 'DEV',
@@ -296,6 +298,9 @@ export class AttendanceComponent implements OnInit {
   /// Payroll Integration --------------------- 
   // to complete the payroll integration.
   sendToPayroll(): void {
+    if (this.sending) {
+      return; 
+    }
 
     if (this.attendanceMonthSendedToPayroll) {
       this.systemMessages.show('תקופה זו כבר נסגרה ונשלחה לעיבוד שכר', false);
@@ -313,14 +318,19 @@ export class AttendanceComponent implements OnInit {
       employeeName: this.selectedEmployeeName,
     }; 
         
+    this.sending = true;
     this.attendanceService.sendToPayroll(attendanceSummary).subscribe({
+      
+
       next: () => {
         this.systemMessages.show('הנתונים נשלחו בהצלחה למחלקת השכר', true);
         this.attendanceMonthSendedToPayroll = true;
 
         this.loadAttendanceData();
+        this.sending = false;
       },
       error: (err) => {
+        this.sending = false;
         if (err.error?.errorCode === 'EMP_003') {
           this.systemMessages.show('תקופה זו כבר סגורה', false);
           this.attendanceMonthSendedToPayroll = true;

@@ -60,25 +60,12 @@
           <p class="stat-value">{{ calculateMonthsInCompany() }}</p>
         </div>
       </div>
-
-      <div class="stat-card stat-card-orange">
-        <div class="stat-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-            <path d="M6 9h12M6 9a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2M6 9v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V9" />
-            <path d="M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v1H9V5z" />
-          </svg>
-        </div>
-        <div class="stat-info">
-          <p class="stat-label">ימי חופש שנתיים</p>
-          <p class="stat-value">{{ employee?.annualDaysOff || '0' }} ימים</p>
-        </div>
-      </div>
     </div>
   </section>
 
   <!-- Attendance Statistics -->
   <section class="attendance-stats-section">
-    <h2 class="section-title">📊 נתוני נוכחות</h2>
+    <h2 class="section-title">יתרות נכון ליום {{ currentDate | date:'dd/MM/yyyy' }}</h2>
     <div class="attendance-stats-grid">
       <div class="attendance-stat-card">
         <div class="stat-badge badge-present">
@@ -137,12 +124,6 @@
         [class.active]="activeTab === 'salary'"
         (click)="switchTab('salary')">
         💰 משכורת
-      </button>
-      <button
-        class="tab-button"
-        [class.active]="activeTab === 'attendance'"
-        (click)="switchTab('attendance')">
-        📋 נוכחות
       </button>
     </div>
 
@@ -507,78 +488,6 @@
               </div>
             }
           </div>
-        </div>
-      </div>
-    }
-
-    <!-- Attendance Tab -->
-    @if (activeTab === 'attendance') {
-      <div class="tab-content attendance-tab">
-        <div class="attendance-filters">
-          <h3 class="details-header-title">📋 רשומות נוכחות</h3>
-          <div class="filter-group">
-            <select [(ngModel)]="selectedYear" (change)="filterAttendance()" class="filter-select">
-              <option value="">בחר שנה</option>
-              @for (year of availableYears; track year) {
-                <option [value]="year">{{ year }}</option>
-              }
-            </select>
-            <select [(ngModel)]="selectedMonth" (change)="filterAttendance()" class="filter-select">
-              <option value="">בחר חודש</option>
-              <option value="1">ינואר</option>
-              <option value="2">פברואר</option>
-              <option value="3">מרץ</option>
-              <option value="4">אפריל</option>
-              <option value="5">מאי</option>
-              <option value="6">יוני</option>
-              <option value="7">יולי</option>
-              <option value="8">אוגוסט</option>
-              <option value="9">ספטמבר</option>
-              <option value="10">אוקטובר</option>
-              <option value="11">נובמבר</option>
-              <option value="12">דצמבר</option>
-            </select>
-            <button class="filter-reset-btn" (click)="clearFilters()">נקה סינון</button>
-          </div>
-        </div>
-
-        <div class="attendance-records">
-          @if (filteredAttendanceRecords && filteredAttendanceRecords.length > 0) {
-            <div class="attendance-table">
-              <div class="table-header">
-                <div class="table-cell">תאריך</div>
-                <div class="table-cell">יום בשבוע</div>
-                <div class="table-cell">שעת הגעה</div>
-                <div class="table-cell">שעת עזיבה</div>
-                <div class="table-cell">סטטוס</div>
-                <div class="table-cell">הערות</div>
-              </div>
-              @for (record of filteredAttendanceRecords; track record.id) {
-                <div class="table-row">
-                  <div class="table-cell">{{ record.date | date:'dd/MM/yyyy' }}</div>
-                  <div class="table-cell">{{ getDayOfWeek(record.date) }}</div>
-                  <div class="table-cell">{{ record.checkInTime || '-' }}</div>
-                  <div class="table-cell">{{ record.checkOutTime || '-' }}</div>
-                  <div class="table-cell">
-                    <span [class]="'attendance-badge badge-' + record.status?.toLowerCase()">
-                      {{ translateAttendanceStatus(record.status) }}
-                    </span>
-                  </div>
-                  <div class="table-cell">{{ record.notes || '-' }}</div>
-                </div>
-              }
-            </div>
-          } @else {
-            <div class="empty-state">
-              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                <line x1="16" y1="2" x2="16" y2="6" />
-                <line x1="8" y1="2" x2="8" y2="6" />
-                <line x1="3" y1="10" x2="21" y2="10" />
-              </svg>
-              <p>אין רשומות נוכחות</p>
-            </div>
-          }
         </div>
       </div>
     }

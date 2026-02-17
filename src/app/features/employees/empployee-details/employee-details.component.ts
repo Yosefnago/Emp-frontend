@@ -30,15 +30,14 @@ export class EmployeeDetailsComponent implements OnInit {
   // Active tab state
   activeTab: string = 'personal';
 
+  currentDate: Date = new Date();
+  
   // Employee data
   employee: any = null;
   employeeBackup: any = null; // For reverting changes
   documents: any[] = [];
   salaryHistory: any[] = [];
-  attendanceRecords: any[] = [];
 
-  // Filtered attendance records (for filtering by month/year)
-  filteredAttendanceRecords: any[] = [];
 
   // Statistics
   attendanceStats: any = {
@@ -107,7 +106,7 @@ export class EmployeeDetailsComponent implements OnInit {
         this.employee = employee;
         this.employeeBackup = JSON.parse(JSON.stringify(employee));
         this.initializeAvailableYears();
-        this.loadAttendanceStats();
+        
         this.isLoading = false;
       },
       error: () => {
@@ -139,99 +138,7 @@ export class EmployeeDetailsComponent implements OnInit {
     }
   }
 
-  /**
-   * Load attendance statistics
-   * Calculates totals for present days, absent days, sick days, vacation days
-   * and overall attendance rate
-   */
-  loadAttendanceStats(): void {
-    if (!this.attendanceRecords || this.attendanceRecords.length === 0) {
-      return;
-    }
-
-    let presentDays = 0;
-    let absentDays = 0;
-    let sickDays = 0;
-    let vacationDays = 0;
-    let totalWorkingDays = 0;
-
-    // Count each type of attendance status
-    this.attendanceRecords.forEach(record => {
-      const status = record.status?.toLowerCase();
-
-      switch (status) {
-        case 'present':
-          presentDays++;
-          totalWorkingDays++;
-          break;
-        case 'absent':
-          absentDays++;
-          totalWorkingDays++;
-          break;
-        case 'sick':
-          sickDays++;
-          break; // Sick days don't count against attendance rate
-        case 'vacation':
-          vacationDays++;
-          break; // Vacation days don't count against attendance rate
-        default:
-          totalWorkingDays++;
-      }
-    });
-
-    // Calculate attendance rate
-    const attendanceRate = totalWorkingDays > 0
-      ? Math.round((presentDays / totalWorkingDays) * 100)
-      : 0;
-
-    this.attendanceStats = {
-      presentDays,
-      absentDays,
-      sickDays,
-      vacationDays,
-      attendanceRate
-    };
-  }
-
-  /**
-   * Filter attendance records by selected year and month
-   * Called when user changes year or month filter
-   */
-  filterAttendance(): void {
-    this.filteredAttendanceRecords = this.attendanceRecords.filter(record => {
-      const recordDate = new Date(record.date);
-      const recordYear = recordDate.getFullYear().toString();
-      const recordMonth = (recordDate.getMonth() + 1).toString();
-
-      // If no filters selected, show all
-      if (!this.selectedYear && !this.selectedMonth) {
-        return true;
-      }
-
-      // Filter by year only
-      if (this.selectedYear && !this.selectedMonth) {
-        return recordYear === this.selectedYear;
-      }
-
-      // Filter by month only
-      if (this.selectedMonth && !this.selectedYear) {
-        return recordMonth === this.selectedMonth;
-      }
-
-      // Filter by both year and month
-      return recordYear === this.selectedYear && recordMonth === this.selectedMonth;
-    });
-  }
-
-  /**
-   * Clear all attendance filters and show all records
-   */
-  clearFilters(): void {
-    this.selectedYear = '';
-    this.selectedMonth = '';
-    this.filteredAttendanceRecords = this.attendanceRecords;
-  }
-
+  
   /**
    * Switch between different tabs
    * 
