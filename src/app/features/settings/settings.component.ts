@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { SettingsService } from '../../core/services/settings-service';
 
 @Component({
   selector: 'app-settings',
@@ -13,17 +14,14 @@ import { Router } from '@angular/router';
 })
 export class SettingsComponent implements OnInit {
   activeTab: string = 'profile';
+  username: string = '';
+  companyName: string = '';
+  companyId: string = '';
+  companyAddress: string = '';
+  email: string = '';
+  phone: string = '';
 
-  user = {
-    firstName: 'יוסף',
-    lastName: 'נג',
-    email: 'yosef@company.com',
-    phone: '050-1234567',
-    birthDate: '1995-03-15',
-    location: 'תל אביב, ישראל',
-    bio: 'Senior Developer | Spring Boot Expert | Java Enthusiast',
-    twoFactorEnabled: false
-  };
+  constructor(private router: Router,private settingsService: SettingsService) {}
 
   passwordData = {
     current: '',
@@ -31,32 +29,6 @@ export class SettingsComponent implements OnInit {
     confirm: ''
   };
 
-  activeSessions = [
-    {
-      id: 1,
-      deviceType: 'Windows 10',
-      browser: 'Chrome',
-      location: 'תל אביב, ישראל',
-      lastActive: new Date(),
-      isCurrent: true
-    },
-    {
-      id: 2,
-      deviceType: 'iPhone 13',
-      browser: 'Safari',
-      location: 'תל אביב, ישראל',
-      lastActive: new Date(Date.now() - 2 * 60 * 60 * 1000),
-      isCurrent: false
-    },
-    {
-      id: 3,
-      deviceType: 'MacBook Pro',
-      browser: 'Safari',
-      location: 'ירושלים, ישראל',
-      lastActive: new Date(Date.now() - 24 * 60 * 60 * 1000),
-      isCurrent: false
-    }
-  ];
 
   notificationSettings = [
     { id: 1, title: 'התראות עבודה', description: 'הודעות על משימות ופרויקטים', enabled: true },
@@ -81,61 +53,33 @@ export class SettingsComponent implements OnInit {
     crashReports: true
   };
 
-  constructor(private router: Router) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.getUserProfile();
+  }
+  getUserProfile(): void {
+    this.settingsService.getUserProfile().subscribe({
+      next: (response) => {
+        this.username = response.username;
+        this.companyName = response.companyName;
+        this.companyId = response.companyId;
+        this.companyAddress = response.companyAddress;
+        this.email = response.email;
+        this.phone = response.phone;
+        
+        console.log('User profile data:', response);
+      },
+      error: (err) => {
+        console.error('Error fetching user profile:', err);
+      }
+    });
+  }
 
   switchTab(tab: string): void {
     this.activeTab = tab;
   }
 
-  getInitials(firstName: string, lastName: string): string {
-    return (firstName[0] + lastName[0]).toUpperCase();
-  }
-
-  saveProfile(): void {
-    alert('פרופיל שמור בהצלחה!');
-  }
-
-  changePassword(): void {
-    if (this.passwordData.new !== this.passwordData.confirm) {
-      alert('הסיסמאות לא תואמות');
-      return;
-    }
-    alert('סיסמה שונתה בהצלחה!');
-    this.passwordData = { current: '', new: '', confirm: '' };
-  }
-
-  toggleTwoFactor(): void {
-    this.user.twoFactorEnabled = !this.user.twoFactorEnabled;
-    alert(this.user.twoFactorEnabled ? 'אימות דו-שלבי הופעל' : 'אימות דו-שלבי בוטל');
-  }
-
-  logoutSession(sessionId: number): void {
-    this.activeSessions = this.activeSessions.filter(s => s.id !== sessionId);
-    alert('הפעלה סגורה בהצלחה');
-  }
-
-  saveNotifications(): void {
-    alert('העדפות התראות נשמרו בהצלחה!');
-  }
-
-  savePreferences(): void {
-    alert('העדפות נשמרו בהצלחה!');
-  }
-
-  requestAccountDeletion(): void {
-    if (confirm('האם אתה בטוח? פעולה זו לא ניתן לביטול!')) {
-      alert('בקשת מחיקת חשבון נשלחה. אישור יישלח לדוא"ל שלך');
-    }
-  }
-
-  logoutFromAllDevices(): void {
-    if (confirm('התחברות מכל המכשירים? יהיה עליך להתחבר שוב')) {
-      alert('התחברת מכל המכשירים');
-    }
-  }
-
+ 
   goBack(): void {
     this.router.navigate(['/home']);
   }

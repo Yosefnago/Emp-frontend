@@ -10,7 +10,6 @@ import { DepartmentComponent } from './features/departments/department.component
 import { AttendanceComponent } from './features/attendance/attendance.component';
 import { SalaryComponent } from './features/salary/salary.component';
 import { EventsComponent } from './features/events/events.component';
-import { ReportsComponent } from './features/reports/reports.component';
 import { SettingsComponent } from './features/settings/settings.component';
 import { AuditLogsComponent } from './features/audit/audit.logs';
 
@@ -29,7 +28,6 @@ export const routes: Routes = [
       { path: 'departments', component: DepartmentComponent },
       { path: 'attendance', component: AttendanceComponent },
       { path: 'salary', component: SalaryComponent },
-      { path: 'reports', component: ReportsComponent },
       { path: 'settings', component: SettingsComponent },
       { path: 'events', component: EventsComponent },
       { path: 'employees/details', component: EmployeeDetailsComponent },

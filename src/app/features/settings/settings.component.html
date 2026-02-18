@@ -22,25 +22,25 @@
         class="tab-button"
         [class.active]="activeTab === 'profile'"
         (click)="switchTab('profile')">
-        👤 פרופיל אישי
+         פרופיל חברה
       </button>
       <button 
         class="tab-button"
         [class.active]="activeTab === 'security'"
         (click)="switchTab('security')">
-        🔒 אבטחה
+         אבטחה
       </button>
       <button 
         class="tab-button"
         [class.active]="activeTab === 'notifications'"
         (click)="switchTab('notifications')">
-        🔔 התראות
+         התראות
       </button>
       <button 
         class="tab-button"
         [class.active]="activeTab === 'preferences'"
         (click)="switchTab('preferences')">
-        ⚙️ העדפות
+         העדפות
       </button>
     </div>
   </div>
@@ -49,15 +49,15 @@
   @if (activeTab === 'profile') {
     <section class="settings-section">
       <div class="section-header">
-        <h2 class="section-title">פרופיל אישי</h2>
-        <p class="section-subtitle">עדכן את פרטיך האישיים</p>
+        <h2 class="section-title">פרופיל חברה</h2>
+        <p class="section-subtitle">עדכן את פרטי החברה </p>
       </div>
 
       <div class="profile-content">
         <!-- Profile Picture -->
         <div class="profile-picture-section">
           <div class="profile-picture">
-            {{ getInitials(user.firstName, user.lastName) }}
+            
           </div>
           <div class="picture-actions">
             <button class="upload-btn">
@@ -76,75 +76,39 @@
         </div>
 
         <!-- Profile Form -->
-        <form (ngSubmit)="saveProfile()" #profileForm="ngForm" class="settings-form">
+        <form #profileForm="ngForm" class="settings-form">
           <div class="form-grid">
-            <div class="form-group">
-              <label class="form-label">שם פרטי</label>
-              <input 
-                type="text" 
-                [(ngModel)]="user.firstName" 
-                name="firstName"
-                class="form-input"
-                required>
+
+           <div class="form-group">
+              <label class="form-label">שם משתמש</label>
+              <input class="form-input" type="text" [(ngModel)]="username" name="username" placeholder="שם משתמש">
             </div>
 
             <div class="form-group">
-              <label class="form-label">שם משפחה</label>
-              <input 
-                type="text" 
-                [(ngModel)]="user.lastName" 
-                name="lastName"
-                class="form-input"
-                required>
+              <label class="form-label">שם חברה</label>
+              <input class="form-input" type="text" [(ngModel)]="companyName" name="companyName" placeholder="שם חברה">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">ח.פ חברה</label>
+              <input class="form-input" type="text" [(ngModel)]="companyId" name="companyId" placeholder="ח.פ חברה">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">כתובת</label>
+              <input class="form-input" type="text" [(ngModel)]="companyAddress" name="companyAddress" placeholder="כתובת החברה">
             </div>
 
             <div class="form-group full-width">
               <label class="form-label">דוא"ל</label>
-              <input 
-                type="email" 
-                [(ngModel)]="user.email" 
-                name="email"
-                class="form-input"
-                required>
+              <input class="form-input" type="email" [(ngModel)]="email" name="email" placeholder="example@domain.com">
             </div>
 
             <div class="form-group">
               <label class="form-label">מספר טלפון</label>
-              <input 
-                type="tel" 
-                [(ngModel)]="user.phone" 
-                name="phone"
-                class="form-input">
+              <input class="form-input" type="tel" [(ngModel)]="phone" name="phone" placeholder="05X-XXXXXXX">
             </div>
 
-            <div class="form-group">
-              <label class="form-label">תאריך לידה</label>
-              <input 
-                type="date" 
-                [(ngModel)]="user.birthDate" 
-                name="birthDate"
-                class="form-input">
-            </div>
-
-            <div class="form-group">
-              <label class="form-label">מיקום</label>
-              <input 
-                type="text" 
-                [(ngModel)]="user.location" 
-                name="location"
-                class="form-input"
-                placeholder="עיר, מדינה">
-            </div>
-
-            <div class="form-group full-width">
-              <label class="form-label">אודות</label>
-              <textarea 
-                [(ngModel)]="user.bio" 
-                name="bio"
-                class="form-textarea"
-                placeholder="ספר קצת על עצמך"
-                rows="3"></textarea>
-            </div>
           </div>
 
           <div class="form-actions">
@@ -159,112 +123,6 @@
       </div>
     </section>
   }
-
-  <!-- Security Tab -->
-  @if (activeTab === 'security') {
-    <section class="settings-section">
-      <div class="section-header">
-        <h2 class="section-title">אבטחה</h2>
-        <p class="section-subtitle">נהל את אבטחת החשבון שלך</p>
-      </div>
-
-      <div class="security-content">
-        <!-- Password Change -->
-        <div class="security-card">
-          <div class="card-header">
-            <h3 class="card-title">🔐 שנה סיסמה</h3>
-            <p class="card-subtitle">עדכן את הסיסמה שלך באופן קבוע</p>
-          </div>
-          <form (ngSubmit)="changePassword()" #passwordForm="ngForm" class="security-form">
-            <div class="form-group">
-              <label class="form-label">סיסמה נוכחית</label>
-              <input 
-                type="password" 
-                [(ngModel)]="passwordData.current" 
-                name="current"
-                class="form-input"
-                required>
-            </div>
-            <div class="form-group">
-              <label class="form-label">סיסמה חדשה</label>
-              <input 
-                type="password" 
-                [(ngModel)]="passwordData.new" 
-                name="new"
-                class="form-input"
-                required>
-            </div>
-            <div class="form-group">
-              <label class="form-label">אשר סיסמה</label>
-              <input 
-                type="password" 
-                [(ngModel)]="passwordData.confirm" 
-                name="confirm"
-                class="form-input"
-                required>
-            </div>
-            <button type="submit" class="submit-btn">עדכן סיסמה</button>
-          </form>
-        </div>
-
-        <!-- Two-Factor Authentication -->
-        <div class="security-card">
-          <div class="card-header">
-            <h3 class="card-title">✓ אימות דו-שלבי</h3>
-            <p class="card-subtitle">הגבר את אבטחת החשבון</p>
-          </div>
-          <div class="card-content">
-            <div class="security-status">
-              <span class="status-label">מצב:</span>
-              <span class="status-badge" [class]="user.twoFactorEnabled ? 'active' : 'inactive'">
-                {{ user.twoFactorEnabled ? '✓ מופעל' : '✗ מבוטל' }}
-              </span>
-            </div>
-            <p class="status-description">
-              {{ user.twoFactorEnabled ? 
-                'אימות דו-שלבי מופעל. משתמשים צריכים קוד נוסף בעת התחברות.' :
-                'הפעל אימות דו-שלבי כדי להגביר אבטחה' }}
-            </p>
-            <button 
-              class="security-toggle-btn" 
-              [class]="user.twoFactorEnabled ? 'disable' : 'enable'"
-              (click)="toggleTwoFactor()">
-              {{ user.twoFactorEnabled ? 'בטל אימות דו-שלבי' : 'הפעל אימות דו-שלבי' }}
-            </button>
-          </div>
-        </div>
-
-        <!-- Active Sessions -->
-        <div class="security-card">
-          <div class="card-header">
-            <h3 class="card-title">🔌 הפעלות פעילות</h3>
-            <p class="card-subtitle">נהל את המכשירים המחוברים</p>
-          </div>
-          <div class="sessions-list">
-            @for (session of activeSessions; track session.id) {
-              <div class="session-item">
-                <div class="session-info">
-                  <div class="session-device">
-                    {{ session.deviceType }} - {{ session.browser }}
-                  </div>
-                  <div class="session-details">
-                    <span>{{ session.location }}</span>
-                    <span>{{ session.lastActive | date:'dd/MM/yyyy HH:mm' }}</span>
-                  </div>
-                </div>
-                @if (!session.isCurrent) {
-                  <button class="logout-btn" (click)="logoutSession(session.id)">
-                    התחבר החוצה
-                  </button>
-                }
-              </div>
-            }
-          </div>
-        </div>
-      </div>
-    </section>
-  }
-
   <!-- Notifications Tab -->
   @if (activeTab === 'notifications') {
     <section class="settings-section">
@@ -336,11 +194,10 @@
       </div>
 
       <div class="form-actions">
-        <button class="submit-btn" (click)="saveNotifications()">שמור העדפות</button>
+        <button class="submit-btn" >שמור העדפות</button>
       </div>
     </section>
   }
-
   <!-- Preferences Tab -->
   @if (activeTab === 'preferences') {
     <section class="settings-section">
@@ -349,7 +206,7 @@
         <p class="section-subtitle">התאם את חוויית האפליקציה</p>
       </div>
 
-      <form (ngSubmit)="savePreferences()" #preferencesForm="ngForm" class="preferences-form">
+      <form  #preferencesForm="ngForm" class="preferences-form">
         <!-- Language -->
         <div class="preference-group">
           <h3 class="preference-title">🌐 שפה</h3>
@@ -480,13 +337,13 @@
   <section class="danger-zone">
     <h3 class="danger-title">⚠️ אזור סכנה</h3>
     <div class="danger-actions">
-      <button class="danger-btn delete-account-btn" (click)="requestAccountDeletion()">
+      <button class="danger-btn delete-account-btn" >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
           <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-9l-1 1H5v2h14V4z"/>
         </svg>
         מחק חשבון
       </button>
-      <button class="danger-btn logout-all-btn" (click)="logoutFromAllDevices()">
+      <button class="danger-btn logout-all-btn" >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
           <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
         </svg>

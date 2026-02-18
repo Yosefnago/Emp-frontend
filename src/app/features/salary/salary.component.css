@@ -179,10 +179,6 @@
   background: linear-gradient(135deg, #10b981 0%, #059669 100%);
 }
 
-.stat-card-orange {
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-}
-
 .stat-card-purple {
   background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
 }
@@ -214,259 +210,6 @@
 .stat-value {
   font-size: 20px;
   font-weight: 700;
-  margin: 0;
-}
-
-.report-section {
-  padding: 30px;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
-
-.employees-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 20px;
-}
-
-.employee-salary-card {
-  padding: 25px;
-  border: 1px solid #e9ecef;
-  border-radius: 10px;
-  background: white;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.employee-salary-card:hover {
-  border-color: #3b82f6;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
-}
-
-.employee-salary-card.expanded {
-  border-color: #3b82f6;
-  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.15);
-}
-
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 15px;
-  direction: rtl;
-  gap: 15px;
-}
-
-.employee-info {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  flex: 1;
-}
-
-.employee-name {
-  font-size: 16px;
-  font-weight: 700;
-  color: #1a1a1a;
-  margin: 0;
-}
-
-.employee-position {
-  font-size: 12px;
-  color: #6c757d;
-  margin: 0;
-}
-
-.salary-amount {
-  font-size: 20px;
-  font-weight: 700;
-  color: #10b981;
-  text-align: left;
-  min-width: 120px;
-}
-
-.card-status {
-  margin-bottom: 15px;
-}
-
-.attendance-badge {
-  display: inline-block;
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 600;
-  text-align: center;
-}
-
-.badge-complete {
-  background: #dcfce7;
-  color: #166534;
-}
-
-.badge-incomplete {
-  background: #fee2e2;
-  color: #991b1b;
-}
-
-.generate-report-btn {
-  width: 100%;
-  padding: 12px;
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin-bottom: 0;
-}
-
-.generate-report-btn:hover:not(.disabled) {
-  transform: scale(1.02);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-}
-
-.generate-report-btn.disabled {
-  background: #cbd5e1;
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-
-.report-details {
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 1px solid #e9ecef;
-  animation: slideDown 0.3s ease;
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.report-section-title {
-  font-size: 13px;
-  font-weight: 700;
-  color: #6c757d;
-  text-transform: uppercase;
-  margin: 0 0 15px 0;
-  text-align: right;
-}
-
-.detail-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 15px;
-  margin-bottom: 20px;
-  direction: rtl;
-}
-
-.detail-item {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 12px;
-  background: #f8f9fa;
-  border-radius: 8px;
-}
-
-.detail-item label {
-  font-size: 11px;
-  font-weight: 600;
-  color: #6c757d;
-  text-transform: uppercase;
-  margin: 0;
-}
-
-.detail-item span {
-  font-size: 14px;
-  font-weight: 700;
-  color: #1a1a1a;
-  margin: 0;
-}
-
-.total-section {
-  padding: 15px;
-  background: linear-gradient(135deg, #f0f4f8 0%, #e0e7ff 100%);
-  border-radius: 8px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-  direction: rtl;
-}
-
-.total-section label {
-  font-size: 13px;
-  font-weight: 700;
-  color: #1a1a1a;
-  margin: 0;
-}
-
-.total-amount {
-  font-size: 18px;
-  font-weight: 700;
-  color: #3b82f6;
-}
-
-.report-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-top: 15px;
-  border-top: 1px solid #e9ecef;
-  direction: rtl;
-}
-
-.report-date {
-  font-size: 12px;
-  color: #6c757d;
-  margin: 0;
-}
-
-.print-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  background: #3b82f6;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-weight: 600;
-  font-size: 12px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.print-btn:hover {
-  background: #1d4ed8;
-  transform: scale(1.05);
-}
-
-.empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 20px;
-  background: #f8f9fa;
-  border-radius: 12px;
-  color: #adb5bd;
-  text-align: center;
-  gap: 16px;
-  grid-column: 1 / -1;
-}
-
-.empty-state p {
-  font-size: 14px;
   margin: 0;
 }
 
@@ -508,14 +251,6 @@
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-
-  .employees-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .detail-grid {
-    grid-template-columns: 1fr;
-  }
 }
 
 @media (max-width: 480px) {
@@ -527,18 +262,6 @@
     font-size: 18px;
   }
 
-  .employee-salary-card {
-    padding: 15px;
-  }
-
-  .card-header {
-    flex-direction: column;
-  }
-
-  .salary-amount {
-    text-align: right;
-  }
-
   .stats-grid {
     grid-template-columns: 1fr;
   }
@@ -547,9 +270,4 @@
     justify-content: flex-start;
   }
 
-  .report-footer {
-    flex-direction: column;
-    gap: 10px;
-    align-items: flex-start;
-  }
 }

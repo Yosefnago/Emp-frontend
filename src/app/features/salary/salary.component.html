@@ -20,7 +20,7 @@
     <div class="filter-group">
       <div class="filter-item">
         <label class="filter-label">שנה</label>
-        <select [(ngModel)]="selectedYear" (change)="filterSalaries()" class="filter-select">
+        <select [(ngModel)]="selectedYear" class="filter-select">
           @for (year of availableYears; track year) {
             <option [value]="year">{{ year }}</option>
           }
@@ -29,23 +29,23 @@
 
       <div class="filter-item">
         <label class="filter-label">חודש</label>
-        <select [(ngModel)]="selectedMonth" (change)="filterSalaries()" class="filter-select">
-          <option value="">כל החודשים</option>
-          <option value="1">ינואר</option>
-          <option value="2">פברואר</option>
-          <option value="3">מרץ</option>
-          <option value="4">אפריל</option>
-          <option value="5">מאי</option>
-          <option value="6">יוני</option>
-          <option value="7">יולי</option>
-          <option value="8">אוגוסט</option>
-          <option value="9">ספטמבר</option>
-          <option value="10">אוקטובר</option>
-          <option value="11">נובמבר</option>
-          <option value="12">דצמבר</option>
-        </select>
+        <select [(ngModel)]="selectedMonth" class="filter-select">
+          <option [ngValue]="1">ינואר</option>
+          <option [ngValue]="2">פברואר</option>
+          <option [ngValue]="3">מרץ</option>
+          <option [ngValue]="4">אפריל</option>
+          <option [ngValue]="5">מאי</option>
+          <option [ngValue]="6">יוני</option>
+          <option [ngValue]="7">יולי</option>
+          <option [ngValue]="8">אוגוסט</option>
+          <option [ngValue]="9">ספטמבר</option>
+          <option [ngValue]="10">אוקטובר</option>
+          <option [ngValue]="11">נובמבר</option>
+          <option [ngValue]="12">דצמבר</option>
+      </select>
       </div>
 
+      <button class="filter-apply-btn" (click)="applyFilters()">החל סינון</button>
       <button class="filter-reset-btn" (click)="clearFilters()">נקה סינון</button>
     </div>
   </section>
@@ -62,7 +62,7 @@
         </div>
         <div class="stat-info">
           <p class="stat-label">סה"כ משכורות</p>
-          <p class="stat-value">₪{{ formatNumber(getSalaryStats()?.totalSalaries) }}</p>
+          <p class="stat-value">₪{{ formatNumber(totalSalary) }}</p>
         </div>
       </div>
 
@@ -75,24 +75,9 @@
         </div>
         <div class="stat-info">
           <p class="stat-label">משכורת ממוצעת</p>
-          <p class="stat-value">₪{{ formatNumber(getSalaryStats()?.averageSalary) }}</p>
+          <p class="stat-value">₪{{ formatNumber(avgSalary) }}</p>
         </div>
       </div>
-
-      <div class="stat-card stat-card-orange">
-        <div class="stat-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"></path>
-            <line x1="12" y1="6" x2="12" y2="12"></line>
-            <line x1="12" y1="12" x2="16" y2="16"></line>
-          </svg>
-        </div>
-        <div class="stat-info">
-          <p class="stat-label">עובדים בתשלום</p>
-          <p class="stat-value">{{ getSalaryStats()?.employeeCount }}</p>
-        </div>
-      </div>
-
       <div class="stat-card stat-card-purple">
         <div class="stat-icon">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
@@ -102,93 +87,11 @@
         </div>
         <div class="stat-info">
           <p class="stat-label">משכורת גבוהה ביותר</p>
-          <p class="stat-value">₪{{ formatNumber(getSalaryStats()?.maxSalary) }}</p>
+          <p class="stat-value">₪{{ formatNumber(maxSalary) }}</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Salary Report Section -->
-  <section class="report-section">
-    <h3 class="section-title">📄 דוח משכורות לעובדים</h3>
-    <div class="employees-grid">
-      @if (filteredSalaries.length > 0) {
-        @for (salary of filteredSalaries; track salary.id) {
-          <div class="employee-salary-card" [class.expanded]="expandedEmployeeId === salary.id">
-            <div class="card-header">
-              <div class="employee-info">
-                <h4 class="employee-name">{{ salary.employeeName }}</h4>
-                <p class="employee-position">{{ salary.position }}</p>
-              </div>
-              <div class="salary-amount">₪{{ formatNumber(salary.totalSalary) }}</div>
-            </div>
-
-            <div class="card-status">
-              <span class="attendance-badge" [class]="'badge-' + (salary.attendanceComplete ? 'complete' : 'incomplete')">
-                {{ salary.attendanceComplete ? '✓ נוכחות תקינה' : '✗ נוכחות חסרה' }}
-              </span>
-            </div>
-
-            @if (salary.attendanceComplete) {
-              <button class="generate-report-btn" (click)="toggleReport(salary.id)">
-                {{ expandedEmployeeId === salary.id ? 'סגור דוח' : 'צור דוח' }}
-              </button>
-            } @else {
-              <button class="generate-report-btn disabled" disabled>
-                לא ניתן ליצור דוח - נוכחות חסרה
-              </button>
-            }
-
-            <!-- Salary Report Details -->
-            @if (expandedEmployeeId === salary.id && salary.attendanceComplete) {
-              <div class="report-details">
-                <div class="report-section-title">פרטי משכורה</div>
-                
-                <div class="detail-grid">
-                  <div class="detail-item">
-                    <label>משכורת בסיסית</label>
-                    <span>₪{{ formatNumber(salary.baseSalary) }}</span>
-                  </div>
-                  <div class="detail-item">
-                    <label>בונוס</label>
-                    <span>₪{{ formatNumber(salary.bonus) }}</span>
-                  </div>
-                  <div class="detail-item">
-                    <label>קצבה</label>
-                    <span>₪{{ formatNumber(salary.allowance) }}</span>
-                  </div>
-                  <div class="detail-item">
-                    <label>ניכויים</label>
-                    <span>₪{{ formatNumber(salary.deductions) }}</span>
-                  </div>
-                </div>
-
-                <div class="total-section">
-                  <label>סך הכל לתשלום</label>
-                  <span class="total-amount">₪{{ formatNumber(salary.totalSalary) }}</span>
-                </div>
-
-                <div class="report-footer">
-                  <p class="report-date">דוח משכורה - {{ getMonthName(selectedMonth) }} {{ selectedYear }}</p>
-                  <button class="print-btn" (click)="printReport(salary)">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/>
-                    </svg>
-                    הדפס דוח
-                  </button>
-                </div>
-              </div>
-            }
-          </div>
-        }
-      } @else {
-        <div class="empty-state">
-          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5">
-            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-          </svg>
-          <p>אין נתוני משכורה לתאריך זה</p>
-        </div>
-      }
-    </div>
-  </section>
 </div>
+
