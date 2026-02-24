@@ -9,7 +9,7 @@
       </svg>
       <span>חזור</span>
     </button>
-  
+
     <div class="header-content">
       <h1 class="employee-name">{{ employee?.firstName }} {{ employee?.lastName }}</h1>
       <p class="personal-id">ת.ז: {{ employee?.personalId }}</p>
@@ -107,389 +107,432 @@
   <!-- Tabs Navigation -->
   <div class="tabs-container">
     <div class="tabs-header">
-      <button
-        class="tab-button"
-        [class.active]="activeTab === 'personal'"
-        (click)="switchTab('personal')">
+      <button class="tab-button" [class.active]="activeTab === 'personal'" (click)="switchTab('personal')">
         👤 פרטים אישיים
       </button>
-      <button
-        class="tab-button"
-        [class.active]="activeTab === 'documents'"
-        (click)="switchTab('documents')">
+      <button class="tab-button" [class.active]="activeTab === 'documents'" (click)="switchTab('documents')">
         📄 מסמכים
       </button>
-      <button
-        class="tab-button"
-        [class.active]="activeTab === 'salary'"
-        (click)="switchTab('salary')">
+      <button class="tab-button" [class.active]="activeTab === 'salary'" (click)="switchTab('salary')">
         💰 משכורת
       </button>
     </div>
 
     <!-- Personal Details Tab -->
     @if (activeTab === 'personal') {
-      <div class="tab-content personal-details-tab">
-        <div class="details-section">
-          <div class="section-header-with-button">
-            <h3 class="details-header-title">📋 פרטים אישיים</h3>
-            
-            @if (isEditMode) {
-              <button class="edit-save-btn btn-save" (click)="saveChanges()" aria-label="שמור">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
-                  <polyline points="17 21 17 13 7 13 7 21"></polyline>
-                  <polyline points="7 3 7 8 15 8"></polyline>
-                </svg>
-                <span>שמור</span>
-              </button>
+    <div class="tab-content personal-details-tab">
+      <div class="details-section">
+        <div class="section-header-with-button">
+          <h3 class="details-header-title">📋 פרטים אישיים</h3>
+
+          <div class="edit-action-buttons">
+            @if (isEditingPersonal) {
+            <button class="edit-save-btn btn-save" (click)="savePersonalChanges()" aria-label="שמור">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                <polyline points="7 3 7 8 15 8"></polyline>
+              </svg>
+              <span>שמור</span>
+            </button>
+            <button class="edit-save-btn btn-cancel" (click)="cancelPersonalEdit()" aria-label="בטל">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+              <span>בטל</span>
+            </button>
             } @else {
-              <button class="edit-save-btn btn-edit" (click)="toggleEditMode()" aria-label="עריכה">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M12 20h9"></path>
-                  <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-                </svg>
-                <span>עריכה</span>
-              </button>
+            <button class="edit-save-btn btn-edit" (click)="toggleEditPersonal()" aria-label="עריכה">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 20h9"></path>
+                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+              </svg>
+              <span>עריכה</span>
+            </button>
             }
           </div>
-
-          <div class="details-grid">
-            <div class="detail-item">
-              @if (isEditMode) {
-                <label class="detail-label">שם פרטי</label>
-                <input type="text" class="detail-input" [(ngModel)]="employee.firstName" />
-              }@else {
-                <label class="detail-label">שם פרטי</label>
-                <p class="detail-value">{{ employee?.firstName }}</p>
-              }
-            </div>
-            <div class="detail-item">
-              @if (isEditMode) {
-                <label class="detail-label">שם משפחה</label>
-                <input type="text" class="detail-input" [(ngModel)]="employee.lastName" />
-              }@else {
-                <label class="detail-label">שם משפחה</label>
-                <p class="detail-value">{{ employee?.lastName }}</p>
-              }
-            </div>
-            <div class="detail-item">
-              @if (isEditMode) {
-                <label class="detail-label">תעודת זהות</label>
-                <input type="text" class="detail-input" [(ngModel)]="employee.personalId" />
-              }@else {
-                <label class="detail-label">תעודת זהות</label>
-                <p class="detail-value">{{ employee?.personalId }}</p>
-              }
-            </div>
-            <div class="detail-item">
-              @if (isEditMode) {
-                <label class="detail-label">מין</label>
-                <select class="detail-input" [(ngModel)]="employee.gender">
-                  <option value="M">זכר</option>
-                  <option value="F">נקבה</option>
-              </select>
-              }@else {  
-              <label class="detail-label">מין</label>
-              <p class="detail-value">{{ employee?.gender === 'M' ? 'זכר' : 'נקבה' }}</p>
-              }
-            </div>
-            <div class="detail-item">
-              @if (isEditMode) {
-                <label class="detail-label">תאריך לידה</label>
-                <input type="date" class="detail-input" [(ngModel)]="employee.birthDate" />
-              }@else {
-                <label class="detail-label">תאריך לידה</label>
-                <p class="detail-value">{{ employee?.birthDate | date:'dd/MM/yyyy' }}</p>
-              }
-            </div>
-            <div class="detail-item">
-              @if (isEditMode) {
-                <label class="detail-label">מצב משפחתי</label>
-                <select class="detail-input" [(ngModel)]="employee.familyStatus">
-                  <option value="single">רווק/ה</option>
-                  <option value="married">נשוי/אה</option>
-                  <option value="divorced">גרוש/ה</option>
-                  <option value="widowed">אלמן/ה</option>
-                </select>
-              }@else {
-                <label class="detail-label">מצב משפחתי</label>
-                <p class="detail-value">{{ translateMaritalStatus(employee?.familyStatus) }}</p>
-              }
-            </div>
-          </div>
         </div>
 
-        <div class="details-section">
-          <div class="section-header-with-button">
-            <h3 class="details-header-title">📞 פרטי קשר</h3>
+        <div class="details-grid">
+          <div class="detail-item">
+            <label class="detail-label">שם פרטי</label>
+            @if (isEditingPersonal) {
+            <input type="text" class="detail-input" [(ngModel)]="employee.firstName" />
+            } @else {
+            <p class="detail-value">{{ employee?.firstName }}</p>
+            }
           </div>
-          
-          <div class="details-grid">
-            <div class="detail-item">
-              @if (isEditMode) {
-                <label class="detail-label">טלפון נייד</label>
-                <input type="text" class="detail-input" [(ngModel)]="employee.phone" maxlength="10">
-              }@else {
-                <label class="detail-label">טלפון נייד</label>
-                <p class="detail-value">{{ employee?.phone }}</p>
-              }
-            </div>
-            <div class="detail-item">
-              @if (isEditMode) {
-                <label class="detail-label">דוא"ל</label>
-                <input type="email" class="detail-input" [(ngModel)]="employee.email" />
-              }@else {
-                <label class="detail-label">דוא"ל</label>
-                <p class="detail-value">{{ employee?.email }}</p>
-              }
-            </div>
-            <div class="detail-item">
-              @if (isEditMode) {
-                <label class="detail-label">כתובת</label>
-                <input type="text" class="detail-input" [(ngModel)]="employee.address" />
-              }@else {
-                <label class="detail-label">כתובת</label>
-                <p class="detail-value">{{ employee?.address }}</p>
-              }
-            </div>
-            <div class="detail-item">
-              @if (isEditMode) {
-                <label class="detail-label">עיר</label>
-                <input type="text" class="detail-input" [(ngModel)]="employee.city" />
-              }@else {
-                <label class="detail-label">עיר</label>
-                <p class="detail-value">{{ employee?.city }}</p>
-              }
-            </div>
-            <div class="detail-item">
-              @if (isEditMode) {
-                <label class="detail-label">מדינה</label>
-                <input type="text" class="detail-input" [(ngModel)]="employee.country" />
-              }@else {
-                <label class="detail-label">מדינה</label>
-                <p class="detail-value">{{ employee?.country }}</p>
-              }
-            </div>
+          <div class="detail-item">
+            <label class="detail-label">שם משפחה</label>
+            @if (isEditingPersonal) {
+            <input type="text" class="detail-input" [(ngModel)]="employee.lastName" />
+            } @else {
+            <p class="detail-value">{{ employee?.lastName }}</p>
+            }
           </div>
-        </div>
-
-        <div class="details-section">
-          <h3 class="details-header-title">💼 פרטי משרה</h3>
-          <div class="details-grid">
-            <div class="detail-item">
-              @if (isEditMode) {
-                <label class="detail-label">תפקיד</label>
-                <input type="text" class="detail-input" [(ngModel)]="employee.position" />
-              }@else {
-                <label class="detail-label">תפקיד</label>
-                <p class="detail-value">{{ employee?.position }}</p>
-              }
-            </div>
-            <div class="detail-item">
-              @if (isEditMode) {
-                <label class="detail-label">מחלקה</label>
-                <select class="detail-input" [(ngModel)]="employee.department">
-                  <option value="DEV">פיתוח</option>
-                  <option value="HR">משאבי אנוש</option>
-                  <option value="IT">תמיכה</option>
-                  <option value="Sales">מכירות</option>
-                  <option value="Marketing">שיווק</option>
-                  <option value="Finance">כספים</option>
-                  <option value="Manegment">ניהול</option>
-                </select>
-              }@else {
-                <label class="detail-label">מחלקה</label>
-                <p class="detail-value">{{ employee?.department }}</p>
-              }
-            </div>
-            <div class="detail-item">
-              @if (isEditMode) {
-                <label class="detail-label">תאריך התחלה</label>
-                <input type="date" class="detail-input" [(ngModel)]="employee.hireDate" />
-              }@else {
-                <label class="detail-label">תאריך התחלה</label>
-                <p class="detail-value">{{ employee?.hireDate | date:'dd/MM/yyyy' }}</p>
-              }
-            </div>
-            <div class="detail-item">
-              @if (isEditMode) {
-                <label class="detail-label">סוג משרה</label>
-                <select class="detail-input" [(ngModel)]="employee.jobType">
-                  <option value="full-time">משרה מלאה</option>
-                  <option value="part-time">משרה חלקית</option>
-                  <option value="contractor">קבלן</option>
-                </select>
-              }@else {
-                <label class="detail-label">סוג משרה</label>
-                <p class="detail-value">{{ translateEmploymentType(employee?.jobType) }}</p>
-              }
-            </div>
-            <div class="detail-item">
-              @if (isEditMode) {
-                <label class="detail-label">סטטוס</label>
-                <select class="detail-input" [(ngModel)]="employee.status">
-                  <option value="Active">פעיל</option>
-                  <option value="Inactive">לא פעיל</option>
-                </select>
-              }@else {
-                <label class="detail-label">סטטוס</label>
-                <p class="detail-value">
-                  <span [class]="'status-badge status-' + employee?.status?.toLowerCase()">
-                    {{ translateStatus(employee?.status) }}
-                  </span>
-                </p>
-              }
-            </div>
+          <div class="detail-item">
+            <label class="detail-label">תעודת זהות</label>
+            @if (isEditingPersonal) {
+            <input type="text" class="detail-input" [(ngModel)]="employee.personalId" />
+            } @else {
+            <p class="detail-value">{{ employee?.personalId }}</p>
+            }
+          </div>
+          <div class="detail-item">
+            <label class="detail-label">מין</label>
+            @if (isEditingPersonal) {
+            <select class="detail-input" [(ngModel)]="employee.gender">
+              <option value="M">זכר</option>
+              <option value="F">נקבה</option>
+            </select>
+            } @else {
+            <p class="detail-value">{{ employee?.gender === 'M' ? 'זכר' : 'נקבה' }}</p>
+            }
+          </div>
+          <div class="detail-item">
+            <label class="detail-label">תאריך לידה</label>
+            @if (isEditingPersonal) {
+            <input type="date" class="detail-input" [(ngModel)]="employee.birthDate" />
+            } @else {
+            <p class="detail-value">{{ employee?.birthDate | date:'dd/MM/yyyy' }}</p>
+            }
+          </div>
+          <div class="detail-item">
+            <label class="detail-label">מצב משפחתי</label>
+            @if (isEditingPersonal) {
+            <select class="detail-input" [(ngModel)]="employee.familyStatus">
+              <option value="single">רווק/ה</option>
+              <option value="married">נשוי/אה</option>
+              <option value="divorced">גרוש/ה</option>
+              <option value="widowed">אלמן/ה</option>
+            </select>
+            } @else {
+            <p class="detail-value">{{ translateMaritalStatus(employee?.familyStatus) }}</p>
+            }
           </div>
         </div>
       </div>
+
+      <div class="details-section">
+        <div class="section-header-with-button">
+          <h3 class="details-header-title">📞 פרטי קשר</h3>
+        </div>
+
+        <div class="details-grid">
+          <div class="detail-item">
+            <label class="detail-label">טלפון נייד</label>
+            @if (isEditingPersonal) {
+            <input type="text" class="detail-input" [(ngModel)]="employee.phone" maxlength="10">
+            } @else {
+            <p class="detail-value">{{ employee?.phone }}</p>
+            }
+          </div>
+          <div class="detail-item">
+            <label class="detail-label">דוא"ל</label>
+            @if (isEditingPersonal) {
+            <input type="email" class="detail-input" [(ngModel)]="employee.email" />
+            } @else {
+            <p class="detail-value">{{ employee?.email }}</p>
+            }
+          </div>
+          <div class="detail-item">
+            <label class="detail-label">כתובת</label>
+            @if (isEditingPersonal) {
+            <input type="text" class="detail-input" [(ngModel)]="employee.address" />
+            } @else {
+            <p class="detail-value">{{ employee?.address }}</p>
+            }
+          </div>
+          <div class="detail-item">
+            <label class="detail-label">עיר</label>
+            @if (isEditingPersonal) {
+            <input type="text" class="detail-input" [(ngModel)]="employee.city" />
+            } @else {
+            <p class="detail-value">{{ employee?.city }}</p>
+            }
+          </div>
+          <div class="detail-item">
+            <label class="detail-label">מדינה</label>
+            @if (isEditingPersonal) {
+            <input type="text" class="detail-input" [(ngModel)]="employee.country" />
+            } @else {
+            <p class="detail-value">{{ employee?.country }}</p>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="details-section">
+        <h3 class="details-header-title">💼 פרטי משרה</h3>
+        <div class="details-grid">
+          <div class="detail-item">
+            <label class="detail-label">תפקיד</label>
+            @if (isEditingPersonal) {
+            <input type="text" class="detail-input" [(ngModel)]="employee.position" />
+            } @else {
+            <p class="detail-value">{{ employee?.position }}</p>
+            }
+          </div>
+          <div class="detail-item">
+            <label class="detail-label">מחלקה</label>
+            @if (isEditingPersonal) {
+            <select class="detail-input" [(ngModel)]="employee.department">
+              <option value="DEV">פיתוח</option>
+              <option value="HR">משאבי אנוש</option>
+              <option value="IT">תמיכה</option>
+              <option value="Sales">מכירות</option>
+              <option value="Marketing">שיווק</option>
+              <option value="Finance">כספים</option>
+              <option value="Manegment">ניהול</option>
+            </select>
+            } @else {
+            <p class="detail-value">{{ employee?.department }}</p>
+            }
+          </div>
+          <div class="detail-item">
+            <label class="detail-label">תאריך התחלה</label>
+            @if (isEditingPersonal) {
+            <input type="date" class="detail-input" [(ngModel)]="employee.hireDate" />
+            } @else {
+            <p class="detail-value">{{ employee?.hireDate | date:'dd/MM/yyyy' }}</p>
+            }
+          </div>
+          <div class="detail-item">
+            <label class="detail-label">סוג משרה</label>
+            @if (isEditingPersonal) {
+            <select class="detail-input" [(ngModel)]="employee.jobType">
+              <option value="full-time">משרה מלאה</option>
+              <option value="part-time">משרה חלקית</option>
+              <option value="contractor">קבלן</option>
+            </select>
+            } @else {
+            <p class="detail-value">{{ translateEmploymentType(employee?.jobType) }}</p>
+            }
+          </div>
+          <div class="detail-item">
+            <label class="detail-label">סטטוס</label>
+            @if (isEditingPersonal) {
+            <select class="detail-input" [(ngModel)]="employee.status">
+              <option value="Active">פעיל</option>
+              <option value="Inactive">לא פעיל</option>
+            </select>
+            } @else {
+            <p class="detail-value">
+              <span [class]="'status-badge status-' + employee?.status?.toLowerCase()">
+                {{ translateStatus(employee?.status) }}
+              </span>
+            </p>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
     }
-    
+
     <!-- Documents Tab -->
     @if (activeTab === 'documents') {
-      <div class="tab-content documents-tab">
-        <div class="documents-grid">
-          @if (documents && documents.length > 0) {
-            @for (doc of documents; track doc.id) {
-              <div class="document-card">
-                <div class="document-icon">
-                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                    <polyline points="14 2 14 8 20 8" />
-                    <line x1="12" y1="13" x2="12" y2="17" />
-                    <line x1="10" y1="15" x2="14" y2="15" />
-                  </svg>
-                </div>
-                <h4 class="document-name">{{ doc.name }}</h4>
-                <p class="document-type">{{ doc.type }}</p>
-                <p class="document-date">{{ doc.uploadDate | date:'dd/MM/yyyy' }}</p>
-                <div class="document-actions">
-                  <button class="doc-btn btn-view">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
-                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                      <circle cx="12" cy="12" r="3" />
-                    </svg>
-                    צפה
-                  </button>
-                  <button class="doc-btn btn-download">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
-                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                      <polyline points="7 10 12 15 17 10" />
-                      <line x1="12" y1="15" x2="12" y2="3" />
-                    </svg>
-                    הורד
-                  </button>
-                </div>
-              </div>
-            }
-          } @else {
-            <div class="empty-state">
-              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                <polyline points="14 2 14 8 20 8" />
-              </svg>
-              <p>אין מסמכים להצגה</p>
-            </div>
+    <div class="tab-content documents-tab">
+
+      <!-- Filters -->
+      <div class="doc-filters">
+        <select class="filter-select" [(ngModel)]="docFilterType" (change)="applyDocumentFilter()">
+          <option value="">כל הסוגים</option>
+          <option value="Payslip">תלושי שכר</option>
+          <option value="101 Form">טופס 101</option>
+          <option value="Sick Leave">אישור מחלה</option>
+          <option value="Other">אחר</option>
+        </select>
+
+        <select class="filter-select" [(ngModel)]="docFilterYear" (change)="applyDocumentFilter()">
+          <option value="">כל השנים</option>
+          @for (year of availableDocYears; track year) {
+          <option [value]="year">{{ year }}</option>
           }
-        </div>
+        </select>
+        <select class="filter-select" [(ngModel)]="docFilterMonth" (change)="applyDocumentFilter()">
+          <option value="">כל החודשים</option>
+          <option value="1">ינואר</option>
+          <option value="2">פברואר</option>
+          <option value="3">מרץ</option>
+          <option value="4">אפריל</option>
+          <option value="5">מאי</option>
+          <option value="6">יוני</option>
+          <option value="7">יולי</option>
+          <option value="8">אוגוסט</option>
+          <option value="9">ספטמבר</option>
+          <option value="10">אוקטובר</option>
+          <option value="11">נובמבר</option>
+          <option value="12">דצמבר</option>
+        </select>
+        @if (docFilterType || docFilterYear || docFilterMonth) {
+        <button class="clear-filter-btn" (click)="clearDocumentFilter()">נקה סינון</button>
+        }
       </div>
+
+      <div class="documents-grid">
+        @if (filteredDocuments && filteredDocuments.length > 0) {
+        @for (doc of filteredDocuments; track doc.id) {
+        <div class="document-card">
+          <div class="document-icon payroll-icon">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+              <line x1="12" y1="13" x2="12" y2="17" />
+              <line x1="10" y1="15" x2="14" y2="15" />
+            </svg>
+          </div>
+          <h4 class="document-name">{{ doc.name }}</h4>
+          <p class="document-type">{{ doc.date | date:'dd/MM/yyyy' }}</p>
+          @if (doc.amount) {
+          <p class="document-date">₪{{ formatNumber(doc.amount) }}</p>
+          }
+          <div class="document-actions">
+            <a [href]="doc.url" target="_blank" class="doc-btn btn-view">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+              צפה
+            </a>
+            <a [href]="doc.url" download class="doc-btn btn-download">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              הורד
+            </a>
+          </div>
+        </div>
+        }
+        } @else {
+        <div class="empty-state">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <polyline points="14 2 14 8 20 8" />
+          </svg>
+          <p>אין מסמכים להצגה</p>
+        </div>
+        }
+      </div>
+    </div>
     }
 
     <!-- Salary Tab -->
     @if (activeTab === 'salary') {
-      <div class="tab-content salary-tab">
-        <div class="salary-section">
-          <div class="section-header-with-button">
-            <h3 class="details-header-title">💰 פרטי משכורת</h3>
-            @if (isEditMode) {
-              <button class="edit-save-btn btn-save" (click)="saveChanges()" aria-label="שמור">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
-                  <polyline points="17 21 17 13 7 13 7 21"></polyline>
-                  <polyline points="7 3 7 8 15 8"></polyline>
-                </svg>
-                <span>שמור</span>
-              </button>
-            }@else {
-              <button class="edit-save-btn btn-edit" (click)="toggleEditMode()" aria-label="עריכה">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M12 20h9"></path>
-                  <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-                </svg>
-                <span>עריכה</span>
-              </button>
-            }
-          </div>
+    <div class="tab-content salary-tab">
 
-          <div class="details-grid">
-            <div class="detail-item">
-              @if (isEditMode) {
-                <label class="detail-label">שכר בסיסי</label>
-                <input type="number" class="detail-input" [(ngModel)]="employee.baseSalary" />
-              }@else {
-                <label class="detail-label">שכר בסיסי</label>
-                <p class="detail-value">₪{{ formatNumber(employee?.baseSalary) }}</p>
-              }
-            </div>
-            <div class="detail-item">
-              @if (isEditMode) {
-                <label class="detail-label">בונוס</label>
-                <input type="number" class="detail-input" [(ngModel)]="employee.bonus" />
-              }@else {
-                <label class="detail-label">בונוס</label>
-                <p class="detail-value">₪{{ formatNumber(employee?.bonus) }}</p>
-              }
-            </div>
-            <div class="detail-item">
-              @if (isEditMode) {
-                <label class="detail-label">קצבה</label>
-                <input type="number" class="detail-input" [(ngModel)]="employee.allowance" />
-              }@else {
-                <label class="detail-label">קצבה</label>
-                <p class="detail-value">₪{{ formatNumber(employee?.allowance) }}</p>
-              }
-            </div>
-            <div class="detail-item">
-              <label class="detail-label">סה"כ משכורת החודש</label>
-              <p class="detail-value total-salary">₪{{ formatNumber(calculateTotalSalary()) }}</p>
-            </div>
-          </div>
-        </div>
+      <!-- Salary Details -->
+      <div class="salary-section">
+        <div class="section-header-with-button">
+          <h3 class="details-header-title">📋 פרטי שכר</h3>
 
-        <div class="salary-section">
-          <h3 class="details-header-title">📊 היסטוריית משכורות</h3>
-          <div class="salary-history">
-            @if (salaryHistory && salaryHistory.length > 0) {
-              <div class="salary-table">
-                <div class="table-header">
-                  <div class="table-cell">חודש</div>
-                  <div class="table-cell">משכורת בסיסית</div>
-                  <div class="table-cell">בונוס</div>
-                  <div class="table-cell">ניכויים</div>
-                  <div class="table-cell">סה"כ</div>
-                </div>
-                @for (salary of salaryHistory; track salary.id) {
-                  <div class="table-row">
-                    <div class="table-cell">{{ salary.month }}/{{ salary.year }}</div>
-                    <div class="table-cell">₪{{ formatNumber(salary.baseSalary) }}</div>
-                    <div class="table-cell">₪{{ formatNumber(salary.bonus) }}</div>
-                    <div class="table-cell">₪{{ formatNumber(salary.deductions) }}</div>
-                    <div class="table-cell total-salary">₪{{ formatNumber(salary.total) }}</div>
-                  </div>
-                }
-              </div>
+          <div class="edit-action-buttons">
+            @if (isEditingSalary) {
+            <button class="edit-save-btn btn-save" (click)="saveSalaryChanges()" aria-label="שמור">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                <polyline points="7 3 7 8 15 8"></polyline>
+              </svg>
+              <span>שמור</span>
+            </button>
+            <button class="edit-save-btn btn-cancel" (click)="cancelSalaryEdit()" aria-label="בטל">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+              <span>בטל</span>
+            </button>
             } @else {
-              <div class="empty-state">
-                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5">
-                  <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-                </svg>
-                <p>אין היסטוריית משכורות</p>
-              </div>
+            <button class="edit-save-btn btn-edit" (click)="toggleEditSalary()" aria-label="עריכה">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 20h9"></path>
+                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+              </svg>
+              <span>עריכה</span>
+            </button>
             }
           </div>
         </div>
+
+        @if (salaryDetails) {
+        <div class="details-grid">
+          <div class="detail-item">
+            <label class="detail-label">קרן פנסיה</label>
+            @if (isEditingSalary) {
+            <input type="text" class="detail-input" [(ngModel)]="salaryDetails.pensionFund" />
+            } @else {
+            <p class="detail-value">{{ salaryDetails.pensionFund || '—' }}</p>
+            }
+          </div>
+          <div class="detail-item">
+            <label class="detail-label">קופת גמל / קרן השתלמות</label>
+            @if (isEditingSalary) {
+            <input type="text" class="detail-input" [(ngModel)]="salaryDetails.providentFund" />
+            } @else {
+            <p class="detail-value">{{ salaryDetails.providentFund || '—' }}</p>
+            }
+          </div>
+          <div class="detail-item">
+            <label class="detail-label">חברת ביטוח</label>
+            @if (isEditingSalary) {
+            <input type="text" class="detail-input" [(ngModel)]="salaryDetails.insuranceCompany" />
+            } @else {
+            <p class="detail-value">{{ salaryDetails.insuranceCompany || '—' }}</p>
+            }
+          </div>
+          <div class="detail-item">
+            <label class="detail-label">שכר לשעה</label>
+            @if (isEditingSalary) {
+            <input type="number" class="detail-input" [(ngModel)]="salaryDetails.salaryPerHour" />
+            } @else {
+            <p class="detail-value">₪{{ formatNumber(salaryDetails.salaryPerHour) }}</p>
+            }
+          </div>
+          <div class="detail-item">
+            <label class="detail-label">ותק (שנים)</label>
+            @if (isEditingSalary) {
+            <input type="number" class="detail-input" [(ngModel)]="salaryDetails.seniority" />
+            } @else {
+            <p class="detail-value">{{ salaryDetails.seniority }}</p>
+            }
+          </div>
+          <div class="detail-item">
+            <label class="detail-label">נקודות זיכוי</label>
+            @if (isEditingSalary) {
+            <input type="number" class="detail-input" [(ngModel)]="salaryDetails.creditPoints" step="0.25" />
+            } @else {
+            <p class="detail-value">{{ salaryDetails.creditPoints }}</p>
+            }
+          </div>
+          <div class="detail-item">
+            <label class="detail-label">ימי מחלה שנוצלו</label>
+            @if (isEditingSalary) {
+            <input type="number" class="detail-input" [(ngModel)]="salaryDetails.totalSeekDays" />
+            } @else {
+            <p class="detail-value">{{ salaryDetails.totalSeekDays }}</p>
+            }
+          </div>
+          <div class="detail-item">
+            <label class="detail-label">ימי חופשה שנוצלו</label>
+            @if (isEditingSalary) {
+            <input type="number" class="detail-input" [(ngModel)]="salaryDetails.totalVacationDays" />
+            } @else {
+            <p class="detail-value">{{ salaryDetails.totalVacationDays }}</p>
+            }
+          </div>
+        </div>
+        } @else {
+        <div class="empty-state">
+          <p>אין פרטי שכר</p>
+        </div>
+        }
       </div>
+
+    </div>
     }
   </div>
+
 </div>

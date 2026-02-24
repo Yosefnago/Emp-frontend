@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SettingsService } from '../../core/services/settings-service';
+import { SystemMessages } from '../../core/services/system-messages.service';
 
 @Component({
   selector: 'app-settings',
@@ -21,12 +22,12 @@ export class SettingsComponent implements OnInit {
   email: string = '';
   phone: string = '';
 
-  constructor(private router: Router,private settingsService: SettingsService) {}
+  constructor(private router: Router, private settingsService: SettingsService,private systemMessage: SystemMessages) { }
 
   passwordData = {
-    current: '',
-    new: '',
-    confirm: ''
+    oldPass: '',
+    newPass: '',
+    newPassAgain: ''
   };
 
 
@@ -45,18 +46,15 @@ export class SettingsComponent implements OnInit {
     sms: false
   };
 
-  preferences = {
-    language: 'he',
-    theme: 'light',
-    timeFormat: '24h',
-    analyticsEnabled: true,
-    crashReports: true
-  };
 
+
+
+  isEditingProfile: boolean = false;
 
   ngOnInit(): void {
     this.getUserProfile();
   }
+
   getUserProfile(): void {
     this.settingsService.getUserProfile().subscribe({
       next: (response) => {
@@ -65,9 +63,7 @@ export class SettingsComponent implements OnInit {
         this.companyId = response.companyId;
         this.companyAddress = response.companyAddress;
         this.email = response.email;
-        this.phone = response.phone;
-        
-        console.log('User profile data:', response);
+        this.phone = response.phoneNumber;
       },
       error: (err) => {
         console.error('Error fetching user profile:', err);
@@ -75,11 +71,75 @@ export class SettingsComponent implements OnInit {
     });
   }
 
+  toggleEditProfile(): void {
+    this.isEditingProfile = !this.isEditingProfile;
+  }
+
+  saveProfile(): void {
+    const profileData = {
+      username: this.username,
+      companyName: this.companyName,
+      companyId: this.companyId,
+      companyAddress: this.companyAddress,
+      email: this.email,
+      phoneNumber: this.phone
+    };
+
+    this.settingsService.updateUserProfile(profileData).subscribe({
+      next: (response) => {
+        console.log('Profile updated successfully', response);
+        this.isEditingProfile = false;
+      },
+      error: (err) => {
+        console.error('Error updating profile:', err);
+      }
+    });
+  }
+
+  cancelEditProfile(): void {
+    this.isEditingProfile = false;
+    this.getUserProfile();
+  }
+
+  saveSecurity(): void {
+
+
+    if (this.passwordData.newPass !== this.passwordData.newPassAgain
+        || this.passwordData.oldPass.trim() === '' || this.passwordData.newPass.trim() === ''
+        || this.passwordData.newPassAgain.trim() === ''
+
+    ) {
+      this.systemMessage.show('הסיסמאות החדשות אינן תואמות או שדות ריקים', false);
+      return;
+    }
+    
+    this.settingsService.updateSecuritySettings(this.passwordData).subscribe({
+      next: (response) => {
+        this.systemMessage.show(response.message,response.success);
+        this.passwordData = { oldPass: '', newPass: '', newPassAgain: '' };
+      },
+      error: (err) => console.error('Error updating security settings:', err)
+    });
+  }
+
+  saveNotifications(): void {
+    const data = {
+      notifications: this.notificationSettings,
+      channels: this.channels
+    };
+    this.settingsService.updateNotificationSettings(data).subscribe({
+      next: (response) => console.log('Notification settings updated', response),
+      error: (err) => console.error('Error updating notification settings:', err)
+    });
+  }
+
+
+
   switchTab(tab: string): void {
     this.activeTab = tab;
   }
 
- 
+
   goBack(): void {
     this.router.navigate(['/home']);
   }

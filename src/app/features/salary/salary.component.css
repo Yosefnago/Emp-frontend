@@ -95,7 +95,27 @@
   text-transform: uppercase;
   margin: 0;
 }
-
+.filter-apply-btn{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: #3b82f6;
+  border: 1px solid #e0e7ff;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.6s ease;
+  white-space: nowrap;
+  direction: ltr;
+}
+.filter-apply-btn:hover {
+  background: #1d4ed8;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.2);
+}
 .filter-select {
   padding: 12px 15px;
   border: 1px solid #e0e7ff;

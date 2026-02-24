@@ -4,10 +4,10 @@ import { Observable } from "rxjs";
 
 
 @Injectable({
-    providedIn: 'root'  
+    providedIn: 'root'
 })
 export class SettingsService {
-    
+
     private apiUrl = 'http://localhost:8090/user';
 
     constructor(private http: HttpClient) { }
@@ -16,12 +16,16 @@ export class SettingsService {
         return this.http.get<any>(`${this.apiUrl}`);
     }
 
-    public updateUserProfile(userId: number, profileData: any) {
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                resolve({ success: true });
-            }, 1000);
-        });     
+    updateUserProfile(profileData: any): Observable<any> {
+        return this.http.put<any>(`${this.apiUrl}`, profileData);
+    }
+
+    updateSecuritySettings(securityData: any): Observable<any> {
+        return this.http.post<any>(`${this.apiUrl}/security`, securityData);
+    }
+
+    updateNotificationSettings(notificationSettings: any): Observable<any> {
+        return this.http.put<any>(`${this.apiUrl}/notifications`, notificationSettings);
     }
 
 

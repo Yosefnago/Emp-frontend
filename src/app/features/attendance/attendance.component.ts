@@ -295,8 +295,7 @@ export class AttendanceComponent implements OnInit {
   goBack(): void {
     this.router.navigate(['/home']);
   }
-  /// Payroll Integration --------------------- 
-  // to complete the payroll integration.
+  
   sendToPayroll(): void {
     if (this.sending) {
       return; 
@@ -342,12 +341,10 @@ export class AttendanceComponent implements OnInit {
   } 
   attendanceRecordsValidort():boolean{
 
-    // validate that year is selected
     if(this.selectedYear ==='' || this.selectedYear === null){
       this.systemMessages.show('אנא בחר שנה', false);
       return false;
     }
-    // validate that month is selected
     if(this.selectedMonth ==='' || this.selectedMonth === null){
       this.systemMessages.show('אנא בחר חודש', false);
       return false;
@@ -361,7 +358,6 @@ export class AttendanceComponent implements OnInit {
       return false;
     }
     
-    // validate that if there any check-in time is after check-out time
     const invalidCheckIn = this.filteredRecords.find(r => r.checkInTime > r.checkOutTime);
 
     if (invalidCheckIn) {
@@ -370,7 +366,6 @@ export class AttendanceComponent implements OnInit {
       return false;
     }
     
-    // validate that if there any record with empty check-in time and status is PRESENT
     const emptyCheckIn = this.filteredRecords.find(r => !r.checkInTime  && r.status === 'PRESENT');
 
     if (emptyCheckIn) {
@@ -379,7 +374,6 @@ export class AttendanceComponent implements OnInit {
       return false;
     }
 
-    // validate that if there any record with empty check-out time and status is PRESENT
     const emptyCheckOut = this.filteredRecords.find(r => !r.checkOutTime && r.status === 'PRESENT');
 
     if (emptyCheckOut) {

@@ -140,75 +140,6 @@
   text-align: right;
 }
 
-/* Profile Section */
-.profile-content {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-}
-
-.profile-picture-section {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  padding: 20px;
-  background: #f8f9fa;
-  border-radius: 10px;
-}
-
-.profile-picture {
-  width: 100px;
-  height: 100px;
-  min-width: 100px;
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 28px;
-  font-weight: 700;
-  color: white;
-}
-
-.picture-actions {
-  display: flex;
-  gap: 10px;
-  flex-direction: column;
-}
-
-.upload-btn,
-.delete-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 16px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 13px;
-  transition: all 0.3s ease;
-}
-
-.upload-btn {
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-  color: white;
-}
-
-.upload-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-}
-
-.delete-btn {
-  background: #fee2e2;
-  color: #991b1b;
-}
-
-.delete-btn:hover {
-  background: #fecaca;
-}
-
 .settings-form,
 .security-form,
 .preferences-form {
@@ -651,48 +582,6 @@
   box-shadow: 0 6px 16px rgba(59, 130, 246, 0.3);
 }
 
-/* Danger Zone */
-.danger-zone {
-  margin-top: 40px;
-  padding: 30px;
-  background: #fee2e2;
-  border: 2px solid #ef4444;
-  border-radius: 12px;
-}
-
-.danger-title {
-  font-size: 18px;
-  font-weight: 700;
-  color: #991b1b;
-  margin: 0 0 20px 0;
-  text-align: right;
-}
-
-.danger-actions {
-  display: flex;
-  gap: 15px;
-  direction: rtl;
-  flex-wrap: wrap;
-}
-
-.danger-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 24px;
-  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.danger-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.3);
-}
 
 @media (max-width: 768px) {
   .settings-container {
@@ -754,16 +643,6 @@
   .settings-section {
     padding: 20px;
   }
-
-  .profile-picture-section {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .picture-actions {
-    width: 100%;
-  }
-
   .upload-btn,
   .delete-btn {
     width: 100%;
