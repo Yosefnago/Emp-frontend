@@ -223,9 +223,9 @@
           <div class="detail-item">
             <label class="detail-label">טלפון נייד</label>
             @if (isEditingPersonal) {
-            <input type="text" class="detail-input" [(ngModel)]="employee.phone" maxlength="10">
+            <input type="text" class="detail-input" [(ngModel)]="employee.phoneNumber" maxlength="10">
             } @else {
-            <p class="detail-value">{{ employee?.phone }}</p>
+            <p class="detail-value">{{ employee?.phoneNumber }}</p>
             }
           </div>
           <div class="detail-item">

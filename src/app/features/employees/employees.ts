@@ -60,7 +60,7 @@ export class EmployeesComponent implements OnInit {
     this.addEmployeeModal.open();
   }
   onModalClose() {
-    this.loadEmployees
+    this.loadEmployees();
   }
 
   onEmployeeAdded(employeeData: any) {

@@ -7,7 +7,7 @@ import { Observable } from "rxjs";
 })
 export class DepartmentService {
 
-    private apiUrl = 'http://localhost:8090/user';
+    private apiUrl = 'http://localhost:8090/department';
 
     constructor(private http: HttpClient) { }
 
@@ -24,8 +24,8 @@ export class DepartmentService {
         return this.http.delete<void>(`${this.apiUrl}/${id}`);
     }
 
-    getDepartmentDetails(id: string): Observable<any> {
-        return this.http.get<any>(`${this.apiUrl}/${id}`);
+    getDepartmentDetails(name: string): Observable<any> {
+        return this.http.get<any>(`${this.apiUrl}/${name}`);
     }
 
 }

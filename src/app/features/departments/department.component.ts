@@ -25,7 +25,22 @@ export class DepartmentComponent implements OnInit {
   }
 
   onDepartmentChange(): void {
-    this.department = this.selectedDepartment;
+    if(this.selectedDepartment === null || this.selectedDepartment ===' '){
+      this.department = null;
+      return;
+    }
+    const departmentName = this.renameDepartment(this.selectedDepartment);
+    
+    this.departmentService.getDepartmentDetails(departmentName).subscribe({
+      next: (data) => {
+        this.department = data;
+      },
+      error: (error) => {
+        console.error('Error fetching department details:', error);
+        this.department = null;
+      }
+
+    });  
   }
 
   goBack(): void {
@@ -41,5 +56,17 @@ export class DepartmentComponent implements OnInit {
 
   getInitials(name: string): string {
     return name.split(' ').map(n => n[0]).join('').toUpperCase();
+  }
+  renameDepartment(department: string): string {
+    switch (department) {
+        case 'פיתוח': return 'DEV';
+        case 'משאבי אנוש': return 'HR';
+        case 'מכירות': return 'SALES';
+        case 'שיווק': return 'MARKETING';
+        case 'תמיכה': return 'IT';
+        case 'ניהול': return 'MANAGEMENT';
+        case 'כספים': return 'FINANCE';
+        default: return department;
+    }
   }
 }

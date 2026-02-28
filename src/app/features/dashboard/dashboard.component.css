@@ -1,6 +1,4 @@
-/* ============================================
-   Top Header Bar Styling
-   ============================================ */
+/*Top Header Bar Styling */
 .top-header {
   display: flex;
   justify-content: space-between;
@@ -38,9 +36,7 @@
   align-items: center;
 }
 
-/* ============================================
-   Header Button & Notification Badge
-   ============================================ */
+/* Header Button & Notification Badge*/
 .header-btn {
   position: relative;
   width: 40px;
@@ -80,9 +76,7 @@
   box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3);
 }
 
-/* ============================================
-   Stats Grid & Cards
-   ============================================ */
+/*Stats Grid & Cards */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -130,17 +124,6 @@
   background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
 }
-
-.stat-card-purple {
-  background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
-  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
-}
-
-.stat-card-orange {
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
-}
-
 .stat-header {
   display: flex;
   justify-content: space-between;
@@ -188,9 +171,7 @@
   font-weight: 500;
 }
 
-/* ============================================
-   Quick Actions Section
-   ============================================ */
+/* Quick Actions Section*/
 .quick-actions {
   padding: 0 30px;
   margin-bottom: 40px;
@@ -300,9 +281,7 @@
   opacity: 1;
 }
 
-/* ============================================
-   Recent Activity Section
-   ============================================ */
+/*Recent Activity Section */
 .recent-activity {
   padding: 30px;
   background: white;
@@ -332,9 +311,7 @@
   color: #1d4ed8;
 }
 
-/* ============================================
-   Activity List & Items
-   ============================================ */
+/*Activity List & Items*/
 .activity-list {
   display: flex;
   flex-direction: column;
@@ -356,9 +333,7 @@
   background: #f0f2f5;
 }
 
-/* ============================================
-   Activity Icons - Color Coding
-   ============================================ */
+/*Activity Icons - Color Coding*/
 .activity-icon {
   width: 36px;
   height: 36px;
@@ -405,7 +380,7 @@
   stroke-width: 2;
 }
 
-/* APPROVE icon - Blue (darker) */
+/* APPROVE icon - Blue */
 .activity-icon-approve {
   background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
   color: white;
@@ -427,9 +402,7 @@
   stroke-width: 2;
 }
 
-/* ============================================
-   Activity Content
-   ============================================ */
+/* Activity Content */
 .activity-content {
   flex: 1;
   display: flex;
@@ -462,9 +435,7 @@
   font-weight: 500;
 }
 
-/* ============================================
-   Empty State
-   ============================================ */
+/*Empty State */
 .activity-empty {
   display: flex;
   flex-direction: column;
@@ -486,9 +457,7 @@
   direction: rtl;
 }
 
-/* ============================================
-   Responsive Design
-   ============================================ */
+/* Responsive Design */
 @media (max-width: 768px) {
   .top-header {
     padding: 15px 20px;
@@ -549,9 +518,7 @@
   }
 }
 
-/* ============================================
-   Animation & Transitions
-   ============================================ */
+/*Animation & Transitions */
 @keyframes slideIn {
   from {
     opacity: 0;
@@ -569,9 +536,7 @@
   animation: slideIn 0.3s ease-out;
 }
 
-/* ============================================
-   Focus States for Accessibility
-   ============================================ */
+/*Focus States for Accessibility */
 .header-btn:focus,
 .action-card:focus,
 .stat-card:focus {

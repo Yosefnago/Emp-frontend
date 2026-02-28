@@ -34,7 +34,7 @@
         </div>
         <div class="stat-info">
           <p class="stat-label">תאריך הקמה</p>
-          <p class="stat-value">{{ department?.foundedDate }}</p>
+          <p class="stat-value">{{ department?.dateOfCreate }}</p>
         </div>
       </div>
 
@@ -46,20 +46,7 @@
         </div>
         <div class="stat-info">
           <p class="stat-label">תקציב שנתי</p>
-          <p class="stat-value">₪{{ formatNumber(department?.budget) }}</p>
-        </div>
-      </div>
-
-      <div class="stat-card stat-card-green">
-        <div class="stat-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-            <path d="M20 10c0 7-3 11-8 11s-8-4-8-11" />
-            <circle cx="12" cy="4" r="3" />
-          </svg>
-        </div>
-        <div class="stat-info">
-          <p class="stat-label">מנהל המחלקה</p>
-          <p class="stat-value">{{ department?.manager }}</p>
+          <p class="stat-value">₪{{ formatNumber(department?.annualPlacement) }}</p>
         </div>
       </div>
 
@@ -72,7 +59,7 @@
         </div>
         <div class="stat-info">
           <p class="stat-label">סה"כ עובדים</p>
-          <p class="stat-value">{{ department?.totalEmployees }}</p>
+          <p class="stat-value">{{ department?.employees.length }}</p>
         </div>
       </div>
     </div>
@@ -84,27 +71,23 @@
     <div class="details-grid">
       <div class="detail-item">
         <label class="detail-label">שם המחלקה</label>
-        <p class="detail-value">{{ department?.name }}</p>
+        <p class="detail-value">{{ selectedDepartment }}</p>
       </div>
       <div class="detail-item">
         <label class="detail-label">קוד המחלקה</label>
-        <p class="detail-value">{{ department?.code }}</p>
+        <p class="detail-value">{{ department?.departmentCode }}</p>
       </div>
       <div class="detail-item">
         <label class="detail-label">מנהל</label>
-        <p class="detail-value">{{ department?.manager }}</p>
+        <p class="detail-value">{{ department?.departmentManager }}</p>
       </div>
       <div class="detail-item">
         <label class="detail-label">טלפון</label>
-        <p class="detail-value">{{ department?.phone }}</p>
-      </div>
-      <div class="detail-item">
-        <label class="detail-label">קומה</label>
-        <p class="detail-value">{{ department?.floor }}</p>
+        <p class="detail-value">{{ department?.departmentPhone }}</p>
       </div>
       <div class="detail-item">
         <label class="detail-label">דוא"ל</label>
-        <p class="detail-value">{{ department?.email }}</p>
+        <p class="detail-value">{{ department?.departmentMail }}</p>
       </div>
     </div>
   </section>
@@ -115,8 +98,8 @@
     <div class="employees-grid">
       @for (employee of department?.employees; track employee.id) {
       <div class="employee-card">
-        <div class="employee-avatar">{{ getInitials(employee.name) }}</div>
-        <h4 class="employee-name">{{ employee.name }}</h4>
+        <div class="employee-avatar">{{ getInitials(employee.firstName + ' ' + employee.lastName) }}</div>
+        <h4 class="employee-name">{{ employee.firstName }} {{ employee.lastName }}</h4>
         <p class="employee-position">{{ employee.position }}</p>
         <p class="employee-email">{{ employee.email }}</p>
       </div>

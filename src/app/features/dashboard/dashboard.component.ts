@@ -1,10 +1,11 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild,NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { HomeService } from '../../core/services/home.service';
 import { CommonModule } from '@angular/common';
 import { NotificationsModalComponent } from '../../shared/components/notifications-modal/notifications-modal.component';
 import { LastActivity } from '../../core/models/LastActivity';
 import { NotificationsEventsService } from '../../core/services/notifications-events.service';
+import { WebSocketService } from '../../core/services/web-socket.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,12 +19,15 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
   numberOfEmployees = 0;
   numberOfAttendants = 0;
-  monthlySalaryTotal = 10000;
-  projectsOnboard = 5;
   notificationCount = 0;
   lastActivities: LastActivity[] = [];
 
-  constructor(private router: Router, private homeService: HomeService, private notificationService: NotificationsEventsService) { }
+  constructor(
+    private ngZone: NgZone,
+    private router: Router,
+    private homeService: HomeService,
+    private webSocketService: WebSocketService,
+    private notificationService: NotificationsEventsService) { }
 
   ngAfterViewInit(): void {
     setTimeout(() => {
@@ -36,9 +40,22 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.loadLastActivities();
     this.loadNotificationCount();
 
-    setInterval(() => {
-      this.loadNotificationCount();
-    }, 600000);
+    this.webSocketService.connect();
+
+    this.webSocketService.connectionStatus.subscribe(status => {
+      if (status.connected) {
+        this.webSocketService.subscribe('/topic/notifications-update', (message) => {
+          
+          this.ngZone.run(() => {
+            console.log('Got refresh signal via WebSocket');
+            this.loadNotificationCount();
+          });
+        });
+      }
+    });
+  }
+  ngOnDestroy(): void {
+    this.webSocketService.disconnect();
   }
 
   navigateTo(route: string) {

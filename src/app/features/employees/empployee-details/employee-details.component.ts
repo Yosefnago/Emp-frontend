@@ -63,11 +63,9 @@ export class EmployeeDetailsComponent implements OnInit {
   selectedMonth: string = '';
   availableYears: number[] = [];
 
-  // Loading state
   isLoading: boolean = true;
   errorMessage: string = '';
 
-  // Edit mode flags — independent per tab
   isEditingPersonal: boolean = false;
   isEditingSalary: boolean = false;
 
@@ -104,11 +102,9 @@ export class EmployeeDetailsComponent implements OnInit {
         this.initializeAvailableYears();
         this.isLoading = false;
 
-        // Load salary data after we have the employee
         const emp = employee as any;
-        const empId = emp?.id || Number(personalId) || 0; // Fallback to personalId if id missing
+        const empId = emp?.id || Number(personalId) || 0; 
 
-        //this.loadSalaryHistory(empId);
         this.loadSalaryDetails(empId);
       },
       error: () => {
@@ -120,49 +116,10 @@ export class EmployeeDetailsComponent implements OnInit {
   loadSalaryHistory(employeeId: number): void {
     this.salaryService.getSalaryHistory(employeeId).subscribe({
       next: (data) => {
-        // Handle Salary Data
+
         if (data && data.length > 0) {
           this.salaryHistory = data;
-        } else {
-          // Mock salary history if empty
-          this.salaryHistory = [
-            {
-              id: 1,
-              salaryMonth: 1,
-              salaryYear: 2026,
-              salaryAmount: 12500,
-              paymentDate: new Date().toISOString(),
-              pathOfTlush: 'assets/sample-tlush.pdf',
-              createdAt: new Date().toISOString()
-            },
-            {
-              id: 2,
-              salaryMonth: 12,
-              salaryYear: 2025,
-              salaryAmount: 12500,
-              paymentDate: new Date('2025-12-10').toISOString(),
-              pathOfTlush: '',
-              createdAt: new Date().toISOString()
-            }
-          ];
-        }
-
-        this.processDocuments();
-      },
-      error: (err) => {
-        console.error('Error loading salary history:', err);
-
-        this.salaryHistory = [
-          {
-            id: 1,
-            salaryMonth: 1,
-            salaryYear: 2026,
-            salaryAmount: 12500,
-            paymentDate: new Date().toISOString(),
-            pathOfTlush: 'assets/sample-tlush.pdf',
-            createdAt: new Date().toISOString()
-          }
-        ];
+        } 
         this.processDocuments();
       }
     });
@@ -175,52 +132,16 @@ export class EmployeeDetailsComponent implements OnInit {
           this.salaryDetails = data;
           this.salaryDetailsBackup = { ...data };
         }
-      },
-      error: (err) => {
-        console.error('Error loading salary details:', err);
       }
     });
   }
 
   processDocuments(): void {
-    const salaryDocs: UnifiedDocument[] = this.salaryHistory
-      .filter(s => s.pathOfTlush)
-      .map(s => ({
-        id: s.id,
-        name: `תלוש שכר ${s.salaryMonth}/${s.salaryYear}`,
-        type: 'Payslip' as const,
-        date: new Date(s.paymentDate),
-        url: s.pathOfTlush,
-        amount: s.salaryAmount,
-        originalObject: s
-      }));
-
-    // Add Mock generic documents
-    const otherDocs: UnifiedDocument[] = [
-      {
-        id: 101,
-        name: 'טופס 101 - 2026',
-        type: '101 Form',
-        date: new Date('2026-01-01'),
-        url: '#'
-      },
-      {
-        id: 102,
-        name: 'אישור מחלה - ינואר',
-        type: 'Sick Leave',
-        date: new Date('2026-01-15'),
-        url: '#'
-      }
-    ];
-
-    this.documents = [...salaryDocs, ...otherDocs];
     this.filteredDocuments = this.documents;
 
-    // Build available years for filter
     const uniqueYears = new Set(this.documents.map(d => d.date.getFullYear()));
     this.availableDocYears = Array.from(uniqueYears).sort((a, b) => b - a);
 
-    // Initial filter application
     this.applyDocumentFilter();
   }
 
@@ -267,7 +188,7 @@ export class EmployeeDetailsComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/employees']);
+    this.router.navigate(['/home/employees']);
   }
 
   toggleEditPersonal(): void {

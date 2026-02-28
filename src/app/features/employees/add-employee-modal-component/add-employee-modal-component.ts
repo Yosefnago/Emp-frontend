@@ -83,9 +83,7 @@ export class AddEmployeeModalComponent {
   onSubmit() {
     this.submitted = true;
 
-    // Basic validation
     if (this.isFormValid()) {
-      // Emit the employee data to parent component
       this.employeeAdded.emit(this.employee);
       this.closeModal();
     }
@@ -104,7 +102,6 @@ export class AddEmployeeModalComponent {
     );
   }
 
-  // Validation helpers
   isFieldInvalid(fieldValue: any): boolean {
     return this.submitted && !fieldValue;
   }
