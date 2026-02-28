@@ -25,6 +25,7 @@
               }
             ],
             "styles": [
+              "src/app/shared/styles/shared.css",
               "src/custom-theme.scss",
               "src/styles.css"
             ]
