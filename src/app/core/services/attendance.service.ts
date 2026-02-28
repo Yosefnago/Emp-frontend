@@ -26,12 +26,13 @@ export class AttendanceService {
         );
     }
     updateAttendanceRecord(record: AttendanceRecord) {
-
         return this.http.put<AttendanceRecord>(
             `${this.apiUrl}/${record.personalId}`,
             record
         );
-
+    }
+    deleteAttendanceRecord(id: number) {
+        return this.http.delete(`${this.apiUrl}/${id}`);
     }
     sendToPayroll(record: AttendanceSummary) {
         return this.http.post(

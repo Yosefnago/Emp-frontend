@@ -21,16 +21,16 @@ export class DepartmentComponent implements OnInit {
   constructor(private router: Router, private departmentService: DepartmentService) { }
 
   ngOnInit(): void {
-    
+
   }
 
   onDepartmentChange(): void {
-    if(this.selectedDepartment === null || this.selectedDepartment ===' '){
+    if (!this.selectedDepartment || this.selectedDepartment.trim() === '') {
       this.department = null;
       return;
     }
     const departmentName = this.renameDepartment(this.selectedDepartment);
-    
+
     this.departmentService.getDepartmentDetails(departmentName).subscribe({
       next: (data) => {
         this.department = data;
@@ -40,7 +40,7 @@ export class DepartmentComponent implements OnInit {
         this.department = null;
       }
 
-    });  
+    });
   }
 
   goBack(): void {
@@ -59,14 +59,14 @@ export class DepartmentComponent implements OnInit {
   }
   renameDepartment(department: string): string {
     switch (department) {
-        case 'פיתוח': return 'DEV';
-        case 'משאבי אנוש': return 'HR';
-        case 'מכירות': return 'SALES';
-        case 'שיווק': return 'MARKETING';
-        case 'תמיכה': return 'IT';
-        case 'ניהול': return 'MANAGEMENT';
-        case 'כספים': return 'FINANCE';
-        default: return department;
+      case 'פיתוח': return 'DEV';
+      case 'משאבי אנוש': return 'HR';
+      case 'מכירות': return 'SALES';
+      case 'שיווק': return 'MARKETING';
+      case 'תמיכה': return 'IT';
+      case 'ניהול': return 'MANAGEMENT';
+      case 'כספים': return 'FINANCE';
+      default: return department;
     }
   }
 }

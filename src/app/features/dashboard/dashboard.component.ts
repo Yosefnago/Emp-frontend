@@ -1,4 +1,5 @@
-import { AfterViewInit, Component, OnInit, ViewChild,NgZone } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild, NgZone, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { HomeService } from '../../core/services/home.service';
 import { CommonModule } from '@angular/common';
@@ -14,13 +15,16 @@ import { WebSocketService } from '../../core/services/web-socket.service';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent implements OnInit, AfterViewInit {
+export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(NotificationsModalComponent) notificationsModal!: NotificationsModalComponent;
 
   numberOfEmployees = 0;
   numberOfAttendants = 0;
   notificationCount = 0;
   lastActivities: LastActivity[] = [];
+
+  private wsStatusSub?: Subscription;
+  private topicSubscribed = false;
 
   constructor(
     private ngZone: NgZone,
@@ -40,14 +44,15 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.loadLastActivities();
     this.loadNotificationCount();
 
-    this.webSocketService.connect();
+    if (!this.webSocketService.isConnected) {
+      this.webSocketService.connect();
+    }
 
-    this.webSocketService.connectionStatus.subscribe(status => {
-      if (status.connected) {
-        this.webSocketService.subscribe('/topic/notifications-update', (message) => {
-          
+    this.wsStatusSub = this.webSocketService.connectionStatus.subscribe(status => {
+      if (status.connected && !this.topicSubscribed) {
+        this.topicSubscribed = true;
+        this.webSocketService.subscribe('/topic/notifications-update', () => {
           this.ngZone.run(() => {
-            console.log('Got refresh signal via WebSocket');
             this.loadNotificationCount();
           });
         });
@@ -55,7 +60,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     });
   }
   ngOnDestroy(): void {
-    this.webSocketService.disconnect();
+    this.wsStatusSub?.unsubscribe();
+    this.topicSubscribed = false;
   }
 
   navigateTo(route: string) {
@@ -132,7 +138,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       case 'SENT_TO_PAYROLL':
         return 'send_to_payroll';
       case 'GENERATED_PAYROLL':
-        return 'generate_payroll';    
+        return 'generate_payroll';
       default:
         return 'default';
 

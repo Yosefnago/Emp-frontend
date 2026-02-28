@@ -9,32 +9,32 @@ import { map, Observable } from "rxjs";
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
-    private readonly API_URL = 'http://localhost:8090/auth';
+  private readonly API_URL = 'http://localhost:8090/auth';
 
-    constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
-    login(username: string,password: string): Observable<String> {
+  login(username: string, password: string): Observable<String> {
 
-        return this.http.post<{token:string; accessToken:string; username: string}>(
+    return this.http.post<{ token: string; accessToken: string; username: string }>(
 
-            `${this.API_URL}/login`,
-            {username,password},
-            {withCredentials: true}
+      `${this.API_URL}/login`,
+      { username, password },
+      { withCredentials: true }
 
-        ).pipe(
-            map(response => {
-                const token = response.accessToken || response.token;
-                
-                if (!token) {
-                    throw new Error('No token received from server');
-                }
-                
-                this.setAccessToken(token);
-              
-                return token;
-            })
-        );
-    }
+    ).pipe(
+      map(response => {
+        const token = response.accessToken || response.token;
+
+        if (!token) {
+          throw new Error('No token received from server');
+        }
+
+        this.setAccessToken(token);
+
+        return token;
+      })
+    );
+  }
 
   /**
    * Refreshes the access token using the refresh token stored in HTTP-only cookie.
@@ -48,7 +48,7 @@ export class AuthService {
 
       `${this.API_URL}/refresh`,
       {},
-      { withCredentials: true } 
+      { withCredentials: true }
 
     ).pipe(
 
@@ -57,7 +57,7 @@ export class AuthService {
         return response.accessToken;
 
       })
-    
+
     );
   }
 
@@ -66,14 +66,8 @@ export class AuthService {
    * Also calls backend to clear the refresh token cookie.
    */
   logout(): void {
-    
-    this.http.post<void>(
-      `${this.API_URL}/logout`,
-      {},
-      { withCredentials: true }
-
-    );
-    this.clearSession();
+    this.http.post<void>(`${this.API_URL}/logout`, {}, { withCredentials: true })
+      .subscribe({ complete: () => this.clearSession() });
   }
   /**
    * Clears the session and redirects to login page.

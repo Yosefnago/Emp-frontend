@@ -74,8 +74,12 @@ export class EventsComponent implements OnInit {
       .sort((a, b) => this.toDateTime(b).getTime() - this.toDateTime(a).getTime());
   }
   private toDateTime(e: EventDto): Date {
-    return new Date(`${e.eventDate}T${e.eventTime}`);
+  if (!e.eventDate || !e.eventTime) {
+    return new Date(0); 
   }
+  const date = new Date(`${e.eventDate}T${e.eventTime}`);
+  return isNaN(date.getTime()) ? new Date(0) : date;
+}
   switchTab(tab: 'upcoming' | 'past' | 'create'): void {
     this.activeTab = tab;
   }

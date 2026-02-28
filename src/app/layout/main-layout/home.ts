@@ -22,13 +22,16 @@ export class HomeComponent implements OnInit {
   constructor(private router: Router, private loginService: LoginService) { }
 
   ngOnInit() {
+    // Initialize active state from current URL (handles refresh / direct navigation)
+    const urlParts = this.router.url.split('/');
+    this.currentRoute = urlParts[urlParts.length - 1]?.split('?')[0] || 'dashboard';
 
-    // Track current route for active state
+    // Keep tracking on subsequent navigations
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: any) => {
-        const urlParts = event.url.split('/');
-        this.currentRoute = urlParts[urlParts.length - 1] || 'dashboard';
+        const parts = event.urlAfterRedirects.split('/');
+        this.currentRoute = parts[parts.length - 1]?.split('?')[0] || 'dashboard';
       });
     this.getUsername();
   }

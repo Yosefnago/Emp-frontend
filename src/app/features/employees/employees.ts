@@ -43,7 +43,7 @@ export class EmployeesComponent implements OnInit {
 
       this.employees = data.map(emp => ({
         id: emp.id,
-        name: emp.firstName.concat(' ', emp.lastName),
+        name: `${emp.firstName || ''} ${emp.lastName || ''}`.trim() || 'ללא שם',
         idNumber: emp.personalId,
         email: emp.email,
         phoneNumber: emp.phoneNumber,
@@ -64,13 +64,15 @@ export class EmployeesComponent implements OnInit {
   }
 
   onEmployeeAdded(employeeData: any) {
-    this.empService.addEmployee(employeeData).subscribe(() => {
-      this.systemService.show('Employee added successfully.', true);
-      this.loadEmployees();
-    }), () => {
-      this.systemService.show('Failed to add employee.', false);
-    }
-
+    this.empService.addEmployee(employeeData).subscribe(
+      () => {
+        this.systemService.show('Employee added successfully.', true);
+        this.loadEmployees();
+      },
+      () => {
+        this.systemService.show('Failed to add employee.', false);
+      }
+    );
   }
 
   toggleSearch() {
@@ -107,7 +109,7 @@ export class EmployeesComponent implements OnInit {
 
   updateStats() {
     this.totalEmployees = this.employees.length;
-    
+
   }
 
   getInitials(name: string): string {
@@ -142,9 +144,7 @@ export class EmployeesComponent implements OnInit {
   }
 
   viewEmployeeDetails(personalId: string): void {
-    this.router.navigate(['/home/employees/details'], {
-      queryParams: { id: personalId }
-    });
+    this.router.navigate(['/home/employees', personalId]);
   }
 
   deleteEmployee(employee: Employee) {

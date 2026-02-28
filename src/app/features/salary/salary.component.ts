@@ -13,33 +13,33 @@ import { SalaryService } from '../../core/services/salary-service';
   styleUrls: ['./salary.component.css']
 })
 export class SalaryComponent implements OnInit {
-  selectedYear: number = new Date().getFullYear();   
-  selectedMonth: number = new Date().getMonth() + 1;  
+  selectedYear: number = new Date().getFullYear();
+  selectedMonth: number = new Date().getMonth() + 1;
   expandedEmployeeId: number | null = null;
 
-  totalSalary:number = 0;
-  avgSalary:number = 0;
-  maxSalary:number = 0;
+  totalSalary: number = 0;
+  avgSalary: number = 0;
+  maxSalary: number = 0;
 
   filteredSalaries: any[] = [];
   allSalaries: any[] = [];
   availableYears: number[] = [];
 
-  constructor(private router: Router,private salaryService: SalaryService) {}
+  constructor(private router: Router, private salaryService: SalaryService) { }
 
   ngOnInit(): void {
     this.initializeYears();
   }
 
   initializeYears(): void {
-    const currentYear = 2026;
+    const currentYear = new Date().getFullYear();
     for (let i = 0; i < 5; i++) {
       this.availableYears.push(currentYear - i);
     }
   }
 
   clearFilters(): void {
-    this.selectedYear = 2025;
+    this.selectedYear = new Date().getFullYear();
     this.selectedMonth = 0;
     this.expandedEmployeeId = null;
     this.getSalaryStats();
@@ -89,7 +89,7 @@ export class SalaryComponent implements OnInit {
     return monthMap[monthNum.toString()] || 'לא ידוע';
   }
 
-  
+
   goBack(): void {
     this.router.navigate(['/home']);
   }

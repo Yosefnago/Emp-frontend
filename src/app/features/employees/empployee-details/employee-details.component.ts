@@ -78,7 +78,7 @@ export class EmployeeDetailsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
+    this.route.params.subscribe(params => {
       const personalId = params['id'];
 
       if (personalId) {
@@ -103,9 +103,10 @@ export class EmployeeDetailsComponent implements OnInit {
         this.isLoading = false;
 
         const emp = employee as any;
-        const empId = emp?.id || Number(personalId) || 0; 
+        const empId = emp?.id || Number(personalId) || 0;
 
         this.loadSalaryDetails(empId);
+        this.loadSalaryHistory(empId);
       },
       error: () => {
         this.isLoading = false;
@@ -119,7 +120,7 @@ export class EmployeeDetailsComponent implements OnInit {
 
         if (data && data.length > 0) {
           this.salaryHistory = data;
-        } 
+        }
         this.processDocuments();
       }
     });
@@ -233,7 +234,6 @@ export class EmployeeDetailsComponent implements OnInit {
         this.loadEmployeeData(this.employee.personalId);
       },
       error: (err) => {
-        console.error('Error updating employee:', err);
         this.isLoading = false;
         this.systemService.show('שגיאה בעדכון פרטי עובד', false);
       }
@@ -253,11 +253,12 @@ export class EmployeeDetailsComponent implements OnInit {
   }
 
   saveSalaryChanges(): void {
-    if (!this.salaryDetails) return;
-    this.salaryDetailsBackup = { ...this.salaryDetails };
+    if (!this.salaryDetails || !this.employee) return;
+
+    this.isLoading = true;
 
     const updateRequest: UpdateSalaryDetailsRequest = {
-      personalId: this.employee?.personalId || '',
+      personalId: this.employee.personalId,
       totalSeekDays: this.salaryDetails.totalSeekDays,
       totalVacationDays: this.salaryDetails.totalVacationDays,
       salaryPerHour: this.salaryDetails.salaryPerHour,
@@ -266,23 +267,26 @@ export class EmployeeDetailsComponent implements OnInit {
       pensionFund: this.salaryDetails.pensionFund,
       insuranceCompany: this.salaryDetails.insuranceCompany,
       providentFund: this.salaryDetails.providentFund
+    };
 
-    }
     this.salaryService.updateSalaryDetails(updateRequest, this.employee.personalId).subscribe({
       next: (updatedSalaryDetails) => {
+
         this.salaryDetails = updatedSalaryDetails;
+
         this.salaryDetailsBackup = JSON.parse(JSON.stringify(updatedSalaryDetails));
+
         this.isEditingSalary = false;
         this.isLoading = false;
+
         this.systemService.show('פרטי שכר עודכנו בהצלחה', true);
       },
-      error: () => {
+      error: (err) => {
         this.isLoading = false;
         this.systemService.show('שגיאה בעדכון פרטי שכר', false);
+        console.error('Update failed', err);
       }
     });
-    this.isEditingSalary = false;
-    this.systemService.show('פרטי שכר עודכנו בהצלחה', true);
   }
 
   calculateMonthsInCompany(): string {

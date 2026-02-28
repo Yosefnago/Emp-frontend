@@ -12,6 +12,7 @@ import { SalaryComponent } from './features/salary/salary.component';
 import { EventsComponent } from './features/events/events.component';
 import { SettingsComponent } from './features/settings/settings.component';
 import { AuditLogsComponent } from './features/audit/audit.logs';
+import { AuthGuard } from './core/auth/auth.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -21,6 +22,7 @@ export const routes: Routes = [
   {
     path: 'home',
     component: HomeComponent,
+    canActivate: [AuthGuard],
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: DashboardComponent },
@@ -30,7 +32,7 @@ export const routes: Routes = [
       { path: 'salary', component: SalaryComponent },
       { path: 'settings', component: SettingsComponent },
       { path: 'events', component: EventsComponent },
-      { path: 'employees/details', component: EmployeeDetailsComponent },
+      { path: 'employees/:id', component: EmployeeDetailsComponent },
       { path: 'logs', component: AuditLogsComponent }
     ]
   },
