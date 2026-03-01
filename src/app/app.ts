@@ -27,7 +27,7 @@ export class App implements OnInit, OnDestroy {
   ngOnInit(): void {
 
 
-    const hasToken = this.authService.hasAccessToken();
+    const hasToken = this.authService.isLoggedIn();
 
     if (!hasToken) {
 
@@ -36,7 +36,7 @@ export class App implements OnInit, OnDestroy {
         take(1)
       ).subscribe(() => {
 
-        if (!this.authService.hasAccessToken() && this.router.url !== '/login') {
+        if (!this.authService.isLoggedIn() && this.router.url !== '/login') {
           this.router.navigate(['/login']);
         }
       });

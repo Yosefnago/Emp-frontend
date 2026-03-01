@@ -14,7 +14,7 @@ import { SalaryService } from '../../core/services/salary-service';
 })
 export class SalaryComponent implements OnInit {
   selectedYear: number = new Date().getFullYear();
-  selectedMonth: number = new Date().getMonth() + 1;
+  selectedMonth: number = 0; // Default to 'All Months'
   expandedEmployeeId: number | null = null;
 
   totalSalary: number = 0;
@@ -29,6 +29,7 @@ export class SalaryComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeYears();
+    this.getSalaryStats(); // Initial load with defaults
   }
 
   initializeYears(): void {
@@ -53,12 +54,15 @@ export class SalaryComponent implements OnInit {
       .getSalariesByYearAndMonth(this.selectedYear, this.selectedMonth)
       .subscribe({
         next: (response) => {
-          this.totalSalary = response.totalSalary;
-          this.avgSalary = response.avgSalary;
-          this.maxSalary = response.maxSalary;
+          this.totalSalary = response?.totalSalary || 0;
+          this.avgSalary = response?.avgSalary || 0;
+          this.maxSalary = response?.maxSalary || 0;
         },
         error: (err) => {
           console.error('Error retrieving salaries:', err);
+          this.totalSalary = 0;
+          this.avgSalary = 0;
+          this.maxSalary = 0;
         }
       });
   }

@@ -22,30 +22,13 @@ export class SettingsComponent implements OnInit {
   email: string = '';
   phone: string = '';
 
-  constructor(private router: Router, private settingsService: SettingsService,private systemMessage: SystemMessages) { }
+  constructor(private router: Router, private settingsService: SettingsService, private systemMessage: SystemMessages) { }
 
   passwordData = {
     oldPass: '',
     newPass: '',
     newPassAgain: ''
   };
-
-
-  notificationSettings = [
-    { id: 1, title: 'התראות עבודה', description: 'הודעות על משימות ופרויקטים', enabled: true },
-    { id: 2, title: 'התראות משכורת', description: 'הודעות על משכורה וקיזוזים', enabled: true },
-    { id: 3, title: 'התראות נוכחות', description: 'הודעות על נוכחות וחסרות', enabled: false },
-    { id: 4, title: 'התראות אירועים', description: 'הודעות על אירועים קרובים', enabled: true },
-    { id: 5, title: 'התראות מערכת', description: 'הודעות חשובות של המערכת', enabled: true },
-    { id: 6, title: 'עדכוני בטיחות', description: 'הודעות על עדכונים בטיחותיים', enabled: true }
-  ];
-
-  channels = {
-    email: true,
-    push: true,
-    sms: false
-  };
-
 
 
 
@@ -64,9 +47,6 @@ export class SettingsComponent implements OnInit {
         this.companyAddress = response.companyAddress;
         this.email = response.email;
         this.phone = response.phoneNumber;
-      },
-      error: (err) => {
-        console.error('Error fetching user profile:', err);
       }
     });
   }
@@ -86,12 +66,8 @@ export class SettingsComponent implements OnInit {
     };
 
     this.settingsService.updateUserProfile(profileData).subscribe({
-      next: (response) => {
-        console.log('Profile updated successfully', response);
+      next: () => {
         this.isEditingProfile = false;
-      },
-      error: (err) => {
-        console.error('Error updating profile:', err);
       }
     });
   }
@@ -105,34 +81,21 @@ export class SettingsComponent implements OnInit {
 
 
     if (this.passwordData.newPass !== this.passwordData.newPassAgain
-        || this.passwordData.oldPass.trim() === '' || this.passwordData.newPass.trim() === ''
-        || this.passwordData.newPassAgain.trim() === ''
+      || this.passwordData.oldPass.trim() === '' || this.passwordData.newPass.trim() === ''
+      || this.passwordData.newPassAgain.trim() === ''
 
     ) {
       this.systemMessage.show('הסיסמאות החדשות אינן תואמות או שדות ריקים', false);
       return;
     }
-    
+
     this.settingsService.updateSecuritySettings(this.passwordData).subscribe({
       next: (response) => {
-        this.systemMessage.show(response.message,response.success);
+        this.systemMessage.show(response.message, response.success);
         this.passwordData = { oldPass: '', newPass: '', newPassAgain: '' };
-      },
-      error: (err) => console.error('Error updating security settings:', err)
+      }
     });
   }
-
-  saveNotifications(): void {
-    const data = {
-      notifications: this.notificationSettings,
-      channels: this.channels
-    };
-    this.settingsService.updateNotificationSettings(data).subscribe({
-      next: (response) => console.log('Notification settings updated', response),
-      error: (err) => console.error('Error updating notification settings:', err)
-    });
-  }
-
 
 
   switchTab(tab: string): void {

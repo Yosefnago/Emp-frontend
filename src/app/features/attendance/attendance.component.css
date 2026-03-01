@@ -225,15 +225,6 @@
   background: #f1f5f9;
 }
 
-.delete-btn {
-  color: var(--color-danger);
-}
-
-.delete-btn:hover {
-  background: var(--color-danger-light);
-  color: #991b1b;
-}
-
 .edit-btn {
   color: var(--color-primary);
 }

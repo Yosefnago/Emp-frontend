@@ -48,7 +48,8 @@ export class EmployeesComponent implements OnInit {
         email: emp.email,
         phoneNumber: emp.phoneNumber,
         department: emp.department,
-        address: emp.address
+        address: emp.address,
+        status: emp.status
       }));
 
       this.allEmployees = [...this.employees];
@@ -109,7 +110,8 @@ export class EmployeesComponent implements OnInit {
 
   updateStats() {
     this.totalEmployees = this.employees.length;
-
+    this.activeEmployees = this.employees.filter(emp => emp.status && emp.status.toUpperCase() === 'ACTIVE').length;
+    this.inactiveEmployees = this.employees.filter(emp => emp.status && emp.status.toUpperCase() === 'INACTIVE').length;
   }
 
   getInitials(name: string): string {

@@ -24,10 +24,6 @@ export class SettingsService {
         return this.http.post<any>(`${this.apiUrl}/security`, securityData);
     }
 
-    updateNotificationSettings(notificationSettings: any): Observable<any> {
-        return this.http.put<any>(`${this.apiUrl}/notifications`, notificationSettings);
-    }
-
 
 
 }    

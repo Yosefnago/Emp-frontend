@@ -1,7 +1,6 @@
-// src/app/services/notification.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { AppNotification } from '../models/AppNotification';
 
 @Injectable({
@@ -9,8 +8,17 @@ import { AppNotification } from '../models/AppNotification';
 })
 export class NotificationsEventsService {
   private apiUrl = 'http://localhost:8090/notifications';
+  private refreshSubject = new Subject<void>();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
+
+  get refresh$() {
+    return this.refreshSubject.asObservable();
+  }
+
+  refreshNotifications() {
+    this.refreshSubject.next();
+  }
 
   // Get all notifications for current user
   getNotifications(): Observable<AppNotification[]> {

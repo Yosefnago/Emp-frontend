@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core'; // חדש: הוספת DestroyRef
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop'; // חדש: אופרטור מניעת זליגות זיכרון
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { LoginService } from '../../../core/auth/login.service';
@@ -15,12 +16,13 @@ import { AuthService } from '../../../core/auth/auth.service';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-
 export class LoginComponent {
   username: string = '';
   password: string = '';
   showPassword = false;
   isLoggingIn = false;
+
+  private destroyRef = inject(DestroyRef); 
 
   constructor(
     private loginService: LoginService,
@@ -30,13 +32,7 @@ export class LoginComponent {
     private webSocketService: WebSocketService
   ) { }
 
-
-  /**
-   * Handles user login flow.
-   * Validates input, authenticates with backend, stores token, and establishes WebSocket connection.
-   */
   async onLogin() {
-
     if (!this.username || !this.password) {
       this.systemService.show('נא למלא את השדות בהתאם', false);
       return;
@@ -49,15 +45,15 @@ export class LoginComponent {
     this.isLoggingIn = true;
 
     try {
-
-      const accessToken = await firstValueFrom(
+      const loginResponse = await firstValueFrom(
         this.loginService.login(this.username, this.password)
       );
 
-      sessionStorage.setItem('username', this.username);
+      sessionStorage.setItem('username', loginResponse.username || this.username);
+      
+      sessionStorage.setItem('role', loginResponse.role);
 
       this.router.navigate(['/home']);
-
       this.systemService.show('התחברת בהצלחה', true);
 
       setTimeout(() => {
@@ -83,33 +79,34 @@ export class LoginComponent {
       this.isLoggingIn = false;
     }
   }
-  /**
-   * Establishes WebSocket connection after successful login.
-   * The WebSocketService will automatically handle token refresh and reconnection.
-   */
+
   private connectWebSocket(): void {
     try {
       if (this.webSocketService.isConnected) {
-        console.log('WebSocket already connected');
         return;
       }
 
       this.webSocketService.connect();
 
-      this.webSocketService.connectionStatus.subscribe(status => {
-        if (status.connected) {
-          console.log('WebSocket connected successfully');
-        } else if (status.error) {
-          console.error('WebSocket connection error:', status.error);
-        }
-      });
+      this.webSocketService.connectionStatus
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: (status) => {
+            if (status.error) {
+              console.error('WebSocket connection error:', status.error);
+            }
+          },
+          error: (error) => {
+            console.error('WebSocket subscription error:', error);
+          }
+        });
 
     } catch (error) {
       console.error('Error establishing WebSocket connection:', error);
     }
   }
+
   goToRegister() {
     this.router.navigate(['/register']);
   }
-
 }

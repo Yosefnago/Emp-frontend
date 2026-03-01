@@ -6,37 +6,38 @@ export interface Employee {
   phoneNumber: string;
   department: string;
   address: string;
+  status: string;
   selected?: boolean;
 }
 
 export interface AddEmployeeRequest {
-    firstName: string,
-    lastName: string,
-    personalId: string,
-    email: string,
-    phoneNumber: string,
-    address: string,
-    position: string,
-    department: string,
-    hireDate: Date
-    status: string
+  firstName: string,
+  lastName: string,
+  personalId: string,
+  email: string,
+  phoneNumber: string,
+  address: string,
+  position: string,
+  department: string,
+  hireDate: Date
+  status: string
 }
 
 export interface UpdateEmployeeRequest {
-    firstName: string;
-    lastName: string;
-    email: string;
-    personalId: string;
-    gender: string;
-    birthDate: string;
-    familyStatus: string;
-    phoneNumber: string;
-    address: string;
-    city: string;
-    country: string;
-    position: string;
-    department: string;
-    hireDate: string;
-    jobType: string;
-    status: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  personalId: string;
+  gender: string;
+  birthDate: string;
+  familyStatus: string;
+  phoneNumber: string;
+  address: string;
+  city: string;
+  country: string;
+  position: string;
+  department: string;
+  hireDate: string;
+  jobType: string;
+  status: string;
 }

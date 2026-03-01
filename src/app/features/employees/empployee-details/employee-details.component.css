@@ -518,18 +518,20 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  transition: all 0.3s ease;
+  transition: var(--transition);
 }
 
 .btn-view {
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  background: var(--grad-blue);
+  width: 200px;
   color: white;
 }
 
 .btn-view:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.5);
 }
+
 
 .btn-download {
   background: linear-gradient(135deg, #10b981 0%, #059669 100%);
@@ -605,6 +607,27 @@
 .tlush-link:hover {
   background: #dbeafe;
   text-decoration: underline;
+}
+
+.download-link-btn {
+  color: #3b82f6;
+  background: #eff6ff;
+  border: 1px solid #3b82f6;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.download-link-btn:hover {
+  background: #3b82f6;
+  color: white;
+  box-shadow: 0 4px 10px rgba(59, 130, 246, 0.2);
 }
 
 .no-tlush {

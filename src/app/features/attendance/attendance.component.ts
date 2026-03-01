@@ -213,7 +213,35 @@ export class AttendanceComponent implements OnInit {
     }
     if (!this.tempRecord) return;
 
+    if (this.tempRecord.checkInTime && this.tempRecord.checkOutTime) {
+      if (this.tempRecord.checkOutTime < this.tempRecord.checkInTime) {
+        this.systemMessages.show('שעת יציאה לא יכול להיות לפני שעת כניסה', false);
+        return;
+      }
+    }
+
     const index = this.allRecords.findIndex(r => r.id === this.tempRecord.id);
+    const originalRecord = index !== -1 ? this.allRecords[index] : null;
+
+    if (originalRecord) {
+
+      const origDateString = originalRecord.date instanceof Date
+        ? originalRecord.date.toISOString().split('T')[0]
+        : originalRecord.date;
+
+      const isChanged =
+        this.tempRecord.checkInTime !== originalRecord.checkInTime ||
+        this.tempRecord.checkOutTime !== originalRecord.checkOutTime ||
+        this.tempRecord.status !== originalRecord.status ||
+        this.tempRecord.travelAllowance !== originalRecord.travelAllowance ||
+        this.tempRecord.date !== origDateString ||
+        this.tempRecord.name !== (originalRecord.name || '');
+
+      if (isChanged && (!this.tempRecord.notes || this.tempRecord.notes.trim() === '')) {
+        this.systemMessages.show('חובה להזין הערות בעת שינוי פרטי הרשומה', false);
+        return;
+      }
+    }
 
     if (index !== -1) {
 
@@ -236,34 +264,6 @@ export class AttendanceComponent implements OnInit {
     this.editingRecordId = null;
     this.tempRecord = null;
 
-  }
-
-  addRecord(): void {
-    if (this.attendanceMonthSendedToPayroll) {
-      this.systemMessages.show('לא ניתן להוסיף רשומות לתקופה סגורה', false);
-      return;
-    }
-    const newId = Math.max(...this.allRecords.map(r => r.id), 0) + 1;
-    const newRecord = {
-      id: newId,
-      date: new Date().toISOString().split('T')[0],
-      employeeName: '',
-      employeePosition: '',
-      department: '',
-      checkInTime: '',
-      checkOutTime: '',
-      status: 'PRESENT',
-      notes: '',
-      travelAllowance: false
-    };
-
-    this.allRecords.unshift({
-      ...newRecord,
-      date: new Date()
-    });
-
-    this.filterAttendance();
-    this.startEdit(this.allRecords.find(r => r.id === newId));
   }
 
   deleteRecord(id: number): void {
@@ -345,7 +345,8 @@ export class AttendanceComponent implements OnInit {
 
 
       next: () => {
-        this.systemMessages.show('הנתונים נשלחו בהצלחה למחלקת השכר', true);
+        const employeeName = this.selectedEmployeeName || 'העובד';
+        this.systemMessages.show(`תלוש שכר נוצר בהצלחה עבור ${employeeName}`, true);
         this.attendanceMonthSendedToPayroll = true;
 
         this.loadAttendanceData();

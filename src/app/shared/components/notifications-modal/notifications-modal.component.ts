@@ -20,7 +20,9 @@ export class NotificationsModalComponent implements OnInit {
 
   ngOnInit() {
     this.loadNotifications();
-    this.getUnreadCount();
+    this.noteService.refresh$.subscribe(() => {
+      this.loadNotifications();
+    });
   }
 
   loadNotifications() {
@@ -81,7 +83,8 @@ export class NotificationsModalComponent implements OnInit {
     const iconMap: { [key: string]: string } = {
       'EVENT_REMINDER': 'notification-icon-event',
       'EVENT_TODAY': 'notification-icon-event',
-      'BIRTHDAY_REMINDER': 'notification-icon-alert'
+      'BIRTHDAY_REMINDER': 'notification-icon-alert',
+      'PAYROLL': 'notification-icon-payroll'
     };
     return iconMap[type] || 'notification-icon-message';
   }

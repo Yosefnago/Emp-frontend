@@ -1,6 +1,4 @@
-<!-- Header Section -->
 <div class="employee-details-container">
-  <!-- Back Button & Title -->
   <div class="details-header">
     <button class="back-button" (click)="goBack()" aria-label="חזור">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -16,7 +14,6 @@
     </div>
   </div>
 
-  <!-- Employee Statistics Cards -->
   <section class="statistics-section">
     <div class="stats-grid">
       <div class="stat-card stat-card-blue">
@@ -63,7 +60,6 @@
     </div>
   </section>
 
-  <!-- Attendance Statistics -->
   <section class="attendance-stats-section">
     <h2 class="section-title">יתרות נכון ליום {{ currentDate | date:'dd/MM/yyyy' }}</h2>
     <div class="attendance-stats-grid">
@@ -104,27 +100,21 @@
     </div>
   </section>
 
-  <!-- Tabs Navigation -->
   <div class="tabs-container">
     <div class="tabs-header">
       <button class="tab-button" [class.active]="activeTab === 'personal'" (click)="switchTab('personal')">
         👤 פרטים אישיים
-      </button>
-      <button class="tab-button" [class.active]="activeTab === 'documents'" (click)="switchTab('documents')">
-        📄 מסמכים
       </button>
       <button class="tab-button" [class.active]="activeTab === 'salary'" (click)="switchTab('salary')">
         💰 משכורת
       </button>
     </div>
 
-    <!-- Personal Details Tab -->
     @if (activeTab === 'personal') {
     <div class="tab-content personal-details-tab">
       <div class="details-section">
         <div class="section-header-with-button">
           <h3 class="details-header-title">📋 פרטים אישיים</h3>
-
           <div class="edit-action-buttons">
             @if (isEditingPersonal) {
             <button class="edit-save-btn btn-save" (click)="savePersonalChanges()" aria-label="שמור">
@@ -202,10 +192,10 @@
             <label class="detail-label">מצב משפחתי</label>
             @if (isEditingPersonal) {
             <select class="detail-input" [(ngModel)]="employee.familyStatus">
-              <option value="single">רווק/ה</option>
-              <option value="married">נשוי/אה</option>
-              <option value="divorced">גרוש/ה</option>
-              <option value="widowed">אלמן/ה</option>
+              <option value="SINGLE">רווק/ה</option>
+              <option value="MARRIED">נשוי/אה</option>
+              <option value="DIVORCED">גרוש/ה</option>
+              <option value="WIDOWED">אלמן/ה</option>
             </select>
             } @else {
             <p class="detail-value">{{ translateMaritalStatus(employee?.familyStatus) }}</p>
@@ -218,7 +208,6 @@
         <div class="section-header-with-button">
           <h3 class="details-header-title">📞 פרטי קשר</h3>
         </div>
-
         <div class="details-grid">
           <div class="detail-item">
             <label class="detail-label">טלפון נייד</label>
@@ -302,9 +291,9 @@
             <label class="detail-label">סוג משרה</label>
             @if (isEditingPersonal) {
             <select class="detail-input" [(ngModel)]="employee.jobType">
-              <option value="full-time">משרה מלאה</option>
-              <option value="part-time">משרה חלקית</option>
-              <option value="contractor">קבלן</option>
+              <option value="FULL_TIME">משרה מלאה</option>
+              <option value="PART_TIME">משרה חלקית</option>
+              <option value="CONTRACTOR">קבלן</option>
             </select>
             } @else {
             <p class="detail-value">{{ translateEmploymentType(employee?.jobType) }}</p>
@@ -314,8 +303,8 @@
             <label class="detail-label">סטטוס</label>
             @if (isEditingPersonal) {
             <select class="detail-input" [(ngModel)]="employee.status">
-              <option value="Active">פעיל</option>
-              <option value="Inactive">לא פעיל</option>
+              <option value="ACTIVE">פעיל</option>
+              <option value="INACTIVE">לא פעיל</option>
             </select>
             } @else {
             <p class="detail-value">
@@ -330,100 +319,9 @@
     </div>
     }
 
-    <!-- Documents Tab -->
-    @if (activeTab === 'documents') {
-    <div class="tab-content documents-tab">
-
-      <!-- Filters -->
-      <div class="doc-filters">
-        <select class="filter-select" [(ngModel)]="docFilterType" (change)="applyDocumentFilter()">
-          <option value="">כל הסוגים</option>
-          <option value="Payslip">תלושי שכר</option>
-          <option value="101 Form">טופס 101</option>
-          <option value="Sick Leave">אישור מחלה</option>
-          <option value="Other">אחר</option>
-        </select>
-
-        <select class="filter-select" [(ngModel)]="docFilterYear" (change)="applyDocumentFilter()">
-          <option value="">כל השנים</option>
-          @for (year of availableDocYears; track year) {
-          <option [value]="year">{{ year }}</option>
-          }
-        </select>
-        <select class="filter-select" [(ngModel)]="docFilterMonth" (change)="applyDocumentFilter()">
-          <option value="">כל החודשים</option>
-          <option value="1">ינואר</option>
-          <option value="2">פברואר</option>
-          <option value="3">מרץ</option>
-          <option value="4">אפריל</option>
-          <option value="5">מאי</option>
-          <option value="6">יוני</option>
-          <option value="7">יולי</option>
-          <option value="8">אוגוסט</option>
-          <option value="9">ספטמבר</option>
-          <option value="10">אוקטובר</option>
-          <option value="11">נובמבר</option>
-          <option value="12">דצמבר</option>
-        </select>
-        @if (docFilterType || docFilterYear || docFilterMonth) {
-        <button class="clear-filter-btn" (click)="clearDocumentFilter()">נקה סינון</button>
-        }
-      </div>
-
-      <div class="documents-grid">
-        @if (filteredDocuments && filteredDocuments.length > 0) {
-        @for (doc of filteredDocuments; track doc.id) {
-        <div class="document-card">
-          <div class="document-icon payroll-icon">
-            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-              <polyline points="14 2 14 8 20 8" />
-              <line x1="12" y1="13" x2="12" y2="17" />
-              <line x1="10" y1="15" x2="14" y2="15" />
-            </svg>
-          </div>
-          <h4 class="document-name">{{ doc.name }}</h4>
-          <p class="document-type">{{ doc.date | date:'dd/MM/yyyy' }}</p>
-          @if (doc.amount) {
-          <p class="document-date">₪{{ formatNumber(doc.amount) }}</p>
-          }
-          <div class="document-actions">
-            <a [href]="doc.url" target="_blank" class="doc-btn btn-view">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                <circle cx="12" cy="12" r="3" />
-              </svg>
-              צפה
-            </a>
-            <a [href]="doc.url" download class="doc-btn btn-download">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <polyline points="7 10 12 15 17 10" />
-                <line x1="12" y1="15" x2="12" y2="3" />
-              </svg>
-              הורד
-            </a>
-          </div>
-        </div>
-        }
-        } @else {
-        <div class="empty-state">
-          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-            <polyline points="14 2 14 8 20 8" />
-          </svg>
-          <p>אין מסמכים להצגה</p>
-        </div>
-        }
-      </div>
-    </div>
-    }
-
-    <!-- Salary Tab -->
     @if (activeTab === 'salary') {
     <div class="tab-content salary-tab">
 
-      <!-- Salary Details -->
       <div class="salary-section">
         <div class="section-header-with-button">
           <h3 class="details-header-title">📋 פרטי שכר</h3>
@@ -531,8 +429,85 @@
         }
       </div>
 
+      <div class="salary-section history-section">
+        <div class="section-header-with-button">
+          <h3 class="details-header-title">📅 הצגת תלושי שכר</h3>
+        </div>
+
+        <div class="doc-filters"
+          style="margin-bottom: 25px; display: flex; align-items: center; gap: 15px; background: #f8fafc; padding: 15px; border-radius: 8px;">
+
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <label style="font-weight: bold; margin: 0;">שנה:</label>
+            <select class="filter-select" [(ngModel)]="searchYear" style="margin: 0;">
+              @for (year of availableSearchYears; track year) {
+              <option [ngValue]="year">{{ year }}</option>
+              }
+            </select>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <label style="font-weight: bold; margin: 0;">חודש:</label>
+            <select class="filter-select" [(ngModel)]="searchMonth" style="margin: 0;">
+              <option [ngValue]="0">כל החודשים</option>
+              <option [ngValue]="1">ינואר</option>
+              <option [ngValue]="2">פברואר</option>
+              <option [ngValue]="3">מרץ</option>
+              <option [ngValue]="4">אפריל</option>
+              <option [ngValue]="5">מאי</option>
+              <option [ngValue]="6">יוני</option>
+              <option [ngValue]="7">יולי</option>
+              <option [ngValue]="8">אוגוסט</option>
+              <option [ngValue]="9">ספטמבר</option>
+              <option [ngValue]="10">אוקטובר</option>
+              <option [ngValue]="11">נובמבר</option>
+              <option [ngValue]="12">דצמבר</option>
+            </select>
+          </div>
+
+          <button class="doc-btn btn-view" (click)="executeSalarySearch()"
+            style="padding: 8px 30px; width: auto; flex: none;">
+            הצג
+          </button>
+        </div>
+
+        <div class="documents-grid"
+          style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;">
+          @if (salarySlipResults && salarySlipResults.length > 0) {
+          @for (slip of salarySlipResults; track slip.id) {
+          <div class="document-card"
+            style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+            <div class="document-icon payroll-icon" style="margin-bottom: 15px; text-align: center;">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="1.5">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <polyline points="14 2 14 8 20 8" />
+              </svg>
+            </div>
+
+            <h4 class="document-name" style="text-align: center; margin-bottom: 8px;">תלוש חודש {{ slip.salaryMonth }}
+            </h4>
+            <p class="document-type" style="text-align: center; color: #64748b; margin-bottom: 15px;">שם עובד: {{
+              employee?.firstName }} {{ employee?.lastName }}</p>
+
+            <div class="document-actions" style="display: flex; gap: 10px;">
+              <button (click)="viewSlipPdf(slip.id)" class="doc-btn btn-view" style="flex: 1; justify-content: center;">
+                הצג
+              </button>
+              <button (click)="downloadSlipPdf(slip.id, slip.salaryMonth, slip.salaryYear)" class="doc-btn btn-download"
+                style="flex: 1; justify-content: center;">
+                הורד
+              </button>
+            </div>
+          </div>
+          }
+          } @else {
+          <div class="empty-state" style="grid-column: 1 / -1; padding: 30px;">
+            <p>בחר שנה וחודש ולחץ על "הצג" כדי לראות תלושים.</p>
+          </div>
+          }
+        </div>
+      </div>
     </div>
     }
   </div>
-
 </div>

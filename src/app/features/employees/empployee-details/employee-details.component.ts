@@ -6,18 +6,7 @@ import { EmployeeService } from '../../../core/services/employee.service';
 import { SystemMessages } from '../../../core/services/system-messages.service';
 import { UpdateEmployeeRequest } from '../../../core/models/Employee';
 import { SalaryService } from '../../../core/services/salary-service';
-import { Salary } from '../../../core/models/Salary';
 import { SalaryDetails, UpdateSalaryDetailsRequest } from '../../../core/models/SalaryDetails';
-
-interface UnifiedDocument {
-  id: number;
-  name: string;
-  type: 'Payslip' | 'Sick Leave' | '101 Form' | 'Other';
-  date: Date;
-  url: string;
-  amount?: number;
-  originalObject?: any;
-}
 
 @Component({
   selector: 'app-employee-details',
@@ -28,40 +17,21 @@ interface UnifiedDocument {
 })
 export class EmployeeDetailsComponent implements OnInit {
 
-  // Active tab state
   activeTab: string = 'personal';
-
   currentDate: Date = new Date();
 
   // Employee data
   employee: any = null;
   employeeBackup: any = null;
-  documents: UnifiedDocument[] = [];
-  salaryHistory: Salary[] = [];
   salaryDetails: any = null;
   salaryDetailsBackup: any = null;
 
-  // Document filter
-  docFilterYear: string = '';
-  docFilterMonth: string = '';
-  docFilterType: string = '';
-  filteredDocuments: UnifiedDocument[] = [];
-  availableDocYears: number[] = [];
+  searchYear: number = new Date().getFullYear();
+  searchMonth: number = 0;
+  availableSearchYears: number[] = [2026, 2025, 2024, 2023, 2022];
+  salarySlipResults: any[] = [];
 
-
-  // Statistics
-  attendanceStats: any = {
-    presentDays: 0,
-    absentDays: 0,
-    sickDays: 0,
-    vacationDays: 0,
-    attendanceRate: 0
-  };
-
-  // Filter options for attendance
-  selectedYear: string = '';
-  selectedMonth: string = '';
-  availableYears: number[] = [];
+  attendanceStats: any = { presentDays: 0, absentDays: 0, sickDays: 0, vacationDays: 0, attendanceRate: 0 };
 
   isLoading: boolean = true;
   errorMessage: string = '';
@@ -80,7 +50,6 @@ export class EmployeeDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       const personalId = params['id'];
-
       if (personalId) {
         this.loadEmployeeData(personalId);
       } else {
@@ -94,108 +63,89 @@ export class EmployeeDetailsComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = '';
 
-    // Load basic employee info
     this.employeeService.getEmployeeByPersonalId(personalId).subscribe({
-      next: (employee) => {
-        this.employee = employee;
-        this.employeeBackup = JSON.parse(JSON.stringify(employee));
-        this.initializeAvailableYears();
-        this.isLoading = false;
+      next: (employee: any) => {
+        if (!employee) return;
+        const empId = employee.id || Number(personalId) || 0;
+        const normalized = this.normalizeEmployeeData(employee);
+        normalized.id = empId;
 
-        const emp = employee as any;
-        const empId = emp?.id || Number(personalId) || 0;
+        this.employee = normalized;
+        this.employeeBackup = JSON.parse(JSON.stringify(normalized));
+        this.isLoading = false;
 
         this.loadSalaryDetails(empId);
-        this.loadSalaryHistory(empId);
+        this.loadCurrentMonthStats(personalId);
+      },
+      error: () => { this.isLoading = false; }
+    });
+  }
+  loadCurrentMonthStats(personalId: string): void {
+    this.employeeService.getCurrentMonthAttendanceStats(personalId).subscribe({
+      next: (stats) => {
+
+        this.attendanceStats = stats;
       },
       error: () => {
-        this.isLoading = false;
+        this.systemService.show('שגיאה בטעינת נתוני יתרות', false);
       }
     });
   }
-
-  loadSalaryHistory(employeeId: number): void {
-    this.salaryService.getSalaryHistory(employeeId).subscribe({
-      next: (data) => {
-
-        if (data && data.length > 0) {
-          this.salaryHistory = data;
-        }
-        this.processDocuments();
+  loadEmployeeOnly(personalId: string): void {
+    this.employeeService.getEmployeeByPersonalId(personalId).subscribe({
+      next: (employee: any) => {
+        if (!employee) return;
+        const empId = employee.id || this.employee?.id || Number(personalId) || 0;
+        const normalized = this.normalizeEmployeeData(employee);
+        normalized.id = empId;
+        this.employee = normalized;
+        this.employeeBackup = JSON.parse(JSON.stringify(normalized));
       }
     });
   }
 
   loadSalaryDetails(employeeId: number): void {
+    if (!employeeId) return;
     this.salaryService.getSalaryDetails(employeeId).subscribe({
-      next: (data) => {
-        if (data) {
-          this.salaryDetails = data;
-          this.salaryDetailsBackup = { ...data };
-        }
-      }
+      next: (data: SalaryDetails) => {
+        this.salaryDetails = data;
+        this.salaryDetailsBackup = JSON.parse(JSON.stringify(data));
+      },
+      error: (err: any) => { console.error('Error loading salary details', err); }
     });
   }
 
-  processDocuments(): void {
-    this.filteredDocuments = this.documents;
-
-    const uniqueYears = new Set(this.documents.map(d => d.date.getFullYear()));
-    this.availableDocYears = Array.from(uniqueYears).sort((a, b) => b - a);
-
-    this.applyDocumentFilter();
-  }
-
-  applyDocumentFilter(): void {
-    this.filteredDocuments = this.documents.filter(doc => {
-      const date = new Date(doc.date);
-      const yearMatch = !this.docFilterYear || date.getFullYear() === +this.docFilterYear;
-      const monthMatch = !this.docFilterMonth || (date.getMonth() + 1) === +this.docFilterMonth;
-
-      let typeMatch = true;
-      if (this.docFilterType) {
-        if (this.docFilterType === 'Payslip') typeMatch = doc.type === 'Payslip';
-        else if (this.docFilterType === '101 Form') typeMatch = doc.type === '101 Form';
-        else if (this.docFilterType === 'Sick Leave') typeMatch = doc.type === 'Sick Leave';
-        else typeMatch = doc.type === 'Other';
+  private normalizeEmployeeData(emp: any): any {
+    if (!emp) return emp;
+    const enums = ['familyStatus', 'jobType', 'status', 'gender'];
+    enums.forEach(key => {
+      if (emp[key] && typeof emp[key] === 'string') {
+        emp[key] = emp[key].toUpperCase().replace('-', '_');
       }
-
-      return yearMatch && monthMatch && typeMatch;
     });
-  }
-
-  clearDocumentFilter(): void {
-    this.docFilterYear = '';
-    this.docFilterMonth = '';
-    this.docFilterType = '';
-    this.filteredDocuments = this.documents;
-  }
-
-  getMonthName(month: number): string {
-    const months = ['ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני', 'יולי', 'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר'];
-    return months[month - 1] || month.toString();
-  }
-
-  initializeAvailableYears(): void {
-    const currentYear = new Date().getFullYear();
-    this.availableYears = [];
-    for (let i = 0; i < 4; i++) {
-      this.availableYears.push(currentYear - i);
+    const dates = ['birthDate', 'hireDate'];
+    dates.forEach(key => {
+      if (emp[key]) {
+        try {
+          const d = new Date(emp[key]);
+          if (!isNaN(d.getTime())) {
+            const offset = d.getTimezoneOffset();
+            const adjustedDate = new Date(d.getTime() - (offset * 60 * 1000));
+            emp[key] = adjustedDate.toISOString().split('T')[0];
+          }
+        } catch (e) { }
+      }
+    });
+    if (emp.department && typeof emp.department === 'object') {
+      emp.department = emp.department.name || emp.department.id || emp.department;
     }
+    return emp;
   }
 
-  switchTab(tab: string): void {
-    this.activeTab = tab;
-  }
+  switchTab(tab: string): void { this.activeTab = tab; }
+  goBack(): void { this.router.navigate(['/home/employees']); }
 
-  goBack(): void {
-    this.router.navigate(['/home/employees']);
-  }
-
-  toggleEditPersonal(): void {
-    this.isEditingPersonal = true;
-  }
-
+  toggleEditPersonal(): void { this.isEditingPersonal = true; }
   cancelPersonalEdit(): void {
     this.employee = JSON.parse(JSON.stringify(this.employeeBackup));
     this.isEditingPersonal = false;
@@ -203,7 +153,6 @@ export class EmployeeDetailsComponent implements OnInit {
 
   savePersonalChanges(): void {
     if (!this.employee) return;
-
     this.isLoading = true;
     const updateRequest: UpdateEmployeeRequest = {
       firstName: this.employee.firstName,
@@ -225,26 +174,20 @@ export class EmployeeDetailsComponent implements OnInit {
     };
 
     this.employeeService.updateEmployee(updateRequest, this.employee.personalId).subscribe({
-      next: (updatedEmployee) => {
-        this.employee = updatedEmployee;
-        this.employeeBackup = JSON.parse(JSON.stringify(updatedEmployee));
+      next: () => {
         this.isEditingPersonal = false;
         this.isLoading = false;
         this.systemService.show('פרטי עובד עודכנו בהצלחה', true);
-        this.loadEmployeeData(this.employee.personalId);
+        this.loadEmployeeOnly(this.employee.personalId);
       },
-      error: (err) => {
+      error: () => {
         this.isLoading = false;
         this.systemService.show('שגיאה בעדכון פרטי עובד', false);
       }
     });
   }
 
-  // Salary Tab Edit 
-  toggleEditSalary(): void {
-    this.isEditingSalary = true;
-  }
-
+  toggleEditSalary(): void { this.isEditingSalary = true; }
   cancelSalaryEdit(): void {
     if (this.salaryDetailsBackup) {
       this.salaryDetails = { ...this.salaryDetailsBackup };
@@ -254,9 +197,7 @@ export class EmployeeDetailsComponent implements OnInit {
 
   saveSalaryChanges(): void {
     if (!this.salaryDetails || !this.employee) return;
-
     this.isLoading = true;
-
     const updateRequest: UpdateSalaryDetailsRequest = {
       personalId: this.employee.personalId,
       totalSeekDays: this.salaryDetails.totalSeekDays,
@@ -270,100 +211,76 @@ export class EmployeeDetailsComponent implements OnInit {
     };
 
     this.salaryService.updateSalaryDetails(updateRequest, this.employee.personalId).subscribe({
-      next: (updatedSalaryDetails) => {
-
-        this.salaryDetails = updatedSalaryDetails;
-
-        this.salaryDetailsBackup = JSON.parse(JSON.stringify(updatedSalaryDetails));
-
+      next: () => {
         this.isEditingSalary = false;
         this.isLoading = false;
-
         this.systemService.show('פרטי שכר עודכנו בהצלחה', true);
+        const empId = this.employee?.id || Number(this.employee?.personalId) || 0;
+        if (empId) this.loadSalaryDetails(empId);
       },
-      error: (err) => {
+      error: () => {
         this.isLoading = false;
         this.systemService.show('שגיאה בעדכון פרטי שכר', false);
-        console.error('Update failed', err);
       }
     });
   }
 
   calculateMonthsInCompany(): string {
-    if (!this.employee?.hireDate) {
-      return '0';
-    }
-
+    if (!this.employee?.hireDate) return '0';
     const startDate = new Date(this.employee.hireDate);
     const now = new Date();
-
-    let months = 0;
-    months = (now.getFullYear() - startDate.getFullYear()) * 12;
+    let months = (now.getFullYear() - startDate.getFullYear()) * 12;
     months -= startDate.getMonth();
     months += now.getMonth();
-
     return months.toString();
   }
 
-  calculateTotalSalary(): number {
-    const baseSalary = this.employee?.baseSalary || 0;
-    const bonus = this.employee?.bonus || 0;
-    const allowance = this.employee?.allowance || 0;
+  formatNumber(num: number): string { return (!num || num === 0) ? '0' : num.toLocaleString('he-IL'); }
+  translateMaritalStatus(status: string): string { const map: any = { 'SINGLE': 'רווק/ה', 'MARRIED': 'נשוי/ה', 'DIVORCED': 'גרוש/ה', 'WIDOWED': 'אלמן/ה' }; return map[status?.toUpperCase()] || status; }
+  translateEmploymentType(type: string): string { const map: any = { 'FULL_TIME': 'משרה מלאה', 'PART_TIME': 'משרה חלקית', 'CONTRACTOR': 'קבלן' }; return map[type?.toUpperCase()] || type; }
+  translateStatus(status: string): string { const map: any = { 'ACTIVE': 'פעיל', 'INACTIVE': 'לא פעיל' }; return map[status?.toUpperCase()] || status; }
 
-    return baseSalary + bonus + allowance;
+  executeSalarySearch(): void {
+    if (!this.employee?.personalId) return;
+
+    this.salaryService.searchSalarySlips(this.employee.personalId, this.searchYear, this.searchMonth)
+      .subscribe({
+        next: (results) => {
+          this.salarySlipResults = results || [];
+        },
+        error: () => {
+          this.salarySlipResults = [];
+        }
+      });
   }
 
-  formatNumber(num: number): string {
-    if (!num || num === 0) {
-      return '0';
-    }
-    return num.toLocaleString('he-IL');
+  viewSlipPdf(salaryId: number): void {
+    this.salaryService.getSalaryPdfBlob(salaryId, 'view').subscribe({
+      next: (blob: Blob) => {
+        const fileURL = URL.createObjectURL(blob);
+        window.open(fileURL, '_blank');
+      },
+      error: () => {
+        this.systemService.show('שגיאה בפתיחת תלוש השכר', false);
+      }
+    });
   }
 
-  translateMaritalStatus(status: string): string {
-    const statusMap: { [key: string]: string } = {
-      'SINGLE': 'רווק/ה',
-      'MARRIED': 'נשוי/ה',
-      'DIVORCED': 'גרוש/ה',
-      'WIDOWED': 'אלמן/ה'
-    };
-    return statusMap[status?.toUpperCase()] || status;
-  }
 
-  translateEmploymentType(type: string): string {
-    const typeMap: { [key: string]: string } = {
-      'FULL_TIME': 'משרה מלאה',
-      'FULL-TIME': 'משרה מלאה',
-      'PART_TIME': 'משרה חלקית',
-      'PART-TIME': 'משרה חלקית',
-      'TEMPORARY': 'זמני',
-      'CONTRACTOR': 'קבלן'
-    };
-    return typeMap[type?.toUpperCase()] || type;
-  }
+  downloadSlipPdf(salaryId: number, month: number, year: number): void {
+    this.salaryService.getSalaryPdfBlob(salaryId, 'download').subscribe({
+      next: (blob: Blob) => {
+        const fileURL = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = fileURL;
+        link.download = `תלוש_${this.employee?.firstName || 'עובד'}_${month}_${year}.pdf`;
+        link.click();
 
-  translateStatus(status: string): string {
-    const statusMap: { [key: string]: string } = {
-      'ACTIVE': 'פעיל',
-      'INACTIVE': 'לא פעיל'
-    };
-    return statusMap[status?.toUpperCase()] || status;
-  }
-
-  translateAttendanceStatus(status: string): string {
-    const statusMap: { [key: string]: string } = {
-      'PRESENT': 'נוכח',
-      'ABSENT': 'נעדר',
-      'LATE': 'איחור',
-      'VACATION': 'חופשה',
-      'SICK': 'מחלה'
-    };
-    return statusMap[status?.toUpperCase()] || status;
-  }
-
-  getDayOfWeek(dateString: string): string {
-    const date = new Date(dateString);
-    const dayNames = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
-    return dayNames[date.getDay()];
+        setTimeout(() => URL.revokeObjectURL(fileURL), 100);
+      },
+      error: () => {
+        this.systemService.show('שגיאה בהורדת תלוש השכר', false);
+      }
+    });
   }
 }

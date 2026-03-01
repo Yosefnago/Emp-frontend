@@ -22,7 +22,7 @@
         <label class="filter-label">שנה</label>
         <select [(ngModel)]="selectedYear" class="filter-select">
           @for (year of availableYears; track year) {
-            <option [value]="year">{{ year }}</option>
+          <option [value]="year">{{ year }}</option>
           }
         </select>
       </div>
@@ -30,6 +30,7 @@
       <div class="filter-item">
         <label class="filter-label">חודש</label>
         <select [(ngModel)]="selectedMonth" class="filter-select">
+          <option [ngValue]="0">כל החודשים</option>
           <option [ngValue]="1">ינואר</option>
           <option [ngValue]="2">פברואר</option>
           <option [ngValue]="3">מרץ</option>
@@ -42,7 +43,7 @@
           <option [ngValue]="10">אוקטובר</option>
           <option [ngValue]="11">נובמבר</option>
           <option [ngValue]="12">דצמבר</option>
-      </select>
+        </select>
       </div>
 
       <button class="filter-apply-btn" (click)="applyFilters()">החל סינון</button>
@@ -94,4 +95,3 @@
   </section>
 
 </div>
-

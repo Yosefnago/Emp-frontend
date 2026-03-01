@@ -13,6 +13,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -38,6 +39,7 @@
     transform: translateY(-20px);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
@@ -185,8 +187,13 @@
 }
 
 .notification-icon-alert {
-  background-color: #fee2e2;
+  background-color: #fef2f2;
   color: #ef4444;
+}
+
+.notification-icon-payroll {
+  background-color: #e0f2fe;
+  color: #0ea5e9;
 }
 
 .notification-content {

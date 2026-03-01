@@ -24,10 +24,6 @@
       <button class="tab-button" [class.active]="activeTab === 'security'" (click)="switchTab('security')">
         אבטחה
       </button>
-      <button class="tab-button" [class.active]="activeTab === 'notifications'" (click)="switchTab('notifications')">
-        התראות
-      </button>
-
     </div>
   </div>
 
@@ -40,7 +36,7 @@
     </div>
 
     <div class="profile-content">
-      
+
       <!-- Profile Form -->
       <form #profileForm="ngForm" (ngSubmit)="saveProfile()" class="settings-form">
         <div class="form-grid">
@@ -77,8 +73,8 @@
 
           <div class="form-group">
             <label class="form-label">מספר טלפון</label>
-            <input class="form-input" type="tel" [(ngModel)]="phone" name="phone" placeholder="05X-XXXXXXX" maxlength="10"
-              [readonly]="!isEditingProfile" [class.readonly]="!isEditingProfile">
+            <input class="form-input" type="tel" [(ngModel)]="phone" name="phone" placeholder="05X-XXXXXXX"
+              maxlength="10" [readonly]="!isEditingProfile" [class.readonly]="!isEditingProfile">
           </div>
 
         </div>
@@ -152,69 +148,7 @@
   </section>
   }
 
-  <!-- Notifications Tab -->
-  @if (activeTab === 'notifications') {
-  <section class="settings-section">
-    <div class="section-header">
-      <h2 class="section-title">התראות</h2>
-      <p class="section-subtitle">בחר איזה התראות תרצה לקבל</p>
-    </div>
 
-    <div class="notifications-content">
-      @for (notification of notificationSettings; track notification.id) {
-      <div class="notification-item">
-        <div class="notification-info">
-          <h4 class="notification-title">{{ notification.title }}</h4>
-          <p class="notification-description">{{ notification.description }}</p>
-        </div>
-        <div class="notification-toggle">
-          <input type="checkbox" [(ngModel)]="notification.enabled" [id]="'notif-' + notification.id"
-            class="toggle-checkbox">
-          <label [for]="'notif-' + notification.id" class="toggle-label"></label>
-        </div>
-      </div>
-      }
-    </div>
-
-    <div class="notification-channels">
-      <h3 class="section-subtitle">ערוצי התראה</h3>
-      <div class="channels-grid">
-        <div class="channel-item">
-          <input type="checkbox" [(ngModel)]="channels.email" id="channel-email" class="toggle-checkbox">
-          <label for="channel-email" class="channel-label">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-              <path
-                d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
-            </svg>
-            דוא"ל
-          </label>
-        </div>
-        <div class="channel-item">
-          <input type="checkbox" [(ngModel)]="channels.push" id="channel-push" class="toggle-checkbox">
-          <label for="channel-push" class="channel-label">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-              <path
-                d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V2h-3v2.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" />
-            </svg>
-            התראות</label>
-        </div>
-        <div class="channel-item">
-          <input type="checkbox" [(ngModel)]="channels.sms" id="channel-sms" class="toggle-checkbox">
-          <label for="channel-sms" class="channel-label">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-              <path
-                d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" />
-            </svg>
-            הודעות</label>
-        </div>
-      </div>
-    </div>
-
-    <div class="form-actions">
-      <button class="submit-btn" (click)="saveNotifications()">שמור העדפות</button>
-    </div>
-  </section>
-  }
 
 
 

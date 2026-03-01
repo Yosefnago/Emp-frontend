@@ -24,6 +24,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   lastActivities: LastActivity[] = [];
 
   private wsStatusSub?: Subscription;
+  private wsTopicSub?: any;
   private topicSubscribed = false;
 
   constructor(
@@ -51,16 +52,25 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     this.wsStatusSub = this.webSocketService.connectionStatus.subscribe(status => {
       if (status.connected && !this.topicSubscribed) {
         this.topicSubscribed = true;
-        this.webSocketService.subscribe('/topic/notifications-update', () => {
+        this.wsTopicSub = this.webSocketService.subscribe('/topic/notifications-update', () => {
           this.ngZone.run(() => {
-            this.loadNotificationCount();
+            this.notificationService.refreshNotifications();
           });
         });
       }
     });
+
+    // Unified refresh subscription
+    const refreshSub = this.notificationService.refresh$.subscribe(() => {
+      this.loadNotificationCount();
+    });
+    this.wsStatusSub.add(refreshSub);
   }
   ngOnDestroy(): void {
     this.wsStatusSub?.unsubscribe();
+    if (this.wsTopicSub) {
+      this.wsTopicSub.unsubscribe();
+    }
     this.topicSubscribed = false;
   }
 

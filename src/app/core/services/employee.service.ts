@@ -1,6 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { AddEmployeeRequest, Employee, UpdateEmployeeRequest } from "../models/Employee";
+import { Observable } from "rxjs";
 
 
 
@@ -12,10 +13,8 @@ import { AddEmployeeRequest, Employee, UpdateEmployeeRequest } from "../models/E
 export class EmployeeService {
 
     private apiUrlEmployee = 'http://localhost:8090/employees';
-    private apiUrlFiles = 'http://localhost:8090/files';
-    private apiUrlSalary ='http://localhost:8090/salary';
 
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) { }
 
     loadAllEmployees() {
         return this.http.get<Employee[]>(
@@ -23,10 +22,10 @@ export class EmployeeService {
         );
     }
     addEmployee(request: AddEmployeeRequest) {
-        return this.http.post(`${this.apiUrlEmployee}/add`,request);
+        return this.http.post(`${this.apiUrlEmployee}/add`, request);
     }
 
-    getEmployeeByPersonalId(personalId:string){
+    getEmployeeByPersonalId(personalId: string) {
 
         return this.http.get(`${this.apiUrlEmployee}/${personalId}`);
     }
@@ -39,6 +38,9 @@ export class EmployeeService {
             updatedData
         );
     }
-    
+    public getCurrentMonthAttendanceStats(personalId: string): Observable<any> {
+        return this.http.get<any>(`http://localhost:8090/attendance/stats/current-month/${personalId}`);
+    }
+
 }
 
