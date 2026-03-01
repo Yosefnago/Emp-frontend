@@ -38,10 +38,9 @@ export class EmployeesComponent implements OnInit {
   }
 
   loadEmployees() {
-
     this.empService.loadAllEmployees().subscribe((data: any[]) => {
 
-      this.employees = data.map(emp => ({
+      const mappedData = data.map(emp => ({
         id: emp.id,
         name: `${emp.firstName || ''} ${emp.lastName || ''}`.trim() || 'ללא שם',
         idNumber: emp.personalId,
@@ -49,10 +48,13 @@ export class EmployeesComponent implements OnInit {
         phoneNumber: emp.phoneNumber,
         department: emp.department,
         address: emp.address,
-        status: emp.status
+        status: emp.status ? emp.status.toUpperCase() : 'INACTIVE'
       }));
 
-      this.allEmployees = [...this.employees];
+      this.allEmployees = [...mappedData];
+
+      this.employees = mappedData.filter(emp => emp.status === 'ACTIVE');
+
       this.updateStats();
     });
   }
@@ -88,16 +90,17 @@ export class EmployeesComponent implements OnInit {
 
       this.searchQuery = '';
       this.employees = [...this.allEmployees];
-      this.updateStats();
     }
   }
 
   onSearch() {
+    const activeOnly = this.allEmployees.filter(emp => emp.status === 'ACTIVE');
+    
     if (!this.searchQuery.trim()) {
-      this.employees = [...this.allEmployees];
+      this.employees = [...activeOnly];
     } else {
       const query = this.searchQuery.toLowerCase();
-      this.employees = this.allEmployees.filter(emp =>
+      this.employees = activeOnly.filter(emp =>
         emp.name.toLowerCase().includes(query) ||
         emp.email.toLowerCase().includes(query) ||
         emp.phoneNumber.includes(query) ||
@@ -105,13 +108,18 @@ export class EmployeesComponent implements OnInit {
         emp.department.toLowerCase().includes(query)
       );
     }
-    this.updateStats();
   }
 
   updateStats() {
-    this.totalEmployees = this.employees.length;
-    this.activeEmployees = this.employees.filter(emp => emp.status && emp.status.toUpperCase() === 'ACTIVE').length;
-    this.inactiveEmployees = this.employees.filter(emp => emp.status && emp.status.toUpperCase() === 'INACTIVE').length;
+    this.totalEmployees = this.allEmployees.length;
+
+    this.activeEmployees = this.allEmployees.filter(emp => 
+      emp.status === 'ACTIVE'
+    ).length;
+
+    this.inactiveEmployees = this.allEmployees.filter(emp => 
+      emp.status === 'INACTIVE'
+    ).length;
   }
 
   getInitials(name: string): string {

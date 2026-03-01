@@ -29,7 +29,7 @@ export class SalaryComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeYears();
-    this.getSalaryStats(); // Initial load with defaults
+    this.getSalaryStats();
   }
 
   initializeYears(): void {
@@ -68,10 +68,14 @@ export class SalaryComponent implements OnInit {
   }
 
   formatNumber(num: number | null | undefined): string {
-    if (!num || num === 0) {
-      return '0';
+    if (num === null || num === undefined || isNaN(num)) {
+      return '0.00';
     }
-    return num.toLocaleString('he-IL');
+
+    return num.toLocaleString('he-IL', {
+      minimumFractionDigits: 2, 
+      maximumFractionDigits: 2 
+    });
   }
 
   getMonthName(monthNum: string | number): string {
